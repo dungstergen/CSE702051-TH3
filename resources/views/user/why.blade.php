@@ -11,30 +11,30 @@
   <meta name="keywords" content="" />
   <meta name="description" content="" />
   <meta name="author" content="" />
-  <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
+  <link rel="shortcut icon" href="{{ asset('Frontend/images/favicon.png') }}" type="image/x-icon">
 
   <title>Paspark</title>
 
 
   <!-- bootstrap core css -->
-  <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+  <link rel="stylesheet" type="text/css" href="{{ asset('Frontend/css/bootstrap.css') }}" />
 
   <!-- fonts style -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
 
   <!-- nice selecy -->
-  <link rel="stylesheet" href="css/nice-select.min.css">
+  <link rel="stylesheet" href="{{ asset('Frontend/css/nice-select.min.css') }}">
 
   <!--owl slider stylesheet -->
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
 
   <!-- font awesome style -->
-  <link href="css/font-awesome.min.css" rel="stylesheet" />
+  <link href="{{ asset('Frontend/css/font-awesome.min.css') }}" rel="stylesheet" />
 
   <!-- Custom styles for this template -->
-  <link href="css/style.css" rel="stylesheet" />
+  <link href="{{ asset('Frontend/css/style.css') }}" rel="stylesheet" />
   <!-- responsive style -->
-  <link href="css/responsive.css" rel="stylesheet" />
+  <link href="{{ asset('Frontend/css/responsive.css') }}" rel="stylesheet" />
 
 </head>
 
@@ -42,13 +42,13 @@
 
   <div class="hero_area">
     <div class="bg-box">
-      <img src="images/slider-bg.jpg" alt="">
+      <img src="{{ asset('Frontend/images/slider-bg.jpg') }}" alt="">
     </div>
     <!-- header section strats -->
     <header class="header_section">
       <div class="container">
         <nav class="navbar navbar-expand-lg custom_nav-container ">
-          <a class="navbar-brand" href="index.html">
+          <a class="navbar-brand" href="{{ url('/') }}">
             <span>
               Paspark
             </span>
@@ -61,19 +61,19 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link" href="index.html">Home </a>
+                <a class="nav-link" href="{{ url('/') }}">Home </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="about.html"> About</a>
+                <a class="nav-link" href="{{ url('/about') }}"> About</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="{{ url('/pricing') }}">Pricing</a>
               </li>
               <li class="nav-item active">
-                <a class="nav-link" href="pricing.html">Pricing <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{{ url('/why') }}">Why Us <span class="sr-only">(current)</span></a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="why.html">Why Us</a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="testimonial.html">Testimonial</a>
+                <a class="nav-link" href="{{ url('/testimonial') }}">Testimonial</a>
               </li>
             </ul>
             <form class="form-inline">
@@ -88,66 +88,63 @@
     <!-- end header section -->
   </div>
 
-  <!-- pricing section -->
+  <!-- why section -->
 
-  <section class="pricing_section layout_padding">
-    <div class="bg-box">
-      <img src="images/pricing-bg.jpg" alt="">
-    </div>
+  <section class="why_section layout_padding">
     <div class="container">
-      <div class="heading_container heading_center">
-        <h2>
-          Our Pricing
-        </h2>
+      <div class="col-md-10 px-0">
+        <div class="heading_container">
+          <h2>
+            Why Choose Us
+          </h2>
+          <p>
+            Eaque nostrum quis ad aliquam autem odio assumenda accusamus, consequuntur, iste voluptate voluptates quia non dicta hic repellendus similique a facere earum omnis? Repellendus nemo, aspernatur ullam est deserunt officiis.
+          </p>
+        </div>
       </div>
-      <div class="col-xl-10 px-0 mx-auto">
-        <div class="row">
-          <div class="col-md-6 col-lg-4 mx-auto">
-            <div class="box">
-              <h4 class="price">
-                10$
+      <div class="row">
+        <div class="col-md-6 col-lg-4 mx-auto">
+          <div class="box">
+            <div class="img-box">
+              <img src="{{ asset('Frontend/images/w1.png') }}" alt="">
+            </div>
+            <div class="detail-box">
+              <h4>
+                No Booking Fees
               </h4>
-              <h5 class="name">
-                Basic
-              </h5>
               <p>
-                Consequuntur iure, quam vero quidem minima obcaecati veniam, praesentium impedit quod repudiandae tempora amet deserunt rerum accusamus. Commodi qui, illum ad ipsa porro ipsum nostrum magni minus.
+                Voluptatem earum eveniet mollitia sit animi dolorum. Iste, quas? Omnis error culpa illo nihil consequatur consectetur tenetur harum modi, quae libero ducimus reiciendis voluptat excepturi. Cum ducimus nesciunt dicta tenetur ducimus perferendis.
               </p>
-              <a href="">
-                Read More <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
-              </a>
             </div>
           </div>
-          <div class="col-md-6 col-lg-4 mx-auto">
-            <div class="box box-center">
-              <h4 class="price">
-                30$
+        </div>
+        <div class="col-md-6 col-lg-4 mx-auto">
+          <div class="box">
+            <div class="img-box">
+              <img src="{{ asset('Frontend/images/w2.png') }}" alt="">
+            </div>
+            <div class="detail-box">
+              <h4>
+                Online Payments
               </h4>
-              <h5 class="name">
-                Premium
-              </h5>
               <p>
-                Consequuntur iure, quam vero quidem minima obcaecati veniam, praesentium impedit quod repudiandae tempora amet deserunt rerum accusamus. Commodi qui, illum ad ipsa porro ipsum nostrum magni minus.
+                Voluptatem earum eveniet mollitia sit animi dolorum. Iste, quas? Omnis error culpa illo nihil consequatur consectetur tenetur harum modi, quae libero ducimus reiciendis voluptat excepturi. Cum ducimus nesciunt dicta tenetur ducimus perferendis.
               </p>
-              <a href="">
-                Read More <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
-              </a>
             </div>
           </div>
-          <div class="col-md-6 col-lg-4 mx-auto">
-            <div class="box">
-              <h4 class="price">
-                20$
+        </div>
+        <div class="col-md-6 col-lg-4 mx-auto">
+          <div class="box ">
+            <div class="img-box">
+              <img src="{{ asset('Frontend/images/w3.png') }}" alt="">
+            </div>
+            <div class="detail-box">
+              <h4>
+                Simple Booking Process
               </h4>
-              <h5 class="name">
-                Standard
-              </h5>
               <p>
-                Consequuntur iure, quam vero quidem minima obcaecati veniam, praesentium impedit quod repudiandae tempora amet deserunt rerum accusamus. Commodi qui, illum ad ipsa porro ipsum nostrum magni minus.
+                Voluptatem earum eveniet mollitia sit animi dolorum. Iste, quas? Omnis error culpa illo nihil consequatur consectetur tenetur harum modi, quae libero ducimus reiciendis voluptat excepturi. Cum ducimus nesciunt dicta tenetur ducimus perferendis.
               </p>
-              <a href="">
-                Read More <i class="fa fa-long-arrow-right" aria-hidden="true"></i>
-              </a>
             </div>
           </div>
         </div>
@@ -155,7 +152,7 @@
     </div>
   </section>
 
-  <!-- end pricing section -->
+  <!-- end why section -->
 
   <!-- info section -->
   <section class="info_section ">
@@ -255,21 +252,24 @@
   <!-- footer section -->
 
   <!-- jQery -->
-  <script src="js/jquery-3.4.1.min.js"></script>
+  <script src="{{ asset('Frontend/js/jquery-3.4.1.min.js') }}"></script>
   <!-- popper js -->
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
   </script>
   <!-- nice select -->
-  <script src="js/jquery.nice-select.min.js"></script>
+  <script src="{{ asset('Frontend/js/jquery.nice-select.min.js') }}"></script>
   <!-- bootstrap js -->
-  <script src="js/bootstrap.js"></script>
+  <script src="{{ asset('Frontend/js/bootstrap.js') }}"></script>
   <!-- owl slider -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
   </script>
   <!-- custom js -->
-  <script src="js/custom.js"></script>
+  <script src="{{ asset('Frontend/js/custom.js') }}"></script>
 
 
 </body>
 
 </html>
+
+
+

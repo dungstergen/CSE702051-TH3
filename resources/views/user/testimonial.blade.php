@@ -11,30 +11,30 @@
   <meta name="keywords" content="" />
   <meta name="description" content="" />
   <meta name="author" content="" />
-  <link rel="shortcut icon" href="images/favicon.png" type="image/x-icon">
+  <link rel="shortcut icon" href="{{ asset('Frontend/images/favicon.png') }}" type="image/x-icon">
 
   <title>Paspark</title>
 
 
   <!-- bootstrap core css -->
-  <link rel="stylesheet" type="text/css" href="css/bootstrap.css" />
+  <link rel="stylesheet" type="text/css" href="{{ asset('Frontend/css/bootstrap.css') }}" />
 
   <!-- fonts style -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
 
   <!-- nice selecy -->
-  <link rel="stylesheet" href="css/nice-select.min.css">
+  <link rel="stylesheet" href="{{ asset('Frontend/css/nice-select.min.css') }}">
 
   <!--owl slider stylesheet -->
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
 
   <!-- font awesome style -->
-  <link href="css/font-awesome.min.css" rel="stylesheet" />
+  <link href="{{ asset('Frontend/css/font-awesome.min.css') }}" rel="stylesheet" />
 
   <!-- Custom styles for this template -->
-  <link href="css/style.css" rel="stylesheet" />
+  <link href="{{ asset('Frontend/css/style.css') }}" rel="stylesheet" />
   <!-- responsive style -->
-  <link href="css/responsive.css" rel="stylesheet" />
+  <link href="{{ asset('Frontend/css/responsive.css') }}" rel="stylesheet" />
 
 </head>
 
@@ -42,13 +42,13 @@
 
   <div class="hero_area">
     <div class="bg-box">
-      <img src="images/slider-bg.jpg" alt="">
+      <img src="{{ asset('Frontend/images/slider-bg.jpg') }}" alt="">
     </div>
     <!-- header section strats -->
     <header class="header_section">
       <div class="container">
         <nav class="navbar navbar-expand-lg custom_nav-container ">
-          <a class="navbar-brand" href="index.html">
+          <a class="navbar-brand" href="{{ url('/') }}">
             <span>
               Paspark
             </span>
@@ -61,19 +61,19 @@
           <div class="collapse navbar-collapse" id="navbarSupportedContent">
             <ul class="navbar-nav">
               <li class="nav-item">
-                <a class="nav-link" href="index.html">Home </a>
+                <a class="nav-link" href="{{ url('/') }}">Home </a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="about.html"> About</a>
+                <a class="nav-link" href="{{ url('/about') }}"> About</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="pricing.html">Pricing</a>
+                <a class="nav-link" href="{{ url('/pricing') }}">Pricing</a>
               </li>
               <li class="nav-item">
-                <a class="nav-link" href="why.html">Why Us</a>
+                <a class="nav-link" href="{{ url('/why') }}">Why Us</a>
               </li>
               <li class="nav-item active">
-                <a class="nav-link" href="testimonial.html">Testimonial <span class="sr-only">(current)</span></a>
+                <a class="nav-link" href="{{ url('/testimonial') }}">Testimonial <span class="sr-only">(current)</span></a>
               </li>
             </ul>
             <form class="form-inline">
@@ -109,7 +109,7 @@
                 </div>
                 <div class="client_id">
                   <div class="img-box">
-                    <img src="images/c1.jpg" alt="" class="img-1">
+                    <img src="{{ asset('Frontend/images/c1.jpg') }}" alt="" class="img-1">
                   </div>
                   <div class="name">
                     <h6>
@@ -131,7 +131,7 @@
                 </div>
                 <div class="client_id">
                   <div class="img-box">
-                    <img src="images/c2.jpg" alt="" class="img-1">
+                    <img src="{{ asset('Frontend/images/c2.jpg') }}" alt="" class="img-1">
                   </div>
                   <div class="name">
                     <h6>
@@ -250,21 +250,24 @@
   <!-- footer section -->
 
   <!-- jQery -->
-  <script src="js/jquery-3.4.1.min.js"></script>
+  <script src="{{ asset('Frontend/js/jquery-3.4.1.min.js') }}"></script>
   <!-- popper js -->
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
   </script>
   <!-- nice select -->
-  <script src="js/jquery.nice-select.min.js"></script>
+  <script src="{{ asset('Frontend/js/jquery.nice-select.min.js') }}"></script>
   <!-- bootstrap js -->
-  <script src="js/bootstrap.js"></script>
+  <script src="{{ asset('Frontend/js/bootstrap.js') }}"></script>
   <!-- owl slider -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
   </script>
   <!-- custom js -->
-  <script src="js/custom.js"></script>
+  <script src="{{ asset('Frontend/js/custom.js') }}"></script>
 
 
 </body>
 
 </html>
+
+
+
