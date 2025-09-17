@@ -36,8 +36,13 @@
     <link href="{{ asset('user/css/style.css') }}" rel="stylesheet" />
     <!-- responsive style -->
     <link href="{{ asset('user/css/responsive.css') }}" rel="stylesheet" />
+    <!-- login page style -->
+    <link href="{{ asset('user/css/login.css') }}" rel="stylesheet" />
     <!-- loading screen style -->
     <link href="{{ asset('user/css/loading.css') }}" rel="stylesheet" />
+
+    <!-- Animate CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
 </head>
 
@@ -66,20 +71,23 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url('/') }}">Trang chủ </a>
+                                <a class="nav-link" href="{{ url('/') }}">Trang chủ</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url('/about') }}"> Giới thiệu</a>
+                                <a class="nav-link" href="{{ url('/about') }}">Giới thiệu</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url('/pricing') }}">Bảng giá</a>
                             </li>
-                            <li class="nav-item active">
-                                <a class="nav-link" href="{{ url('/why') }}">Tại sao chọn chúng tôi <span
-                                        class="sr-only">(current)</span></a>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('/why') }}">Tại sao chọn chúng tôi</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url('/testimonial') }}">Đánh giá khách hàng</a>
+                            </li>
+                             <li class="nav-item active">
+                                <a class="nav-link" href="{{ url('/login') }}">Đăng nhập <span
+                                        class="sr-only">(current)</span> </a>
                             </li>
                         </ul>
                         <form class="form-inline">
@@ -94,71 +102,73 @@
         <!-- end header section -->
     </div>
 
-    <!-- why section -->
+    <!-- about login -->
 
-    <section class="why_section layout_padding">
+    <section class="login_section">
         <div class="container">
-            <div class="col-md-10 px-0">
-                <div class="heading_container">
-                    <h2>
-                        Tại Sao Chọn Chúng Tôi
-                    </h2>
-                    <p>
-                        Chúng tôi tự hào là đơn vị hàng đầu trong lĩnh vực cung cấp dịch vụ bãi đỗ xe với nhiều ưu điểm
-                        vượt trội. Hệ thống hiện đại, dịch vụ chuyên nghiệp và cam kết mang đến sự hài lòng tuyệt đối
-                        cho khách hàng là những giá trị cốt lõi của chúng tôi.
-                    </p>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-md-6 col-lg-4 mx-auto">
-                    <div class="box">
-                        <div class="img-box">
-                            <img src="{{ asset('user/images/w1.png') }}" alt="">
-                        </div>
-                        <div class="detail-box">
-                            <h4>
-                                Không Phí Đặt Chỗ
-                            </h4>
-                            <p>
-                                Chúng tôi cam kết không thu thêm bất kỳ phí đặt chỗ nào. Khách hàng chỉ trả đúng giá
-                                dịch vụ đỗ xe mà thôi. Điều này giúp bạn tiết kiệm chi phí và có trải nghiệm minh bạch,
-                                không lo bị tính phí ẩn hay phụ phí không mong muốn.
-                            </p>
+            <div class="login_container">
+                <div class="row no-gutters">
+                    <div class="col-lg-6">
+                        <div class="login_left animate__animated animate__fadeInLeft">
+                            <div>
+                                <h2 class="login_title">Chào Mừng Trở Lại!</h2>
+                                <p class="login_subtitle">
+                                    Đăng nhập để quản lý chỗ đỗ xe của bạn và trải nghiệm dịch vụ bãi đỗ xe hiện đại,
+                                    an toàn và tiện lợi nhất.
+                                </p>
+                                <div class="mt-4">
+                                    <i class="fa fa-car fa-3x mb-3"></i>
+                                    <p>Hệ thống quản lý bãi đỗ xe thông minh</p>
+                                </div>
+                                <a href="{{ url('/register') }}" class="register_link">Tạo Tài Khoản Mới</a>
+                            </div>
                         </div>
                     </div>
-                </div>
-                <div class="col-md-6 col-lg-4 mx-auto">
-                    <div class="box">
-                        <div class="img-box">
-                            <img src="{{ asset('user/images/w2.png') }}" alt="">
-                        </div>
-                        <div class="detail-box">
-                            <h4>
-                                Thanh Toán Trực Tuyến
-                            </h4>
-                            <p>
-                                Hệ thống thanh toán trực tuyến an toàn và tiện lợi với nhiều phương thức: thẻ tín dụng,
-                                ví điện tử, chuyển khoản ngân hàng. Giao dịch được mã hóa bảo mật cao, đảm bảo thông tin
-                                tài chính của bạn luôn được bảo vệ tuyệt đối.
-                            </p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-6 col-lg-4 mx-auto">
-                    <div class="box ">
-                        <div class="img-box">
-                            <img src="{{ asset('user/images/w3.png') }}" alt="">
-                        </div>
-                        <div class="detail-box">
-                            <h4>
-                                Quy Trình Đặt Chỗ Đơn Giản
-                            </h4>
-                            <p>
-                                Chỉ với 3 bước đơn giản: Chọn bãi đỗ - Nhập thông tin - Thanh toán, bạn đã có chỗ đỗ xe
-                                an toàn. Giao diện thân thiện, hướng dẫn rõ ràng và xác nhận ngay lập tức giúp bạn đặt chỗ
-                                nhanh chóng chỉ trong vài phút.
-                            </p>
+                    <div class="col-lg-6">
+                        <div class="login_right animate__animated animate__fadeInRight">
+                            <h3 class="form_title">Đăng Nhập</h3>
+                            <form action="/login" method="POST">
+                                @csrf
+                                <div class="form-group">
+                                    <input type="text" class="form-control @error('email') is-invalid @enderror"
+                                        name="email" value="{{ old('email') }}" placeholder="Email hoặc Tên đăng nhập"
+                                        required>
+                                    @error('email')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                        name="password" placeholder="Mật khẩu" required>
+                                    @error('password')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="checkbox_container">
+                                    <input type="checkbox" id="remember" name="remember" {{ old('remember') ? 'checked' : '' }}>
+                                    <label for="remember">Ghi nhớ đăng nhập</label>
+                                </div>
+
+                                <button type="submit" class="btn_login">
+                                    <i class="fa fa-sign-in mr-2"></i>
+                                    Đăng Nhập
+                                </button>
+
+                                <a href="#" class="forgot_password">
+                                    Quên mật khẩu?
+                                </a>
+                            </form>
+
+                            <div class="text-center mt-4">
+                                <p class="text-muted">
+                                    Chưa có tài khoản?
+                                    <a href="{{ url('/register') }}" style="color: #ff6f3c; font-weight: 600;">
+                                        Đăng ký ngay
+                                    </a>
+                                </p>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -166,7 +176,70 @@
         </div>
     </section>
 
-    <!-- end why section -->
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="{{ asset('user/js/bootstrap.js') }}"></script>
+
+    <script>
+        // Add some interactive effects
+        $(document).ready(function () {
+            // Focus effects with smooth transitions
+            $('.form-control').on('focus', function () {
+                $(this).parent().addClass('focused');
+                $(this).addClass('animate__animated animate__fadeIn');
+            });
+
+            $('.form-control').on('blur', function () {
+                if ($(this).val() === '') {
+                    $(this).parent().removeClass('focused');
+                }
+                $(this).removeClass('animate__animated animate__fadeIn');
+            });
+
+            // Button click effect with improved animation
+            $('.btn_login').on('click', function (e) {
+                const $btn = $(this);
+
+                // Remove any existing animation classes
+                $btn.removeClass('animate__animated animate__pulse animate__heartBeat');
+
+                // Add pulse animation
+                $btn.addClass('animate__animated animate__pulse');
+
+                // Add loading state
+                const originalText = $btn.html();
+                $btn.html('<i class="fa fa-spinner fa-spin mr-2"></i>Đang xử lý...');
+
+                // Remove animation and restore text after delay
+                setTimeout(() => {
+                    $btn.removeClass('animate__animated animate__pulse');
+                    $btn.addClass('animate__animated animate__heartBeat');
+
+                    setTimeout(() => {
+                        $btn.removeClass('animate__animated animate__heartBeat');
+                        $btn.html(originalText);
+                    }, 600);
+                }, 300);
+            });
+
+            // Add hover effects for form controls
+            $('.form-control').hover(
+                function() {
+                    $(this).addClass('animate__animated animate__fadeIn');
+                },
+                function() {
+                    $(this).removeClass('animate__animated animate__fadeIn');
+                }
+            );
+
+            // Add entrance animations
+            $('.login_left').addClass('animate__animated animate__fadeInLeft');
+            $('.login_right').addClass('animate__animated animate__fadeInRight');
+        });
+    </script>
+
+    <!-- end about login -->
 
     <!-- info section -->
     <section class="info_section ">
@@ -204,7 +277,7 @@
                     <div class="col-md-6 col-lg-3 info_col ">
                         <div class="info_detail">
                             <h4>
-                                Về Chúng Tôi
+                                Giới Thiệu
                             </h4>
                             <p>
                                 Chúng tôi là đơn vị hàng đầu trong lĩnh vực cung cấp dịch vụ bãi đỗ xe với hệ thống
@@ -267,7 +340,7 @@
             </p>
         </div>
     </footer>
-    <!-- footer section -->
+    <!-- end footer section -->
 
     <!-- jQery -->
     <script src="{{ asset('user/js/jquery-3.4.1.min.js') }}"></script>

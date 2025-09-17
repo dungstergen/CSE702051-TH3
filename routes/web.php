@@ -21,3 +21,11 @@ Route::get('/why', function () {
 Route::get('/testimonial', function () {
     return view('user.testimonial');
 });
+
+Route::get('/login', function () {
+    return view('user.login');
+})->name('login');
+
+Route::get('/register', function () {
+    return view('user.register');
+})->name('register');

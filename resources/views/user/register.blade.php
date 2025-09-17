@@ -36,8 +36,13 @@
     <link href="{{ asset('user/css/style.css') }}" rel="stylesheet" />
     <!-- responsive style -->
     <link href="{{ asset('user/css/responsive.css') }}" rel="stylesheet" />
+    <!-- login page style -->
+    <link href="{{ asset('user/css/register.css') }}" rel="stylesheet" />
     <!-- loading screen style -->
     <link href="{{ asset('user/css/loading.css') }}" rel="stylesheet" />
+
+    <!-- Animate CSS -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
 
 </head>
 
@@ -66,10 +71,10 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav">
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url('/') }}">Trang chủ </a>
+                                <a class="nav-link" href="{{ url('/') }}">Trang chủ</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url('/about') }}"> Giới thiệu</a>
+                                <a class="nav-link" href="{{ url('/about') }}">Giới thiệu</a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url('/pricing') }}">Bảng giá</a>
@@ -77,9 +82,12 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url('/why') }}">Tại sao chọn chúng tôi</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('/testimonial') }}">Đánh giá khách hàng</a>
+                            </li>
                             <li class="nav-item active">
-                                <a class="nav-link" href="{{ url('/testimonial') }}">Đánh giá khách hàng <span
-                                        class="sr-only">(current)</span></a>
+                                <a class="nav-link" href="{{ url('/login') }}">Đăng nhập <span
+                                        class="sr-only">(current)</span> </a>
                             </li>
                         </ul>
                         <form class="form-inline">
@@ -94,64 +102,89 @@
         <!-- end header section -->
     </div>
 
-    <!-- client section -->
+    <!-- register section -->
 
-    <section class="client_section layout_padding">
+    <section class="login_section">
         <div class="container">
-            <div class="heading_container col">
-                <h2>
-                    Khách Hàng Nói Gì Về <span>Chúng Tôi</span>
-                </h2>
-            </div>
-            <div class="client_container">
-                <div class="carousel-wrap ">
-                    <div class="owl-carousel client_owl-carousel">
-                        <div class="item">
-                            <div class="box">
-                                <div class="detail-box">
-                                    <p>
-                                        Tôi đã sử dụng dịch vụ bãi đỗ xe này được 2 năm và rất hài lòng. Hệ thống bảo mật
-                                        tốt, nhân viên thân thiện và giá cả hợp lý. Xe của tôi luôn được giữ an toàn và sạch sẽ.
-                                        Tôi chắc chắn sẽ tiếp tục sử dụng dịch vụ này và giới thiệu cho bạn bè.
+            <div class="login_container">
+                <div class="row no-gutters">
+                    <div class="col-lg-6">
+                        <div class="login_right">
+                            <h3 class="form_title">Đăng Ký Tài Khoản</h3>
+                            <form action="/register" method="POST">
+                                @csrf
+                                <div class="form-group">
+                                    <input type="text" class="form-control @error('name') is-invalid @enderror"
+                                        name="name" value="{{ old('name') }}" placeholder="Họ và tên"
+                                        required>
+                                    @error('name')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="email" class="form-control @error('email') is-invalid @enderror"
+                                        name="email" value="{{ old('email') }}" placeholder="Địa chỉ email"
+                                        required>
+                                    @error('email')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="tel" class="form-control @error('phone') is-invalid @enderror"
+                                        name="phone" value="{{ old('phone') }}" placeholder="Số điện thoại"
+                                        required>
+                                    @error('phone')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="password" class="form-control @error('password') is-invalid @enderror"
+                                        name="password" placeholder="Mật khẩu" required>
+                                    @error('password')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror"
+                                        name="password_confirmation" placeholder="Xác nhận mật khẩu" required>
+                                    @error('password_confirmation')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+
+                                <button type="submit" class="btn_login">
+                                    <i class="fa fa-user-plus mr-2"></i>
+                                    Tạo Tài Khoản
+                                </button>
+
+                                <div class="text-center mt-4">
+                                    <p class="text-muted">
+                                        Đã có tài khoản?
+                                        <a href="{{ url('/login') }}" style="color: #ff6f3c; font-weight: 600;">
+                                            Đăng nhập ngay
+                                        </a>
                                     </p>
                                 </div>
-                                <div class="client_id">
-                                    <div class="img-box">
-                                        <img src="{{ asset('user/images/c1.jpg') }}" alt="" class="img-1">
-                                    </div>
-                                    <div class="name">
-                                        <h6>
-                                            Nguyễn Thị Lan
-                                        </h6>
-                                        <p>
-                                            Khách hàng VIP
-                                        </p>
-                                    </div>
-                                </div>
-                            </div>
+                            </form>
                         </div>
-                        <div class="item">
-                            <div class="box">
-                                <div class="detail-box">
-                                    <p>
-                                        Dịch vụ tuyệt vời! Tôi làm việc trong khu vực trung tâm và cần đỗ xe hàng ngày.
-                                        Bãi đỗ xe này có vị trí thuận lợi, giá cả phù hợp và đặc biệt là rất an toàn.
-                                        Hệ thống đặt chỗ online rất tiện lợi. Tôi rất recommend cho mọi người!
-                                    </p>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="login_left">
+                            <div>
+                                <h2 class="login_title">Tham Gia Cùng Chúng Tôi!</h2>
+                                <p class="login_subtitle">
+                                    Tạo tài khoản để trải nghiệm dịch vụ bãi đỗ xe hiện đại, an toàn và tiện lợi nhất.
+                                    Quản lý chỗ đỗ xe dễ dàng chỉ với vài thao tác đơn giản.
+                                </p>
+                                <div class="mt-4">
+                                    <i class="fa fa-users fa-3x mb-3"></i>
+                                    <p>Hệ thống quản lý bãi đỗ xe thông minh</p>
                                 </div>
-                                <div class="client_id">
-                                    <div class="img-box">
-                                        <img src="{{ asset('user/images/c2.jpg') }}" alt="" class="img-1">
-                                    </div>
-                                    <div class="name">
-                                        <h6>
-                                            Trần Văn Minh
-                                        </h6>
-                                        <p>
-                                            Khách hàng thân thiết
-                                        </p>
-                                    </div>
-                                </div>
+                                <a href="{{ url('/login') }}" class="register_link">Đăng nhập</a>
                             </div>
                         </div>
                     </div>
@@ -160,7 +193,91 @@
         </div>
     </section>
 
-    <!-- end client section -->
+    <!-- jQuery -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="{{ asset('user/js/bootstrap.js') }}"></script>
+
+    <script>
+        // Add some interactive effects for register page
+        $(document).ready(function () {
+            // Focus effects with smooth transitions
+            $('.form-control').on('focus', function () {
+                $(this).parent().addClass('focused');
+                $(this).addClass('animate__animated animate__fadeIn');
+            });
+
+            $('.form-control').on('blur', function () {
+                if ($(this).val() === '') {
+                    $(this).parent().removeClass('focused');
+                }
+                $(this).removeClass('animate__animated animate__fadeIn');
+            });
+
+            // Button click effect with improved animation
+            $('.btn_login').on('click', function (e) {
+                const $btn = $(this);
+
+                // Remove any existing animation classes
+                $btn.removeClass('animate__animated animate__pulse animate__heartBeat');
+
+                // Add pulse animation
+                $btn.addClass('animate__animated animate__pulse');
+
+                // Add loading state
+                const originalText = $btn.html();
+                $btn.html('<i class="fa fa-spinner fa-spin mr-2"></i>Đang tạo tài khoản...');
+
+                // Remove animation and restore text after delay
+                setTimeout(() => {
+                    $btn.removeClass('animate__animated animate__pulse');
+                    $btn.addClass('animate__animated animate__heartBeat');
+
+                    setTimeout(() => {
+                        $btn.removeClass('animate__animated animate__heartBeat');
+                        $btn.html(originalText);
+                    }, 600);
+                }, 300);
+            });
+
+            // Add hover effects for form controls
+            $('.form-control').hover(
+                function() {
+                    $(this).addClass('animate__animated animate__fadeIn');
+                },
+                function() {
+                    $(this).removeClass('animate__animated animate__fadeIn');
+                }
+            );
+
+            // Add entrance animations - từ trong ra ngoài
+            $('.login_left').addClass('animate__animated animate__zoomIn');
+            $('.login_right').addClass('animate__animated animate__zoomIn');
+
+            // Set animation delays for staggered effect
+            $('.login_right').css('animation-delay', '0.2s');
+            $('.login_left').css('animation-delay', '0.4s');
+
+            // Staggered animation for form fields - từ trong ra ngoài
+            $('.form-group').each(function(index) {
+                $(this).css('animation-delay', (0.8 + index * 0.15) + 's');
+                $(this).addClass('animate__animated animate__fadeInUp');
+            });
+
+            // Animation cho title và button
+            $('.form_title').css('animation-delay', '0.6s').addClass('animate__animated animate__fadeInDown');
+            $('.btn_login').css('animation-delay', '1.5s').addClass('animate__animated animate__zoomIn');
+            $('.text-center').css('animation-delay', '1.7s').addClass('animate__animated animate__fadeIn');
+
+            // Animation cho content panel elements
+            $('.login_title').css('animation-delay', '0.6s').addClass('animate__animated animate__fadeInDown');
+            $('.login_subtitle').css('animation-delay', '0.8s').addClass('animate__animated animate__fadeInUp');
+            $('.fa-users').parent().css('animation-delay', '1.0s').addClass('animate__animated animate__zoomIn');
+            $('.register_link').css('animation-delay', '1.2s').addClass('animate__animated animate__fadeInUp');
+        });
+    </script>
+
+    <!-- end about login -->
 
     <!-- info section -->
     <section class="info_section ">
@@ -198,7 +315,7 @@
                     <div class="col-md-6 col-lg-3 info_col ">
                         <div class="info_detail">
                             <h4>
-                                Về Chúng Tôi
+                                Giới Thiệu
                             </h4>
                             <p>
                                 Chúng tôi là đơn vị hàng đầu trong lĩnh vực cung cấp dịch vụ bãi đỗ xe với hệ thống
@@ -261,7 +378,7 @@
             </p>
         </div>
     </footer>
-    <!-- footer section -->
+    <!-- end footer section -->
 
     <!-- jQery -->
     <script src="{{ asset('user/js/jquery-3.4.1.min.js') }}"></script>
@@ -277,10 +394,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
     </script>
     <!-- custom js -->
+        <!-- custom js -->
     <script src="{{ asset('user/js/custom.js') }}"></script>
     <!-- loading screen js -->
     <script src="{{ asset('user/js/loading.js') }}"></script>
 
+    <script>
 </body>
 
 </html>

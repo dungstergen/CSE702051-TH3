@@ -36,6 +36,8 @@
     <link href="{{ asset('user/css/style.css') }}" rel="stylesheet" />
     <!-- responsive style -->
     <link href="{{ asset('user/css/responsive.css') }}" rel="stylesheet" />
+    <!-- loading screen style -->
+    <link href="{{ asset('user/css/loading.css') }}" rel="stylesheet" />
 
 </head>
 
@@ -528,6 +530,8 @@
     </script>
     <!-- custom js -->
     <script src="{{ asset('user/js/custom.js') }}"></script>
+    <!-- loading screen js -->
+    <script src="{{ asset('user/js/loading.js') }}"></script>
 
 </body>
 
