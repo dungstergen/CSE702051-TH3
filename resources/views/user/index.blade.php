@@ -11,30 +11,30 @@
   <meta name="keywords" content="" />
   <meta name="description" content="" />
   <meta name="author" content="" />
-  <link rel="shortcut icon" href="{{ asset('Frontend/images/favicon.png') }}" type="image/x-icon">
+  <link rel="shortcut icon" href="{{ asset('user/images/favicon.png') }}" type="image/x-icon">
 
   <title>Paspark</title>
 
 
   <!-- bootstrap core css -->
-  <link rel="stylesheet" type="text/css" href="{{ asset('Frontend/css/bootstrap.css') }}" />
+  <link rel="stylesheet" type="text/css" href="{{ asset('user/css/bootstrap.css') }}" />
 
   <!-- fonts style -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700;900&display=swap" rel="stylesheet">
 
-  <!-- nice selecy -->
-  <link rel="stylesheet" href="{{ asset('Frontend/css/nice-select.min.css') }}">
+  <!-- nice select -->
+  <link rel="stylesheet" href="{{ asset('user/css/nice-select.min.css') }}">
 
   <!--owl slider stylesheet -->
   <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/assets/owl.carousel.min.css" />
 
   <!-- font awesome style -->
-  <link href="{{ asset('Frontend/css/font-awesome.min.css') }}" rel="stylesheet" />
+  <link href="{{ asset('user/css/font-awesome.min.css') }}" rel="stylesheet" />
 
   <!-- Custom styles for this template -->
-  <link href="{{ asset('Frontend/css/style.css') }}" rel="stylesheet" />
+  <link href="{{ asset('user/css/style.css') }}" rel="stylesheet" />
   <!-- responsive style -->
-  <link href="{{ asset('Frontend/css/responsive.css') }}" rel="stylesheet" />
+  <link href="{{ asset('user/css/responsive.css') }}" rel="stylesheet" />
 
 </head>
 
@@ -42,7 +42,7 @@
 
   <div class="hero_area">
     <div class="bg-box">
-      <img src="{{ asset('Frontend/images/slider-bg.jpg') }}" alt="">
+      <img src="{{ asset('user/images/slider-bg.jpg') }}" alt="">
     </div>
     <!-- header section strats -->
     <header class="header_section">
@@ -159,7 +159,7 @@
       <div class="row">
         <div class="col-lg-6 ">
           <div class="img-box">
-            <img src="{{ asset('Frontend/images/about-img.jpg') }}" alt="">
+            <img src="{{ asset('user/images/about-img.jpg') }}" alt="">
           </div>
         </div>
         <div class="col-lg-6">
@@ -205,7 +205,7 @@
         <div class="col-md-6 col-lg-4 mx-auto">
           <div class="box">
             <div class="img-box">
-              <img src="{{ asset('Frontend/images/w1.png') }}" alt="">
+              <img src="{{ asset('user/images/w1.png') }}" alt="">
             </div>
             <div class="detail-box">
               <h4>
@@ -220,7 +220,7 @@
         <div class="col-md-6 col-lg-4 mx-auto">
           <div class="box">
             <div class="img-box">
-              <img src="{{ asset('Frontend/images/w2.png') }}" alt="">
+              <img src="{{ asset('user/images/w2.png') }}" alt="">
             </div>
             <div class="detail-box">
               <h4>
@@ -235,7 +235,7 @@
         <div class="col-md-6 col-lg-4 mx-auto">
           <div class="box ">
             <div class="img-box">
-              <img src="{{ asset('Frontend/images/w3.png') }}" alt="">
+              <img src="{{ asset('user/images/w3.png') }}" alt="">
             </div>
             <div class="detail-box">
               <h4>
@@ -257,7 +257,7 @@
 
   <section class="pricing_section layout_padding">
     <div class="bg-box">
-      <img src="{{ asset('Frontend/images/pricing-bg.jpg') }}" alt="">
+      <img src="{{ asset('user/images/pricing-bg.jpg') }}" alt="">
     </div>
     <div class="container">
       <div class="heading_container heading_center">
@@ -344,7 +344,7 @@
                 </div>
                 <div class="client_id">
                   <div class="img-box">
-                    <img src="{{ asset('Frontend/images/c1.jpg') }}" alt="" class="img-1">
+                    <img src="{{ asset('user/images/c1.jpg') }}" alt="" class="img-1">
                   </div>
                   <div class="name">
                     <h6>
@@ -366,7 +366,7 @@
                 </div>
                 <div class="client_id">
                   <div class="img-box">
-                    <img src="{{ asset('Frontend/images/c2.jpg') }}" alt="" class="img-1">
+                    <img src="{{ asset('user/images/c2.jpg') }}" alt="" class="img-1">
                   </div>
                   <div class="name">
                     <h6>
@@ -485,19 +485,19 @@
   <!-- footer section -->
 
   <!-- jQery -->
-  <script src="{{ asset('Frontend/js/jquery-3.4.1.min.js') }}"></script>
+  <script src="{{ asset('user/js/jquery-3.4.1.min.js') }}"></script>
   <!-- popper js -->
   <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
   </script>
   <!-- nice select -->
-  <script src="{{ asset('Frontend/js/jquery.nice-select.min.js') }}"></script>
+  <script src="{{ asset('user/js/jquery.nice-select.min.js') }}"></script>
   <!-- bootstrap js -->
-  <script src="{{ asset('Frontend/js/bootstrap.js') }}"></script>
+  <script src="{{ asset('user/js/bootstrap.js') }}"></script>
   <!-- owl slider -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
   </script>
   <!-- custom js -->
-  <script src="{{ asset('Frontend/js/custom.js') }}"></script>
+  <script src="{{ asset('user/js/custom.js') }}"></script>
 
 </body>
 
