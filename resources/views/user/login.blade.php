@@ -236,6 +236,27 @@
             // Add entrance animations
             $('.login_left').addClass('animate__animated animate__fadeInLeft');
             $('.login_right').addClass('animate__animated animate__fadeInRight');
+
+             // Set animation delays for staggered effect
+            $('.login_right').css('animation-delay', '0.2s');
+            $('.login_left').css('animation-delay', '0.4s');
+
+            // Staggered animation for form fields - từ trong ra ngoài
+            $('.form-group').each(function(index) {
+                $(this).css('animation-delay', (0.8 + index * 0.15) + 's');
+                $(this).addClass('animate__animated animate__fadeInUp');
+            });
+
+            // Animation cho title và button
+            $('.form_title').css('animation-delay', '0.6s').addClass('animate__animated animate__fadeInDown');
+            $('.btn_login').css('animation-delay', '1.5s').addClass('animate__animated animate__zoomIn');
+            $('.text-center').css('animation-delay', '1.7s').addClass('animate__animated animate__fadeIn');
+
+            // Animation cho content panel elements
+            $('.login_title').css('animation-delay', '0.6s').addClass('animate__animated animate__fadeInDown');
+            $('.login_subtitle').css('animation-delay', '0.8s').addClass('animate__animated animate__fadeInUp');
+            $('.fa-users').parent().css('animation-delay', '1.0s').addClass('animate__animated animate__zoomIn');
+            $('.register_link').css('animation-delay', '1.2s').addClass('animate__animated animate__fadeInUp');
         });
     </script>
 
