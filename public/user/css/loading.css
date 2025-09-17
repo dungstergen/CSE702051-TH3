@@ -1,0 +1,250 @@
+/* Loading Screen Styles - Optimized for LoadingManager */
+.loading-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.96);
+    backdrop-filter: blur(8px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    opacity: 1;
+    visibility: visible;
+    /* Tối ưu timing để match với LoadingManager (500ms fade out) */
+    transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                visibility 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+                backdrop-filter 0.3s ease;
+}
+
+/* Class được sử dụng bởi LoadingManager.hide() */
+.loading-overlay.fade-out {
+    opacity: 0;
+    visibility: hidden;
+    backdrop-filter: blur(0px);
+}
+
+/* Style khi loading được hiển thị (cho navigation) */
+.loading-overlay.show {
+    opacity: 1;
+    visibility: visible;
+    backdrop-filter: blur(8px);
+}
+
+.loading-container {
+    text-align: center;
+    animation: smoothFadeInScale 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    transform-origin: center;
+    /* Đảm bảo container luôn ở trung tâm */
+    max-width: 400px;
+    padding: 20px;
+}
+
+.loading-spinner {
+    width: 80px;
+    height: 80px;
+    border: 3px solid rgba(243, 243, 243, 0.8);
+    border-top: 3px solid #ff6f3c;
+    border-right: 3px solid rgba(255, 111, 60, 0.6);
+    border-radius: 50%;
+    animation: smoothSpin 1.2s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite;
+    margin: 0 auto 30px;
+    position: relative;
+    box-shadow: 0 2px 10px rgba(255, 111, 60, 0.1);
+    /* Đảm bảo spinner hiển thị mượt mà */
+    will-change: transform;
+}
+
+.loading-spinner::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    right: 6px;
+    bottom: 6px;
+    border: 2px solid transparent;
+    border-top: 2px solid #155263;
+    border-left: 2px solid rgba(21, 82, 99, 0.4);
+    border-radius: 50%;
+    animation: smoothSpin 1.8s cubic-bezier(0.68, -0.55, 0.265, 1.55) infinite reverse;
+    /* Tối ưu performance cho animation */
+    will-change: transform;
+}
+
+.loading-text {
+    font-family: 'Roboto', sans-serif;
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: #155263;
+    margin-bottom: 10px;
+    letter-spacing: 2px;
+    animation: pulse 2s ease-in-out infinite;
+}
+
+.loading-subtext {
+    font-family: 'Roboto', sans-serif;
+    font-size: 1rem;
+    color: #666;
+    font-weight: 400;
+    opacity: 0.8;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+@keyframes smoothSpin {
+    0% {
+        transform: rotate(0deg);
+        filter: hue-rotate(0deg);
+    }
+    50% {
+        filter: hue-rotate(180deg);
+    }
+    100% {
+        transform: rotate(360deg);
+        filter: hue-rotate(360deg);
+    }
+}
+
+@keyframes pulse {
+    0%, 100% {
+        opacity: 1;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.8;
+        transform: scale(1.03);
+    }
+}
+
+@keyframes smoothFadeInScale {
+    0% {
+        opacity: 0;
+        transform: translateY(20px) scale(0.9);
+    }
+    50% {
+        opacity: 0.7;
+        transform: translateY(10px) scale(0.95);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Progressive dots animation */
+.loading-dots {
+    display: inline-block;
+    font-size: 1rem;
+    color: #ff6f3c;
+    margin-left: 5px;
+}
+
+.loading-dots::after {
+    content: '';
+    animation: dots 1.5s steps(4, end) infinite;
+}
+
+@keyframes dots {
+    0%, 20% { content: ''; }
+    40% { content: '.'; }
+    60% { content: '..'; }
+    80%, 100% { content: '...'; }
+}
+
+/* Responsive - Tối ưu cho mobile */
+@media (max-width: 768px) {
+    .loading-spinner {
+        width: 60px;
+        height: 60px;
+        border-width: 2px;
+    }
+
+    .loading-spinner::before {
+        border-width: 1.5px;
+        top: 4px;
+        left: 4px;
+        right: 4px;
+        bottom: 4px;
+    }
+
+    .loading-text {
+        font-size: 1.8rem;
+        letter-spacing: 1px;
+    }
+
+    .loading-subtext {
+        font-size: 0.9rem;
+    }
+
+    .loading-container {
+        padding: 15px;
+        max-width: 320px;
+    }
+}
+
+@media (max-width: 480px) {
+    .loading-spinner {
+        width: 50px;
+        height: 50px;
+        margin-bottom: 20px;
+    }
+
+    .loading-text {
+        font-size: 1.6rem;
+    }
+
+    .loading-overlay {
+        /* Giảm blur cho mobile performance */
+        backdrop-filter: blur(4px);
+    }
+}
+
+/* Utility classes cho LoadingManager */
+.loading-overlay.quick-fade {
+    transition: opacity 0.3s ease, visibility 0.3s ease;
+}
+
+.loading-overlay.slow-fade {
+    transition: opacity 0.8s ease, visibility 0.8s ease;
+}
+
+/* Loading state cho body khi LoadingManager active */
+body.loading-active {
+    overflow: hidden;
+}
+
+/* Preload animation state */
+.loading-overlay.preload {
+    animation: none;
+}
+
+.loading-overlay.preload .loading-container {
+    animation: quickFadeIn 0.3s ease;
+}
+
+@keyframes quickFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
