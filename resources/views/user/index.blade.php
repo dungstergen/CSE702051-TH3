@@ -82,6 +82,12 @@
                                 <a class="nav-link" href="{{ url('/testimonial') }}">Đánh giá khách hàng</a>
                             </li>
                         </ul>
+                        <div class="user_options">
+                            <a href="{{ url('/login') }}" class="login_btn">
+                                <i class="fa fa-user" aria-hidden="true"></i>
+                                <span>Đăng nhập</span>
+                            </a>
+                        </div>
                         <form class="form-inline">
                             <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit">
                                 <i class="fa fa-search" aria-hidden="true"></i>
@@ -139,11 +145,11 @@
                             </div>
                         </div>
                         <div class="btn-box">
-                            <button type="submit" class="">
+                            <a href="{{ url('/dashboard') }}" class="btn-link">
                                 <span>
                                     Tìm Kiếm Ngay
                                 </span>
-                            </button>
+                            </a>
                         </div>
                     </form>
                 </div>

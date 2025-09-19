@@ -29,3 +29,19 @@ Route::get('/login', function () {
 Route::get('/register', function () {
     return view('user.register');
 })->name('register');
+
+Route::get('/dashboard', function () {
+    return view('user.dashboard');
+});
+
+Route::get('/booking', function () {
+    return view('user.booking');
+});
+
+Route::get('/history', function () {
+    return view('user.history');
+});
+
+Route::get('/payment', function () {
+    return view('user.payment');
+});
