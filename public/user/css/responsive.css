@@ -26,6 +26,15 @@
     margin: 5px 0;
   }
 
+  .custom_nav-container .user_options {
+    margin: 15px 0 0 0;
+    text-align: center;
+  }
+
+  .custom_nav-container .login_btn {
+    margin: 0 auto;
+  }
+
   .about_section .detail-box {
     margin-top: 45px;
   }
