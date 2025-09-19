@@ -182,45 +182,7 @@
                     </div>
 
                     <!-- Quick Stats -->
-                    <div class="quick_stats">
-                        <h4>Thống kê nhanh</h4>
-                        <div class="stat_item">
-                            <div class="stat_icon">
-                                <i class="fa fa-car"></i>
-                            </div>
-                            <div class="stat_info">
-                                <span class="stat_number">24</span>
-                                <span class="stat_label">Lần đỗ xe</span>
-                            </div>
-                        </div>
-                        <div class="stat_item">
-                            <div class="stat_icon">
-                                <i class="fa fa-clock-o"></i>
-                            </div>
-                            <div class="stat_info">
-                                <span class="stat_number">86</span>
-                                <span class="stat_label">Tổng giờ</span>
-                            </div>
-                        </div>
-                        <div class="stat_item">
-                            <div class="stat_icon">
-                                <i class="fa fa-money"></i>
-                            </div>
-                            <div class="stat_info">
-                                <span class="stat_number">2.1M</span>
-                                <span class="stat_label">Tổng chi phí</span>
-                            </div>
-                        </div>
-                        <div class="stat_item">
-                            <div class="stat_icon">
-                                <i class="fa fa-map-marker"></i>
-                            </div>
-                            <div class="stat_info">
-                                <span class="stat_number">8</span>
-                                <span class="stat_label">Địa điểm</span>
-                            </div>
-                        </div>
-                    </div>
+                   
                 </div>
 
                 <div class="col-lg-9">
@@ -913,9 +875,7 @@
                                 </li>
                             </ul>
                         </nav>
-                        <div class="pagination_info">
-                            Hiển thị 1-4 của 24 kết quả
-                        </div>
+                    
                     </div>
                 </div>
             </div>
