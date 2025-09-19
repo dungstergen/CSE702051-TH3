@@ -38,6 +38,8 @@
     <link href="{{ asset('user/css/responsive.css') }}" rel="stylesheet" />
     <!-- loading screen style -->
     <link href="{{ asset('user/css/loading.css') }}" rel="stylesheet" />
+    <!-- history page style -->
+    <link href="{{ asset('user/css/history.css') }}" rel="stylesheet" />
     <!-- history style -->
     <link href="{{ asset('user/css/history.css') }}" rel="stylesheet" />
 
@@ -168,12 +170,12 @@
                             </select>
                         </div>
 
-                        <button type="button" class="filter_btn" id="applyFilter">
+                        <button type="button" class="btn_filter" id="applyFilter">
                             <i class="fa fa-filter"></i>
                             Áp dụng bộ lọc
                         </button>
 
-                        <button type="button" class="reset_btn" id="resetFilter">
+                        <button type="button" class="btn_reset" id="resetFilter">
                             <i class="fa fa-refresh"></i>
                             Đặt lại
                         </button>
