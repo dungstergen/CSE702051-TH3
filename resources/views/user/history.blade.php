@@ -300,6 +300,158 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Customer Review Section -->
+                            <div class="customer_review_section">
+                                <div class="review_header">
+                                    <h6><i class="fa fa-comment-o"></i> Đánh giá của bạn</h6>
+                                    <button class="btn_edit_review" data-booking-id="1">
+                                        <i class="fa fa-edit"></i> Chỉnh sửa đánh giá
+                                    </button>
+                                </div>
+
+                                <!-- Existing Review Display -->
+                                <div class="existing_review" id="existingReview1">
+                                    <div class="rating_display">
+                                        <div class="stars">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                        </div>
+                                        <span class="rating_text">5.0 - Xuất sắc</span>
+                                        <span class="review_date">Đánh giá ngày 15/09/2025</span>
+                                    </div>
+                                    <div class="review_comment">
+                                        <p>"Bãi đỗ xe rất tiện lợi, gần trung tâm thương mại. Nhân viên thân thiện, giá cả hợp lý. Sẽ quay lại sử dụng dịch vụ."</p>
+                                    </div>
+                                    <div class="review_aspects">
+                                        <div class="aspect_item">
+                                            <span class="aspect_label">Vị trí:</span>
+                                            <div class="aspect_stars">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                            </div>
+                                        </div>
+                                        <div class="aspect_item">
+                                            <span class="aspect_label">Dịch vụ:</span>
+                                            <div class="aspect_stars">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                            </div>
+                                        </div>
+                                        <div class="aspect_item">
+                                            <span class="aspect_label">Giá cả:</span>
+                                            <div class="aspect_stars">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star-o"></i>
+                                            </div>
+                                        </div>
+                                        <div class="aspect_item">
+                                            <span class="aspect_label">An toàn:</span>
+                                            <div class="aspect_stars">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Interactive Review Form -->
+                                <div class="review_form" id="reviewForm1" style="display: none;">
+                                    <form class="review_form_content">
+                                        <!-- Overall Rating -->
+                                        <div class="form_group">
+                                            <label>Đánh giá tổng thể:</label>
+                                            <div class="interactive_stars overall_rating" data-rating="5">
+                                                <i class="fa fa-star-o" data-star="1"></i>
+                                                <i class="fa fa-star-o" data-star="2"></i>
+                                                <i class="fa fa-star-o" data-star="3"></i>
+                                                <i class="fa fa-star-o" data-star="4"></i>
+                                                <i class="fa fa-star-o" data-star="5"></i>
+                                            </div>
+                                            <span class="rating_label">Xuất sắc</span>
+                                        </div>
+
+                                        <!-- Comment -->
+                                        <div class="form_group">
+                                            <label>Nhận xét của bạn:</label>
+                                            <textarea class="review_textarea" placeholder="Chia sẻ trải nghiệm của bạn về bãi đỗ xe này..." rows="4">Bãi đỗ xe rất tiện lợi, gần trung tâm thương mại. Nhân viên thân thiện, giá cả hợp lý. Sẽ quay lại sử dụng dịch vụ.</textarea>
+                                        </div>
+
+                                        <!-- Aspect Ratings -->
+                                        <div class="form_group">
+                                            <label>Đánh giá chi tiết:</label>
+                                            <div class="aspect_ratings">
+                                                <div class="aspect_rating_item">
+                                                    <span class="aspect_name">Vị trí:</span>
+                                                    <div class="interactive_stars aspect_rating" data-aspect="location" data-rating="5">
+                                                        <i class="fa fa-star-o" data-star="1"></i>
+                                                        <i class="fa fa-star-o" data-star="2"></i>
+                                                        <i class="fa fa-star-o" data-star="3"></i>
+                                                        <i class="fa fa-star-o" data-star="4"></i>
+                                                        <i class="fa fa-star-o" data-star="5"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="aspect_rating_item">
+                                                    <span class="aspect_name">Dịch vụ:</span>
+                                                    <div class="interactive_stars aspect_rating" data-aspect="service" data-rating="5">
+                                                        <i class="fa fa-star-o" data-star="1"></i>
+                                                        <i class="fa fa-star-o" data-star="2"></i>
+                                                        <i class="fa fa-star-o" data-star="3"></i>
+                                                        <i class="fa fa-star-o" data-star="4"></i>
+                                                        <i class="fa fa-star-o" data-star="5"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="aspect_rating_item">
+                                                    <span class="aspect_name">Giá cả:</span>
+                                                    <div class="interactive_stars aspect_rating" data-aspect="price" data-rating="4">
+                                                        <i class="fa fa-star-o" data-star="1"></i>
+                                                        <i class="fa fa-star-o" data-star="2"></i>
+                                                        <i class="fa fa-star-o" data-star="3"></i>
+                                                        <i class="fa fa-star-o" data-star="4"></i>
+                                                        <i class="fa fa-star-o" data-star="5"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="aspect_rating_item">
+                                                    <span class="aspect_name">An toàn:</span>
+                                                    <div class="interactive_stars aspect_rating" data-aspect="safety" data-rating="5">
+                                                        <i class="fa fa-star-o" data-star="1"></i>
+                                                        <i class="fa fa-star-o" data-star="2"></i>
+                                                        <i class="fa fa-star-o" data-star="3"></i>
+                                                        <i class="fa fa-star-o" data-star="4"></i>
+                                                        <i class="fa fa-star-o" data-star="5"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Form Actions -->
+                                        <div class="form_actions">
+                                            <button type="button" class="btn_save_review">
+                                                <i class="fa fa-save"></i> Lưu đánh giá
+                                            </button>
+                                            <button type="button" class="btn_cancel_review">
+                                                <i class="fa fa-times"></i> Hủy
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
                             <div class="history_actions">
                                 <button type="button" class="action_btn view_details" data-id="1">
                                     <i class="fa fa-eye"></i>
@@ -364,6 +516,72 @@
                                     </div>
                                 </div>
                             </div>
+
+                            <!-- Customer Review Section -->
+                            <div class="customer_review_section">
+                                <div class="review_header">
+                                    <h6><i class="fa fa-comment-o"></i> Đánh giá của bạn</h6>
+                                </div>
+                                <div class="review_content">
+                                    <div class="rating_display">
+                                        <div class="stars">
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star"></i>
+                                            <i class="fa fa-star-o"></i>
+                                        </div>
+                                        <span class="rating_text">4.0 - Tốt</span>
+                                        <span class="review_date">Đánh giá ngày 12/09/2025</span>
+                                    </div>
+                                    <div class="review_comment">
+                                        <p>"Bãi đỗ xe khá rộng rãi, dễ dàng di chuyển. Tuy nhiên giá hơi cao so với các bãi khác trong khu vực."</p>
+                                    </div>
+                                    <div class="review_aspects">
+                                        <div class="aspect_item">
+                                            <span class="aspect_label">Vị trí:</span>
+                                            <div class="aspect_stars">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star-o"></i>
+                                            </div>
+                                        </div>
+                                        <div class="aspect_item">
+                                            <span class="aspect_label">Dịch vụ:</span>
+                                            <div class="aspect_stars">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star-o"></i>
+                                            </div>
+                                        </div>
+                                        <div class="aspect_item">
+                                            <span class="aspect_label">Giá cả:</span>
+                                            <div class="aspect_stars">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star-o"></i>
+                                                <i class="fa fa-star-o"></i>
+                                            </div>
+                                        </div>
+                                        <div class="aspect_item">
+                                            <span class="aspect_label">An toàn:</span>
+                                            <div class="aspect_stars">
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                                <i class="fa fa-star"></i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
                             <div class="history_actions">
                                 <button type="button" class="action_btn view_details" data-id="2">
                                     <i class="fa fa-eye"></i>
@@ -498,6 +716,171 @@
                                     Chi tiết
                                 </button>
                                 <button type="button" class="action_btn book_again" data-id="4">
+                                    <i class="fa fa-repeat"></i>
+                                    Đặt lại
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- History Item 5 - No Review Yet -->
+                        <div class="history_item" data-status="completed" data-price="32000" data-date="2025-09-10">
+                            <div class="history_header">
+                                <div class="booking_info">
+                                    <h5>Bãi đỗ xe Diamond Plaza</h5>
+                                    <span class="booking_code">#BP12345676</span>
+                                </div>
+                                <div class="status_badge completed">
+                                    <i class="fa fa-check-circle"></i>
+                                    Hoàn thành
+                                </div>
+                            </div>
+                            <div class="history_content">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <div class="detail_group">
+                                            <div class="detail_item">
+                                                <i class="fa fa-map-marker"></i>
+                                                <span>34 Lê Duẩn, Quận 1, TP.HCM</span>
+                                            </div>
+                                            <div class="detail_item">
+                                                <i class="fa fa-calendar"></i>
+                                                <span>10/09/2025</span>
+                                            </div>
+                                            <div class="detail_item">
+                                                <i class="fa fa-clock-o"></i>
+                                                <span>10:00 - 12:00 (2 giờ)</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="detail_group">
+                                            <div class="detail_item">
+                                                <i class="fa fa-car"></i>
+                                                <span>Ô tô - 51B-123.45</span>
+                                            </div>
+                                            <div class="detail_item">
+                                                <i class="fa fa-money"></i>
+                                                <span>32,000 VNĐ</span>
+                                            </div>
+                                            <div class="detail_item">
+                                                <i class="fa fa-star-o"></i>
+                                                <span>Chưa đánh giá</span>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- New Review Section -->
+                            <div class="customer_review_section">
+                                <div class="review_header">
+                                    <h6><i class="fa fa-comment-o"></i> Đánh giá bãi đỗ xe</h6>
+                                    <button class="btn_write_review" data-booking-id="5">
+                                        <i class="fa fa-edit"></i> Viết đánh giá
+                                    </button>
+                                </div>
+
+                                <!-- No Review Message -->
+                                <div class="no_review_message" id="noReviewMessage5">
+                                    <div class="empty_review_state">
+                                        <i class="fa fa-comment-o"></i>
+                                        <p>Bạn chưa đánh giá bãi đỗ xe này</p>
+                                        <small>Chia sẻ trải nghiệm của bạn để giúp những người khác</small>
+                                    </div>
+                                </div>
+
+                                <!-- New Review Form -->
+                                <div class="review_form" id="reviewForm5" style="display: none;">
+                                    <form class="review_form_content">
+                                        <!-- Overall Rating -->
+                                        <div class="form_group">
+                                            <label>Đánh giá tổng thể:</label>
+                                            <div class="interactive_stars overall_rating" data-rating="0">
+                                                <i class="fa fa-star-o" data-star="1"></i>
+                                                <i class="fa fa-star-o" data-star="2"></i>
+                                                <i class="fa fa-star-o" data-star="3"></i>
+                                                <i class="fa fa-star-o" data-star="4"></i>
+                                                <i class="fa fa-star-o" data-star="5"></i>
+                                            </div>
+                                            <span class="rating_label">Chọn đánh giá</span>
+                                        </div>
+
+                                        <!-- Comment -->
+                                        <div class="form_group">
+                                            <label>Nhận xét của bạn:</label>
+                                            <textarea class="review_textarea" placeholder="Chia sẻ trải nghiệm của bạn về bãi đỗ xe này..." rows="4"></textarea>
+                                        </div>
+
+                                        <!-- Aspect Ratings -->
+                                        <div class="form_group">
+                                            <label>Đánh giá chi tiết:</label>
+                                            <div class="aspect_ratings">
+                                                <div class="aspect_rating_item">
+                                                    <span class="aspect_name">Vị trí:</span>
+                                                    <div class="interactive_stars aspect_rating" data-aspect="location" data-rating="0">
+                                                        <i class="fa fa-star-o" data-star="1"></i>
+                                                        <i class="fa fa-star-o" data-star="2"></i>
+                                                        <i class="fa fa-star-o" data-star="3"></i>
+                                                        <i class="fa fa-star-o" data-star="4"></i>
+                                                        <i class="fa fa-star-o" data-star="5"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="aspect_rating_item">
+                                                    <span class="aspect_name">Dịch vụ:</span>
+                                                    <div class="interactive_stars aspect_rating" data-aspect="service" data-rating="0">
+                                                        <i class="fa fa-star-o" data-star="1"></i>
+                                                        <i class="fa fa-star-o" data-star="2"></i>
+                                                        <i class="fa fa-star-o" data-star="3"></i>
+                                                        <i class="fa fa-star-o" data-star="4"></i>
+                                                        <i class="fa fa-star-o" data-star="5"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="aspect_rating_item">
+                                                    <span class="aspect_name">Giá cả:</span>
+                                                    <div class="interactive_stars aspect_rating" data-aspect="price" data-rating="0">
+                                                        <i class="fa fa-star-o" data-star="1"></i>
+                                                        <i class="fa fa-star-o" data-star="2"></i>
+                                                        <i class="fa fa-star-o" data-star="3"></i>
+                                                        <i class="fa fa-star-o" data-star="4"></i>
+                                                        <i class="fa fa-star-o" data-star="5"></i>
+                                                    </div>
+                                                </div>
+                                                <div class="aspect_rating_item">
+                                                    <span class="aspect_name">An toàn:</span>
+                                                    <div class="interactive_stars aspect_rating" data-aspect="safety" data-rating="0">
+                                                        <i class="fa fa-star-o" data-star="1"></i>
+                                                        <i class="fa fa-star-o" data-star="2"></i>
+                                                        <i class="fa fa-star-o" data-star="3"></i>
+                                                        <i class="fa fa-star-o" data-star="4"></i>
+                                                        <i class="fa fa-star-o" data-star="5"></i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                        <!-- Form Actions -->
+                                        <div class="form_actions">
+                                            <button type="button" class="btn_save_review">
+                                                <i class="fa fa-save"></i> Gửi đánh giá
+                                            </button>
+                                            <button type="button" class="btn_cancel_review">
+                                                <i class="fa fa-times"></i> Hủy
+                                            </button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+
+                            <div class="history_actions">
+                                <button type="button" class="action_btn view_details" data-id="5">
+                                    <i class="fa fa-eye"></i>
+                                    Chi tiết
+                                </button>
+                                <button type="button" class="action_btn download_receipt" data-id="5">
+                                    <i class="fa fa-download"></i>
+                                    Hóa đơn
+                                </button>
+                                <button type="button" class="action_btn book_again" data-id="5">
                                     <i class="fa fa-repeat"></i>
                                     Đặt lại
                                 </button>
