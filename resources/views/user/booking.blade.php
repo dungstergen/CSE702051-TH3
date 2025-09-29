@@ -116,7 +116,7 @@
                         <div class="search_group">
                             <label>Địa điểm</label>
                             <div class="input_wrapper">
-                                <i class="fa fa-map-marker"></i>
+                                {{-- <i class="fa fa-map-marker"></i> --}}
                                 <input type="text" id="locationSearch" placeholder="Nhập địa chỉ hoặc tên địa điểm">
                                 <button type="button" class="location_btn" id="getCurrentLocation">
                                     <i class="fa fa-crosshairs"></i>
@@ -130,7 +130,7 @@
                                 <div class="search_group">
                                     <label>Ngày đỗ xe</label>
                                     <div class="input_wrapper">
-                                        <i class="fa fa-calendar"></i>
+                                        {{-- <i class="fa fa-calendar"></i> --}}
                                         <input type="date" id="parkingDate" min="2025-09-19">
                                     </div>
                                 </div>
@@ -139,7 +139,7 @@
                                 <div class="search_group">
                                     <label>Giờ vào</label>
                                     <div class="input_wrapper">
-                                        <i class="fa fa-clock-o"></i>
+                                        {{-- <i class="fa fa-clock-o"></i> --}}
                                         <input type="time" id="entryTime">
                                     </div>
                                 </div>
@@ -151,7 +151,7 @@
                                 <div class="search_group">
                                     <label>Thời gian đỗ</label>
                                     <div class="input_wrapper">
-                                        <i class="fa fa-hourglass-half"></i>
+                                        {{-- <i class="fa fa-hourglass-half"></i> --}}
                                         <select id="duration">
                                             <option value="1">1 giờ</option>
                                             <option value="2">2 giờ</option>
@@ -169,7 +169,7 @@
                                 <div class="search_group">
                                     <label>Loại xe</label>
                                     <div class="input_wrapper">
-                                        <i class="fa fa-car"></i>
+                                        {{-- <i class="fa fa-car"></i> --}}
                                         <select id="vehicleType">
                                             <option value="car">Ô tô</option>
                                             <option value="motorcycle">Xe máy</option>

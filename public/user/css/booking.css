@@ -45,17 +45,38 @@
     align-items: center;
 }
 
-.input_wrapper i {
+/* Mặc định không hiển thị icon bên trái */
+.input_wrapper i.left-icon {
     position: absolute;
     left: 12px;
     color: #666;
     z-index: 2;
+    display: none;
+}
+
+/* Chỉ hiển thị icon bên trái khi có class with-left-icon */
+.input_wrapper.with-left-icon i.left-icon {
+    display: block;
+}
+
+.input_wrapper.with-left-icon input,
+.input_wrapper.with-left-icon select {
+    padding-left: 40px;
+}
+
+/* Icon bên phải (như clock, calendar) */
+.input_wrapper i.right-icon {
+    position: absolute;
+    right: 12px;
+    color: #666;
+    z-index: 2;
+    pointer-events: none;
 }
 
 .input_wrapper input,
 .input_wrapper select {
     width: 100%;
-    padding: 12px 15px 12px 40px;
+    padding: 12px 15px;
     border: 2px solid #e0e0e0;
     border-radius: 8px;
     font-size: 0.9rem;
@@ -192,23 +213,96 @@
     display: block;
 }
 
+/* Two Column Layout */
+.search_row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.search_col {
+    flex: 1;
+}
+
+.search_col .search_group {
+    margin-bottom: 0;
+}
+
+/* Single Column Layout */
+.search_full {
+    width: 100%;
+}
+
+/* Time and Vehicle Type Styling */
+.time_vehicle_row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+.time_col, .vehicle_col {
+    flex: 1;
+}
+
+.time_col .search_group,
+.vehicle_col .search_group {
+    margin-bottom: 0;
+}
+
+/* Custom Select Styling */
+.custom_select {
+    position: relative;
+}
+
+.custom_select select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url("data:image/svg+xml;charset=US-ASCII,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'><path fill='%23666' d='M2 0L0 2h4zm0 5L0 3h4z'/></svg>");
+    background-repeat: no-repeat;
+    background-position: right 15px center;
+    background-size: 12px;
+}
+
 /* Search Button */
 .search_btn {
     width: 100%;
-    background: linear-gradient(135deg, #ff6f3c, #ff8a50);
+    background: linear-gradient(135deg, #ff6f3c 0%, #ff8a50 100%);
     color: white;
     border: none;
-    padding: 15px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 1rem;
-    transition: all 0.3s ease;
-    margin-top: 10px;
+    padding: 18px 24px;
+    border-radius: 12px;
+    font-weight: 700;
+    font-size: 1.1rem;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 20px;
+    position: relative;
+    overflow: hidden;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    box-shadow: 0 6px 20px rgba(255, 111, 60, 0.3);
+}
+
+.search_btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s;
 }
 
 .search_btn:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 8px 20px rgba(255, 111, 60, 0.4);
+    transform: translateY(-3px);
+    box-shadow:
+        0 12px 30px rgba(255, 111, 60, 0.4),
+        0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.search_btn:hover::before {
+    left: 100%;
 }
 
 .search_btn i {
@@ -650,9 +744,36 @@
     .map_section {
         height: 250px;
     }
+
+    .search_row,
+    .time_vehicle_row {
+        flex-direction: column;
+        gap: 20px;
+    }
 }
 
 @media (max-width: 768px) {
+    .search_panel {
+        padding: 25px 20px;
+        border-radius: 15px;
+    }
+
+    .search_row,
+    .time_vehicle_row {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .input_wrapper input,
+    .input_wrapper select {
+        padding: 14px 18px 14px 45px;
+        font-size: 0.95rem;
+    }
+
+    .location_btn {
+        width: 38px;
+        height: 38px;
+    }
     .parking_card {
         flex-direction: column;
     }
@@ -755,4 +876,36 @@
         opacity: 1;
         transform: translateY(0);
     }
+}
+
+/* Form Animation */
+.search_panel {
+    animation: slideInLeft 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+/* Input Focus Animation */
+.input_wrapper {
+    animation: fadeInUp 0.4s ease forwards;
+    opacity: 0;
+}
+
+.input_wrapper:nth-child(1) { animation-delay: 0.1s; }
+.input_wrapper:nth-child(2) { animation-delay: 0.2s; }
+.input_wrapper:nth-child(3) { animation-delay: 0.3s; }
+.input_wrapper:nth-child(4) { animation-delay: 0.4s; }
+
+/* Smooth transitions for all elements */
+* {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
