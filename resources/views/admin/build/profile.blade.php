@@ -28,7 +28,7 @@
     <aside class="fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 my-4 overflow-y-auto antialiased transition-transform duration-200 -translate-x-full bg-white border-0 shadow-xl dark:shadow-none dark:bg-slate-850 xl:ml-6 max-w-64 ease-nav-brand z-990 rounded-2xl xl:left-0 xl:translate-x-0" aria-expanded="false">
       <div class="h-19">
         <i class="absolute top-0 right-0 p-4 opacity-50 cursor-pointer fas fa-times text-slate-400 xl:hidden" sidenav-close></i>
-        <a class="block px-8 py-6 m-0 text-sm whitespace-nowrap text-slate-700" href="{{ url('admin/dashboard') }}" target="_blank">
+        <a class="block px-8 py-6 m-0 text-sm whitespace-nowrap text-slate-700" href="dashboard.html" target="_blank">
           <img src="{{ asset('admin/img/logo.png') }}" class="inline h-full max-w-full transition-all duration-200 dark:hidden ease-nav-brand max-h-8" alt="main_logo" />
           <img src="{{ asset('admin/img/logo.png') }}" class="hidden h-full max-w-full transition-all duration-200 dark:inline ease-nav-brand max-h-8" alt="main_logo" />
           <span class="ml-1 font-semibold transition-all duration-200 dark:text-white ease-nav-brand">Paspark</span>
@@ -41,7 +41,7 @@
         <ul class="flex flex-col pl-0 mb-0">
 
           <li class="mt-0.5 w-full">
-            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors dark:text-white dark:opacity-80" href="{{ url('admin/dashboard') }}">
+            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors dark:text-white dark:opacity-80" href="../pages/dashboard.html">
               <div class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
                 <i class="relative top-0 leading-normal text-blue-500 ni ni-tv-2 text-sm"></i>
               </div>
@@ -50,7 +50,7 @@
           </li>
 
           <li class="mt-0.5 w-full">
-            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors dark:text-white dark:opacity-80" href="{{ url('admin/tables') }}">
+            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors dark:text-white dark:opacity-80" href="../pages/tables.html">
               <div class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
                 <i class="relative top-0 leading-normal text-orange-500 ni ni-calendar-grid-58 text-sm"></i>
               </div>
@@ -64,7 +64,7 @@
           </li>
 
           <li class="mt-0.5 w-full">
-            <a class="py-2.7 bg-blue-500/13 dark:text-white dark:opacity-80  text-sm ease-nav-brand my-0 mx-2 flex items-center rounded-lg whitespace-nowrap px-4 font-semibold text-slate-700 transition-colors" href="{{ url('admin/profile') }}">
+            <a class="py-2.7 bg-blue-500/13 dark:text-white dark:opacity-80  text-sm ease-nav-brand my-0 mx-2 flex items-center rounded-lg whitespace-nowrap px-4 font-semibold text-slate-700 transition-colors" href="../pages/profile.html">
               <div class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
                 <i class="relative top-0 leading-normal text-slate-700 text-sm ni ni-single-02"></i>
               </div>
@@ -73,7 +73,7 @@
           </li>
 
           <li class="mt-0.5 w-full">
-            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors dark:text-white dark:opacity-80" href="{{ url('admin/sign-in') }}">
+            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors dark:text-white dark:opacity-80" href="../pages/sign-in.html">
               <div class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
                 <i class="relative top-0 leading-normal text-orange-500 text-sm ni ni-single-copy-04"></i>
               </div>
@@ -82,7 +82,7 @@
           </li>
 
           <li class="mt-0.5 w-full">
-            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors dark:text-white dark:opacity-80" href="{{ url('admin/sign-up') }}">
+            <a class="py-2.7 text-sm ease-nav-brand my-0 mx-2 flex items-center whitespace-nowrap px-4 transition-colors dark:text-white dark:opacity-80" href="../pages/sign-up.html">
               <div class="mr-2 flex h-8 w-8 items-center justify-center rounded-lg bg-center stroke-0 text-center xl:p-2.5">
                 <i class="relative top-0 leading-normal text-cyan-500 text-sm ni ni-collection"></i>
               </div>
@@ -120,7 +120,7 @@
             <ul class="flex flex-row justify-end pl-0 mb-0 list-none md-max:w-full">
 
               <li class="flex items-center">
-                  <a href="{{ url('admin/sign-in') }}" class="block px-0 py-2 font-semibold text-white transition-all ease-in-out text-sm">
+                  <a href="../pages/sign-in.html" class="block px-0 py-2 font-semibold text-white transition-all ease-in-out text-sm">
                   <i class="fa fa-user sm:mr-1" aria-hidden="true"></i>
                   <span class="hidden sm:inline">Đăng nhập</span>
                 </a>
