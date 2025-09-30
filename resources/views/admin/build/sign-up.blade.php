@@ -23,7 +23,7 @@
     <!-- Navbar -->
     <nav class="absolute top-0 z-30 flex flex-wrap items-center justify-between w-full px-4 py-2 mt-6 mb-4 shadow-none lg:flex-nowrap lg:justify-start">
       <div class="container flex items-center justify-between py-0 flex-wrap-inherit">
-        <a class="py-1.75 ml-4 mr-4 font-bold text-white text-sm whitespace-nowrap lg:ml-0" href="dashboard.html" target="_blank"> Paspark </a>
+        <a class="py-1.75 ml-4 mr-4 font-bold text-white text-sm whitespace-nowrap lg:ml-0" href="{{ url('admin/dashboard') }}" target="_blank"> Paspark </a>
         <button navbar-trigger class="px-3 py-1 ml-2 leading-none transition-all ease-in-out bg-transparent border border-transparent border-solid rounded-lg shadow-none cursor-pointer text-lg lg:hidden" type="button" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
           <span class="inline-block mt-2 align-middle bg-center bg-no-repeat bg-cover w-6 h-6 bg-none">
             <span bar1 class="w-5.5 rounded-xs duration-350 relative my-0 mx-auto block h-px bg-white transition-all"></span>
@@ -34,25 +34,25 @@
         <div navbar-menu class="items-center flex-grow transition-all ease duration-350 lg-max:bg-white lg-max:max-h-0 lg-max:overflow-hidden basis-full rounded-2xl lg:flex lg:basis-auto">
           <ul class="flex flex-col pl-0 mx-auto mb-0 list-none lg-max:py-2 lg:flex-row xl:ml-auto">
             <li>
-                <a class="flex items-center px-4 py-2 mr-2 font-normal text-white transition-all ease-in-out duration-250 lg-max:opacity-0 lg-max:text-slate-700 text-sm lg:px-2 lg:hover:text-white/75" aria-current="page" href="../pages/dashboard.html">
+                <a class="flex items-center px-4 py-2 mr-2 font-normal text-white transition-all ease-in-out duration-250 lg-max:opacity-0 lg-max:text-slate-700 text-sm lg:px-2 lg:hover:text-white/75" aria-current="page" href="{{ url('admin/dashboard') }}">
                 <i class="mr-1 text-white lg-max:text-slate-700 fa fa-chart-pie opacity-60"></i>
                 Bảng điều khiển
               </a>
             </li>
             <li>
-              <a class="block px-4 py-2 mr-2 font-normal text-white transition-all ease-in-out duration-250 lg-max:opacity-0 lg-max:text-slate-700 text-sm lg:px-2 lg:hover:text-white/75" href="../pages/profile.html">
+              <a class="block px-4 py-2 mr-2 font-normal text-white transition-all ease-in-out duration-250 lg-max:opacity-0 lg-max:text-slate-700 text-sm lg:px-2 lg:hover:text-white/75" href="{{ url('admin/profile') }}">
                 <i class="mr-1 text-white lg-max:text-slate-700 fa fa-user opacity-60"></i>
                 Hồ sơ
               </a>
             </li>
             <li>
-              <a class="block px-4 py-2 mr-2 font-normal text-white transition-all ease-in-out duration-250 lg-max:opacity-0 lg-max:text-slate-700 text-sm lg:px-2 lg:hover:text-white/75" href="../pages/sign-up.html">
+              <a class="block px-4 py-2 mr-2 font-normal text-white transition-all ease-in-out duration-250 lg-max:opacity-0 lg-max:text-slate-700 text-sm lg:px-2 lg:hover:text-white/75" href="{{ url('admin/sign-up') }}">
                 <i class="mr-1 text-white lg-max:text-slate-700 fas fa-user-circle opacity-60"></i>
                 Đăng ký
               </a>
             </li>
             <li>
-              <a class="block px-4 py-2 mr-2 font-normal text-white transition-all ease-in-out duration-250 lg-max:opacity-0 lg-max:text-slate-700 text-sm lg:px-2 lg:hover:text-white/75" href="../pages/sign-in.html">
+              <a class="block px-4 py-2 mr-2 font-normal text-white transition-all ease-in-out duration-250 lg-max:opacity-0 lg-max:text-slate-700 text-sm lg:px-2 lg:hover:text-white/75" href="{{ url('admin/sign-in') }}">
                 <i class="mr-1 text-white lg-max:text-slate-700 fas fa-key opacity-60"></i>
                 Đăng nhập
               </a>
@@ -145,7 +145,7 @@
                     <div class="text-center">
                       <button type="button" class="inline-block w-full px-5 py-2.5 mt-6 mb-2 font-bold text-center text-white align-middle transition-all bg-transparent border-0 rounded-lg cursor-pointer active:opacity-85 hover:-translate-y-px hover:shadow-xs leading-normal text-sm ease-in tracking-tight-rem shadow-md bg-150 bg-x-25 bg-gradient-to-tl from-zinc-800 to-zinc-700 hover:border-slate-700 hover:bg-slate-700 hover:text-white">Đăng ký</button>
                     </div>
-                    <p class="mt-4 mb-0 leading-normal text-sm">Đã có tài khoản? <a href="../pages/sign-in.html" class="font-bold text-slate-700">Đăng nhập</a></p>
+                    <p class="mt-4 mb-0 leading-normal text-sm">Đã có tài khoản? <a href="{{ url('admin/sign-in') }}" class="font-bold text-slate-700">Đăng nhập</a></p>
                   </form>
                 </div>
               </div>
