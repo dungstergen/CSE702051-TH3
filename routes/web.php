@@ -47,26 +47,73 @@ Route::get('/payment', function () {
 });
 
 //Admin
-Route::prefix('admin')->group(function () {
+Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/', function () {
-        return view('admin.build.index');
+        return redirect()->route('admin.dashboard');
     });
+
     Route::get('/dashboard', function () {
         return view('admin.build.dashboard');
-    });
+    })->name('dashboard');
+
+    Route::get('/parking', function () {
+        return view('admin.build.parking');
+    })->name('parking');
+
+    Route::get('/customers', function () {
+        return view('admin.build.customers');
+    })->name('customers');
+
+    Route::get('/reports', function () {
+        return view('admin.build.reports');
+    })->name('reports');
+
+    Route::get('/revenue', function () {
+        return view('admin.build.revenue');
+    })->name('revenue');
+
+    Route::get('/users', function () {
+        return view('admin.build.users');
+    })->name('users');
+
+    Route::get('/settings', function () {
+        return view('admin.build.settings');
+    })->name('settings');
+
     Route::get('/documentation', function () {
         return view('admin.build.documentation');
-    });
+    })->name('documentation');
+
     Route::get('/profile', function () {
         return view('admin.build.profile');
-    });
-    Route::get('/sign-in', function () {
-        return view('admin.build.sign-in');
-    });
-    Route::get('/sign-up', function () {
-        return view('admin.build.sign-up');
-    });
+    })->name('profile');
+
     Route::get('/tables', function () {
         return view('admin.build.tables');
-    });
+    })->name('tables');
+
+    Route::get('/about', function () {
+        return view('admin.about');
+    })->name('about');
+
+    // Authentication routes
+    Route::get('/sign-in', function () {
+        return view('admin.build.sign-in');
+    })->name('sign-in');
+
+    Route::get('/sign-up', function () {
+        return view('admin.build.sign-up');
+    })->name('sign-up');
+
+    Route::post('/logout', function () {
+        // Logout logic here
+        session()->flush();
+        return redirect()->route('admin.sign-in')->with('success', 'Đăng xuất thành công!');
+    })->name('logout');
+
+    Route::get('/logout', function () {
+        // GET logout for direct access
+        session()->flush();
+        return redirect()->route('admin.sign-in')->with('success', 'Đăng xuất thành công!');
+    })->name('logout.get');
 });
