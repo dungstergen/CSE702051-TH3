@@ -45,3 +45,28 @@ Route::get('/history', function () {
 Route::get('/payment', function () {
     return view('user.payment');
 });
+
+//Admin
+Route::prefix('admin')->group(function () {
+    Route::get('/', function () {
+        return view('admin.build.index');
+    });
+    Route::get('/dashboard', function () {
+        return view('admin.build.dashboard');
+    });
+    Route::get('/documentation', function () {
+        return view('admin.build.documentation');
+    });
+    Route::get('/profile', function () {
+        return view('admin.build.profile');
+    });
+    Route::get('/sign-in', function () {
+        return view('admin.build.sign-in');
+    });
+    Route::get('/sign-up', function () {
+        return view('admin.build.sign-up');
+    });
+    Route::get('/tables', function () {
+        return view('admin.build.tables');
+    });
+});

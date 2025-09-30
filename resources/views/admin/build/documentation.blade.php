@@ -19,20 +19,20 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="apple-touch-icon" sizes="76x76" href="../assets/img/apple-icon.png" />
-    <link rel="icon" type="image/png" href="../assets/img/favicon.png" />
+    <link rel="apple-touch-icon" sizes="76x76" href="{{ asset('admin/img/apple-icon.png') }}" />
+    <link rel="icon" type="image/png" href="{{ asset('admin/img/favicon.png') }}" />
     <title>Argon Dashboard 2 Tailwind by Creative Tim</title>
     <!--     Fonts and icons     -->
     <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700" rel="stylesheet" />
     <!-- Font Awesome Icons -->
     <script src="https://kit.fontawesome.com/42d5adcbca.js" crossorigin="anonymous"></script>
     <!-- Nucleo Icons -->
-    <link href="../assets/css/nucleo-icons.css" rel="stylesheet" />
-    <link href="../assets/css/nucleo-svg.css" rel="stylesheet" />
+    <link href="{{ asset('admin/css/nucleo-icons.css') }}" rel="stylesheet" />
+    <link href="{{ asset('admin/css/nucleo-svg.css') }}" rel="stylesheet" />
     <!-- Popper -->
     <script src="https://unpkg.com/@popperjs/core@2"></script>
     <!-- Main Styling -->
-    <link href="../assets/css/argon-dashboard-tailwind.css?v=1.0.1" rel="stylesheet" />
+    <link href="{{ asset('admin/css/argon-dashboard-tailwind.css?v=1.0.1') }}" rel="stylesheet" />
   </head>
 
   <body class="m-0 font-sans antialiased font-normal bg-white text-base leading-default text-slate-500">
@@ -99,7 +99,7 @@
                   <a class="dark:hover:bg-slate-900 ease py-1.2 clear-both block w-full whitespace-nowrap rounded-lg bg-transparent px-4 duration-300 hover:bg-gray-200 hover:text-slate-700 lg:transition-colors" href="javascript:;">
                     <div class="flex py-1">
                       <div class="my-auto">
-                        <img src="../assets/img/team-2.jpg" class="inline-flex items-center justify-center mr-4 text-white text-sm h-9 w-9 max-w-none rounded-xl" />
+                        <img src="{{ asset('admin/img/team-2.jpg') }}" class="inline-flex items-center justify-center mr-4 text-white text-sm h-9 w-9 max-w-none rounded-xl" />
                       </div>
                       <div class="flex flex-col justify-center">
                         <h6 class="mb-1 font-normal leading-normal dark:text-white text-sm"><span class="font-semibold">New message</span> from Laur</h6>
@@ -116,7 +116,7 @@
                   <a class="dark:hover:bg-slate-900 ease py-1.2 clear-both block w-full whitespace-nowrap rounded-lg px-4 transition-colors duration-300 hover:bg-gray-200 hover:text-slate-700" href="javascript:;">
                     <div class="flex py-1">
                       <div class="my-auto">
-                        <img src="../assets/img/small-logos/logo-spotify.svg" class="inline-flex items-center justify-center mr-4 text-white text-sm bg-gradient-to-tl from-zinc-800 to-zinc-700 dark:bg-gradient-to-tl dark:from-slate-750 dark:to-gray-850 h-9 w-9 max-w-none rounded-xl" />
+                        <img src="{{ asset('admin/img/small-logos/logo-spotify.svg') }}" class="inline-flex items-center justify-center mr-4 text-white text-sm bg-gradient-to-tl from-zinc-800 to-zinc-700 dark:bg-gradient-to-tl dark:from-slate-750 dark:to-gray-850 h-9 w-9 max-w-none rounded-xl" />
                       </div>
                       <div class="flex flex-col justify-center">
                         <h6 class="mb-1 font-normal leading-normal dark:text-white text-sm"><span class="font-semibold">New album</span> by Travis Scott</h6>
@@ -175,9 +175,9 @@
           </div>
         </div>
       </div>
-        
+
     </div>
-    
+
     <footer class="bottom-0 top-auto pt-4">
       <div class="w-full px-6 mx-auto">
         <div class="flex flex-wrap items-center -mx-3 lg:justify-between">
@@ -213,9 +213,9 @@
     </footer>
   </body>
   <!-- plugin for charts  -->
-  <script src="../assets/js/plugins/chartjs.min.js" async></script>
+  <script src="{{ asset('admin/js/plugins/chartjs.min.js') }}" async></script>
   <!-- plugin for scrollbar  -->
-  <script src="../assets/js/plugins/perfect-scrollbar.min.js" async></script>
+  <script src="{{ asset('admin/js/plugins/perfect-scrollbar.min.js') }}" async></script>
   <!-- main script file  -->
-  <script src="../assets/js/argon-dashboard-tailwind.js?v=1.0.1" async></script>
+  <script src="{{ asset('admin/js/argon-dashboard-tailwind.js?v=1.0.1') }}" async></script>
 </html>
