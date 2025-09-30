@@ -156,6 +156,11 @@
                                     Đăng Nhập
                                 </button>
 
+                                <a href="/admin/dashboard" class="btn_admin_test">
+                                    <i class="fa fa-cogs mr-2"></i>
+                                    Go to Admin
+                                </a>
+
                                 <a href="#" class="forgot_password">
                                     Quên mật khẩu?
                                 </a>
