@@ -1,11 +1,11 @@
-@extends('admin.build.master')
+
+@extends('admin.layouts')
 
 @section('title', 'Quản lý khách hàng - Paspark Admin')
-@section('page-title', 'Quản lý khách hàng')
-@section('breadcrumb-parent', 'Trang chủ')
-@section('breadcrumb-current', 'Khách hàng')
+@section('page_title', 'Quản lý khách hàng')
+@section('breadcrumb', 'Khách hàng')
 
-@push('styles')
+@section('additional_css')
 <style>
     .customer-card {
         background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
@@ -89,7 +89,7 @@
         box-shadow: 0 2px 4px rgba(0,0,0,0.1);
     }
 </style>
-@endpush
+@endsection
 
 @section('content')
 <div class="space-y-6">
@@ -490,7 +490,7 @@
 </div>
 @endsection
 
-@push('scripts')
+@section('additional_js')
 <script>
 function showAddCustomerModal() {
     showNotification('Chức năng thêm khách hàng sẽ có trong phiên bản tiếp theo', 'info');
@@ -584,7 +584,7 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-@endpush
+
         </div>
 
         <div class="activity-item">
@@ -790,4 +790,4 @@ document.addEventListener('DOMContentLoaded', function() {
             // In real implementation, this would fetch new activities via AJAX
         }, 30000);
     </script>
-@endpush
+@endsection

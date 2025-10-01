@@ -1,9 +1,9 @@
-@extends('admin.build.master')
+
+@extends('admin.layouts')
 
 @section('title', 'Quản lý người dùng - Paspark Admin')
-@section('page-title', 'Quản lý người dùng')
-@section('breadcrumb-parent', 'Trang chủ')
-@section('breadcrumb-current', 'Người dùng')
+@section('page_title', 'Quản lý người dùng')
+@section('breadcrumb', 'Người dùng')
 
 @section('content')
     <!-- Thống kê người dùng -->

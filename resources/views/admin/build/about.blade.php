@@ -1,9 +1,10 @@
-@extends('admin.layouts.master')
 
-@section('title', 'Về chúng tôi')
-@section('page-title', 'Về hệ thống Paspark')
-@section('breadcrumb-parent', 'Trang')
-@section('breadcrumb-current', 'Về chúng tôi')
+
+@extends('admin.layouts')
+
+@section('title', 'Về chúng tôi - Paspark Admin')
+@section('page_title', 'Về hệ thống Paspark')
+@section('breadcrumb', 'Về chúng tôi')
 
 @section('content')
 <div class="flex flex-wrap -mx-3">

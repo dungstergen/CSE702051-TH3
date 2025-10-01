@@ -1,8 +1,9 @@
-@extends('layouts.admin')
 
-@section('title', 'Cấp thẻ VIP')
-@section('page-title', 'Cấp thẻ VIP cho khách hàng')
-@section('breadcrumb', 'Trang chủ > Khách hàng > Cấp thẻ VIP')
+@extends('admin.layouts')
+
+@section('title', 'Cấp thẻ VIP - Paspark Admin')
+@section('page_title', 'Cấp thẻ VIP cho khách hàng')
+@section('breadcrumb', 'Cấp thẻ VIP')
 
 @section('content')
     <div class="card">

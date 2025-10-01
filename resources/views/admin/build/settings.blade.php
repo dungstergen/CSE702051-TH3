@@ -1,11 +1,11 @@
-@extends('admin.build.master')
+
+@extends('admin.layouts')
 
 @section('title', 'Cài đặt hệ thống - Paspark Admin')
-@section('page-title', 'Cài đặt hệ thống')
-@section('breadcrumb-parent', 'Trang chủ')
-@section('breadcrumb-current', 'Cài đặt')
+@section('page_title', 'Cài đặt hệ thống')
+@section('breadcrumb', 'Cài đặt')
 
-@push('styles')
+@section('additional_css')
 <style>
     .settings-section {
         background: white;
@@ -132,7 +132,7 @@
         box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
     }
 </style>
-@endpush
+@endsection
 
 @section('content')
 <div class="space-y-6">
@@ -443,7 +443,7 @@
 </div>
 @endsection
 
-@push('scripts')
+@section('additional_js')
 <script>
 function savePricingSettings() {
     const basicPrice = document.getElementById('basicPrice').value;
@@ -570,7 +570,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-@endpush
                 </button>
             </div>
         </div>
@@ -765,4 +764,4 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Mở form thêm người dùng mới...');
         }
     </script>
-@endpush
+@endsection

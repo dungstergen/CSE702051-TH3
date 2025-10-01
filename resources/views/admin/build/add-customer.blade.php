@@ -1,8 +1,10 @@
-@extends('layouts.admin')
 
-@section('title', 'Thêm khách hàng')
-@section('page-title', 'Thêm khách hàng mới')
-@section('breadcrumb', 'Trang chủ > Khách hàng > Thêm mới')
+
+@extends('admin.layouts')
+
+@section('title', 'Thêm khách hàng - Paspark Admin')
+@section('page_title', 'Thêm khách hàng mới')
+@section('breadcrumb', 'Thêm khách hàng')
 
 @section('content')
     <div class="card">
