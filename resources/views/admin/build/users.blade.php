@@ -1,4 +1,3 @@
-
 @extends('admin.layouts')
 
 @section('title', 'Quản lý người dùng - Paspark Admin')
@@ -63,7 +62,8 @@
                         </td>
                         <td style="padding: 15px;">admin@parkingadmin.com</td>
                         <td style="padding: 15px;">
-                            <span style="background: #dc3545; color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold;">
+                            <span
+                                style="background: #dc3545; color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold;">
                                 Super Admin
                             </span>
                         </td>
@@ -72,7 +72,8 @@
                             <br><small style="color: #666;">2 phút trước</small>
                         </td>
                         <td style="padding: 15px; text-align: center;">
-                            <span style="background: #28a745; color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px;">
+                            <span
+                                style="background: #28a745; color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px;">
                                 Hoạt động
                             </span>
                         </td>
@@ -89,7 +90,8 @@
                         </td>
                         <td style="padding: 15px;">manager1@parkingadmin.com</td>
                         <td style="padding: 15px;">
-                            <span style="background: #007bff; color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold;">
+                            <span
+                                style="background: #007bff; color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold;">
                                 Manager
                             </span>
                         </td>
@@ -98,12 +100,14 @@
                             <br><small style="color: #666;">25/09/2025 13:30</small>
                         </td>
                         <td style="padding: 15px; text-align: center;">
-                            <span style="background: #28a745; color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px;">
+                            <span
+                                style="background: #28a745; color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px;">
                                 Hoạt động
                             </span>
                         </td>
                         <td style="padding: 15px; text-align: center;">
-                            <a href="#edit-user-2" class="btn btn-sm" style="background: #ffc107; color: black; margin-right: 5px; padding: 5px 10px;">
+                            <a href="#edit-user-2" class="btn btn-sm"
+                                style="background: #ffc107; color: black; margin-right: 5px; padding: 5px 10px;">
                                 <i class="fas fa-edit"></i>
                             </a>
                             <button class="btn btn-sm" style="background: #dc3545; color: white; padding: 5px 10px;">
@@ -120,7 +124,8 @@
                         </td>
                         <td style="padding: 15px;">manager2@parkingadmin.com</td>
                         <td style="padding: 15px;">
-                            <span style="background: #007bff; color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold;">
+                            <span
+                                style="background: #007bff; color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold;">
                                 Manager
                             </span>
                         </td>
@@ -129,12 +134,14 @@
                             <br><small style="color: #666;">25/09/2025 11:15</small>
                         </td>
                         <td style="padding: 15px; text-align: center;">
-                            <span style="background: #28a745; color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px;">
+                            <span
+                                style="background: #28a745; color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px;">
                                 Hoạt động
                             </span>
                         </td>
                         <td style="padding: 15px; text-align: center;">
-                            <a href="#edit-user-3" class="btn btn-sm" style="background: #ffc107; color: black; margin-right: 5px; padding: 5px 10px;">
+                            <a href="#edit-user-3" class="btn btn-sm"
+                                style="background: #ffc107; color: black; margin-right: 5px; padding: 5px 10px;">
                                 <i class="fas fa-edit"></i>
                             </a>
                             <button class="btn btn-sm" style="background: #dc3545; color: white; padding: 5px 10px;">
@@ -151,7 +158,8 @@
                         </td>
                         <td style="padding: 15px;">staff1@parkingadmin.com</td>
                         <td style="padding: 15px;">
-                            <span style="background: #6c757d; color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold;">
+                            <span
+                                style="background: #6c757d; color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold;">
                                 Staff
                             </span>
                         </td>
@@ -160,12 +168,14 @@
                             <br><small style="color: #666;">24/09/2025 18:00</small>
                         </td>
                         <td style="padding: 15px; text-align: center;">
-                            <span style="background: #ffc107; color: black; padding: 5px 12px; border-radius: 20px; font-size: 12px;">
+                            <span
+                                style="background: #ffc107; color: black; padding: 5px 12px; border-radius: 20px; font-size: 12px;">
                                 Tạm khóa
                             </span>
                         </td>
                         <td style="padding: 15px; text-align: center;">
-                            <a href="#edit-user-4" class="btn btn-sm" style="background: #ffc107; color: black; margin-right: 5px; padding: 5px 10px;">
+                            <a href="#edit-user-4" class="btn btn-sm"
+                                style="background: #ffc107; color: black; margin-right: 5px; padding: 5px 10px;">
                                 <i class="fas fa-edit"></i>
                             </a>
                             <button class="btn btn-sm" style="background: #28a745; color: white; padding: 5px 10px;">
@@ -182,7 +192,8 @@
                         </td>
                         <td style="padding: 15px;">staff2@parkingadmin.com</td>
                         <td style="padding: 15px;">
-                            <span style="background: #6c757d; color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold;">
+                            <span
+                                style="background: #6c757d; color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: bold;">
                                 Staff
                             </span>
                         </td>
@@ -191,12 +202,14 @@
                             <br><small style="color: #666;">25/09/2025 14:00</small>
                         </td>
                         <td style="padding: 15px; text-align: center;">
-                            <span style="background: #28a745; color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px;">
+                            <span
+                                style="background: #28a745; color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px;">
                                 Hoạt động
                             </span>
                         </td>
                         <td style="padding: 15px; text-align: center;">
-                            <a href="#edit-user-5" class="btn btn-sm" style="background: #ffc107; color: black; margin-right: 5px; padding: 5px 10px;">
+                            <a href="#edit-user-5" class="btn btn-sm"
+                                style="background: #ffc107; color: black; margin-right: 5px; padding: 5px 10px;">
                                 <i class="fas fa-edit"></i>
                             </a>
                             <button class="btn btn-sm" style="background: #dc3545; color: white; padding: 5px 10px;">
@@ -218,63 +231,65 @@
                 <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
                     <!-- Cột trái -->
                     <div>
-                        <h4 style="color: #ff6b35; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #ff6b35;">
+                        <h4
+                            style="color: #ff6b35; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #ff6b35;">
                             👤 Thông tin cá nhân
                         </h4>
 
                         <div style="margin-bottom: 20px;">
                             <label style="display: block; margin-bottom: 8px; font-weight: 600;">Tên đăng nhập *</label>
                             <input type="text" name="username" required
-                                   style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;"
-                                   placeholder="Nhập tên đăng nhập">
+                                style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;"
+                                placeholder="Nhập tên đăng nhập">
                         </div>
 
                         <div style="margin-bottom: 20px;">
                             <label style="display: block; margin-bottom: 8px; font-weight: 600;">Họ và tên *</label>
                             <input type="text" name="fullname" required
-                                   style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;"
-                                   placeholder="Nhập họ tên đầy đủ">
+                                style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;"
+                                placeholder="Nhập họ tên đầy đủ">
                         </div>
 
                         <div style="margin-bottom: 20px;">
                             <label style="display: block; margin-bottom: 8px; font-weight: 600;">Email *</label>
                             <input type="email" name="email" required
-                                   style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;"
-                                   placeholder="example@parkingadmin.com">
+                                style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;"
+                                placeholder="example@parkingadmin.com">
                         </div>
 
                         <div style="margin-bottom: 20px;">
                             <label style="display: block; margin-bottom: 8px; font-weight: 600;">Số điện thoại</label>
                             <input type="tel" name="phone"
-                                   style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;"
-                                   placeholder="0987654321">
+                                style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;"
+                                placeholder="0987654321">
                         </div>
                     </div>
 
                     <!-- Cột phải -->
                     <div>
-                        <h4 style="color: #28a745; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #28a745;">
+                        <h4
+                            style="color: #28a745; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #28a745;">
                             🔐 Thông tin bảo mật
                         </h4>
 
                         <div style="margin-bottom: 20px;">
                             <label style="display: block; margin-bottom: 8px; font-weight: 600;">Mật khẩu *</label>
                             <input type="password" name="password" required
-                                   style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;"
-                                   placeholder="Nhập mật khẩu">
+                                style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;"
+                                placeholder="Nhập mật khẩu">
                         </div>
 
                         <div style="margin-bottom: 20px;">
                             <label style="display: block; margin-bottom: 8px; font-weight: 600;">Xác nhận mật khẩu *</label>
                             <input type="password" name="confirm_password" required
-                                   style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;"
-                                   placeholder="Nhập lại mật khẩu">
+                                style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;"
+                                placeholder="Nhập lại mật khẩu">
                         </div>
 
                         <div style="margin-bottom: 20px;">
                             <label style="display: block; margin-bottom: 8px; font-weight: 600;">Vai trò *</label>
                             <select name="role" required
-                                    style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;">
+                                style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;">
                                 <option value="">Chọn vai trò</option>
                                 <option value="staff">🧑‍💼 Staff - Nhân viên</option>
                                 <option value="manager">👨‍💼 Manager - Quản lý</option>
@@ -285,7 +300,7 @@
                         <div style="margin-bottom: 20px;">
                             <label style="display: block; margin-bottom: 8px; font-weight: 600;">Trạng thái</label>
                             <select name="status"
-                                    style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;">
+                                style="width: 100%; padding: 12px; border: 2px solid #ddd; border-radius: 8px; font-size: 16px;">
                                 <option value="active">✅ Hoạt động</option>
                                 <option value="inactive">❌ Tạm khóa</option>
                             </select>
@@ -297,27 +312,36 @@
                 <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin: 25px 0;">
                     <h4 style="color: #333; margin-bottom: 20px;">🔑 Phân quyền truy cập</h4>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px;">
-                        <div style="display: flex; align-items: center; gap: 12px; background: white; padding: 15px; border-radius: 10px;">
-                            <input type="checkbox" name="permissions[]" value="dashboard" style="transform: scale(1.5);" checked>
+                        <div
+                            style="display: flex; align-items: center; gap: 12px; background: white; padding: 15px; border-radius: 10px;">
+                            <input type="checkbox" name="permissions[]" value="dashboard" style="transform: scale(1.5);"
+                                checked>
                             <span style="font-weight: 500;">📊 Xem Dashboard</span>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 12px; background: white; padding: 15px; border-radius: 10px;">
-                            <input type="checkbox" name="permissions[]" value="parking" style="transform: scale(1.5);" checked>
+                        <div
+                            style="display: flex; align-items: center; gap: 12px; background: white; padding: 15px; border-radius: 10px;">
+                            <input type="checkbox" name="permissions[]" value="parking" style="transform: scale(1.5);"
+                                checked>
                             <span style="font-weight: 500;">🅿️ Quản lý bãi đỗ</span>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 12px; background: white; padding: 15px; border-radius: 10px;">
-                            <input type="checkbox" name="permissions[]" value="customers" style="transform: scale(1.5);" checked>
+                        <div
+                            style="display: flex; align-items: center; gap: 12px; background: white; padding: 15px; border-radius: 10px;">
+                            <input type="checkbox" name="permissions[]" value="customers" style="transform: scale(1.5);"
+                                checked>
                             <span style="font-weight: 500;">👥 Quản lý khách hàng</span>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 12px; background: white; padding: 15px; border-radius: 10px;">
+                        <div
+                            style="display: flex; align-items: center; gap: 12px; background: white; padding: 15px; border-radius: 10px;">
                             <input type="checkbox" name="permissions[]" value="reports" style="transform: scale(1.5);">
                             <span style="font-weight: 500;">📈 Xem báo cáo</span>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 12px; background: white; padding: 15px; border-radius: 10px;">
+                        <div
+                            style="display: flex; align-items: center; gap: 12px; background: white; padding: 15px; border-radius: 10px;">
                             <input type="checkbox" name="permissions[]" value="revenue" style="transform: scale(1.5);">
                             <span style="font-weight: 500;">💰 Quản lý doanh thu</span>
                         </div>
-                        <div style="display: flex; align-items: center; gap: 12px; background: white; padding: 15px; border-radius: 10px;">
+                        <div
+                            style="display: flex; align-items: center; gap: 12px; background: white; padding: 15px; border-radius: 10px;">
                             <input type="checkbox" name="permissions[]" value="settings" style="transform: scale(1.5);">
                             <span style="font-weight: 500;">⚙️ Cài đặt hệ thống</span>
                         </div>
@@ -326,11 +350,13 @@
 
                 <!-- Nút hành động -->
                 <div style="text-align: center; margin-top: 30px; padding-top: 25px; border-top: 2px solid #eee;">
-                    <button type="submit" class="btn btn-success" style="font-size: 18px; padding: 15px 40px; margin-right: 20px; min-width: 200px;">
+                    <button type="submit" class="btn btn-success"
+                        style="font-size: 18px; padding: 15px 40px; margin-right: 20px; min-width: 200px;">
                         <i class="fas fa-user-plus"></i>
                         Tạo người dùng
                     </button>
-                    <button type="reset" class="btn btn-warning" style="font-size: 18px; padding: 15px 40px; min-width: 200px;">
+                    <button type="reset" class="btn btn-warning"
+                        style="font-size: 18px; padding: 15px 40px; min-width: 200px;">
                         <i class="fas fa-undo"></i>
                         Làm mới form
                     </button>
