@@ -1,11 +1,11 @@
-@extends('admin.build.master')
+
+@extends('admin.layouts')
 
 @section('title', 'Quản lý bãi đỗ xe - Paspark Admin')
-@section('page-title', 'Quản lý bãi đỗ xe')
-@section('breadcrumb-parent', 'Trang chủ')
-@section('breadcrumb-current', 'Quản lý bãi đỗ xe')
+@section('page_title', 'Quản lý bãi đỗ xe')
+@section('breadcrumb', 'Quản lý bãi đỗ xe')
 
-@push('styles')
+@section('additional_css')
 <style>
     .parking-spot {
         width: 60px;
@@ -99,7 +99,7 @@
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
     }
 </style>
-@endpush
+@endsection
 
 @section('content')
 <div class="space-y-6">
@@ -405,7 +405,7 @@
 </div>
 @endsection
 
-@push('scripts')
+@section('additional_js')
 <script>
 // Parking management functions
 function refreshParkingLayout() {
@@ -509,7 +509,6 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 </script>
-@endpush
         </div>
     </div>
         </div>
@@ -706,4 +705,4 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         });
     </script>
-@endpush
+@endsection

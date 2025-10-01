@@ -1,9 +1,9 @@
-@extends('admin.build.master')
+
+@extends('admin.layouts')
 
 @section('title', 'Doanh thu - Paspark Admin')
-@section('page-title', 'Báo cáo doanh thu')
-@section('breadcrumb-parent', 'Trang chủ')
-@section('breadcrumb-current', 'Doanh thu')
+@section('page_title', 'Báo cáo doanh thu')
+@section('breadcrumb', 'Doanh thu')
 
 @section('content')
     <!-- Revenue Stats -->

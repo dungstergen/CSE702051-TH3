@@ -46,74 +46,41 @@ Route::get('/payment', function () {
     return view('user.payment');
 });
 
-//Admin
+//Admin Routes
 Route::prefix('admin')->name('admin.')->group(function () {
+    // Redirect root admin to dashboard
     Route::get('/', function () {
         return redirect()->route('admin.dashboard');
     });
 
-    Route::get('/dashboard', function () {
-        return view('admin.build.dashboard');
-    })->name('dashboard');
+    // Main admin pages
+    Route::get('/dashboard', [App\Http\Controllers\AdminController::class, 'dashboard'])->name('dashboard');
+    Route::get('/parking', [App\Http\Controllers\AdminController::class, 'parking'])->name('parking');
 
-    Route::get('/parking', function () {
-        return view('admin.build.parking');
-    })->name('parking');
+    // Customer management
+    Route::get('/customers', [App\Http\Controllers\AdminController::class, 'customers'])->name('customers');
+    Route::get('/customers/add', [App\Http\Controllers\AdminController::class, 'addCustomer'])->name('customers.add');
+    Route::get('/customers/vip', [App\Http\Controllers\AdminController::class, 'vipCustomer'])->name('customers.vip');
 
-    Route::get('/customers', function () {
-        return view('admin.build.customers');
-    })->name('customers');
+    // Reports and analytics
+    Route::get('/reports', [App\Http\Controllers\AdminController::class, 'reports'])->name('reports');
+    Route::get('/revenue', [App\Http\Controllers\AdminController::class, 'revenue'])->name('revenue');
 
-    Route::get('/reports', function () {
-        return view('admin.build.reports');
-    })->name('reports');
+    // System management
+    Route::get('/users', [App\Http\Controllers\AdminController::class, 'users'])->name('users');
+    Route::get('/settings', [App\Http\Controllers\AdminController::class, 'settings'])->name('settings');
 
-    Route::get('/revenue', function () {
-        return view('admin.build.revenue');
-    })->name('revenue');
-
-    Route::get('/users', function () {
-        return view('admin.build.users');
-    })->name('users');
-
-    Route::get('/settings', function () {
-        return view('admin.build.settings');
-    })->name('settings');
-
-    Route::get('/documentation', function () {
-        return view('admin.build.documentation');
-    })->name('documentation');
-
-    Route::get('/profile', function () {
-        return view('admin.build.profile');
-    })->name('profile');
-
-    Route::get('/tables', function () {
-        return view('admin.build.tables');
-    })->name('tables');
-
-    Route::get('/about', function () {
-        return view('admin.about');
-    })->name('about');
+    // Additional pages
+    Route::get('/profile', [App\Http\Controllers\AdminController::class, 'profile'])->name('profile');
+    Route::get('/tables', [App\Http\Controllers\AdminController::class, 'tables'])->name('tables');
+    Route::get('/about', [App\Http\Controllers\AdminController::class, 'about'])->name('about');
+    Route::get('/documentation', [App\Http\Controllers\AdminController::class, 'documentation'])->name('documentation');
 
     // Authentication routes
-    Route::get('/sign-in', function () {
-        return view('admin.build.sign-in');
-    })->name('sign-in');
+    Route::get('/sign-in', [App\Http\Controllers\AdminController::class, 'signIn'])->name('sign-in');
+    Route::get('/sign-up', [App\Http\Controllers\AdminController::class, 'signUp'])->name('sign-up');
 
-    Route::get('/sign-up', function () {
-        return view('admin.build.sign-up');
-    })->name('sign-up');
-
-    Route::post('/logout', function () {
-        // Logout logic here
-        session()->flush();
-        return redirect()->route('admin.sign-in')->with('success', 'Đăng xuất thành công!');
-    })->name('logout');
-
-    Route::get('/logout', function () {
-        // GET logout for direct access
-        session()->flush();
-        return redirect()->route('admin.sign-in')->with('success', 'Đăng xuất thành công!');
-    })->name('logout.get');
+    // Logout routes (both GET and POST)
+    Route::post('/logout', [App\Http\Controllers\AdminController::class, 'logout'])->name('logout');
+    Route::get('/logout', [App\Http\Controllers\AdminController::class, 'logout'])->name('logout.get');
 });

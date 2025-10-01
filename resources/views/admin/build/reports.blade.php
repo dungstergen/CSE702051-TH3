@@ -1,9 +1,59 @@
-@extends('admin.build.master')
+
+@extends('admin.layouts')
 
 @section('title', 'Báo cáo - Paspark Admin')
-@section('page-title', 'Báo cáo hệ thống')
-@section('breadcrumb-parent', 'Trang chủ')
-@section('breadcrumb-current', 'Báo cáo')
+@section('page_title', 'Báo cáo hệ thống')
+@section('breadcrumb', 'Báo cáo')
+
+@section('additional_css')
+<style>
+    .dashboard-cards {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    .card {
+        background: white;
+        border-radius: 10px;
+        padding: 20px;
+        box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        border: 0;
+    }
+    .card h3 {
+        font-size: 16px;
+        color: #666;
+        margin-bottom: 15px;
+        font-weight: 600;
+    }
+    .card .number {
+        font-size: 28px;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 8px;
+    }
+    .card .change {
+        font-size: 14px;
+        color: #28a745;
+    }
+    .btn {
+        padding: 12px 20px;
+        border: none;
+        border-radius: 8px;
+        font-weight: 600;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+    }
+    .btn-primary { background: #007bff; color: white; }
+    .btn-success { background: #28a745; color: white; }
+    .btn-warning { background: #ffc107; color: #333; }
+    .btn-info { background: #17a2b8; color: white; }
+    .btn:hover { transform: translateY(-2px); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
+</style>
+@endsection
 
 @section('content')
     <!-- Report Cards -->
