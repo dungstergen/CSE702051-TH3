@@ -1,4 +1,3 @@
-
 @extends('admin.layouts')
 
 @section('title', 'Doanh thu - Paspark Admin')
@@ -111,40 +110,55 @@
                         <td style="padding: 10px; border: 1px solid #dee2e6;">30B-987.65</td>
                         <td style="padding: 10px; border: 1px solid #dee2e6;">C5</td>
                         <td style="padding: 10px; border: 1px solid #dee2e6;">3h 45m</td>
-                        <td style="padding: 10px; border: 1px solid #dee2e6;"><span style="background: #6c757d; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">Thường</span></td>
-                        <td style="padding: 10px; border: 1px solid #dee2e6; text-align: right;"><strong>45,000đ</strong></td>
+                        <td style="padding: 10px; border: 1px solid #dee2e6;"><span
+                                style="background: #6c757d; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">Thường</span>
+                        </td>
+                        <td style="padding: 10px; border: 1px solid #dee2e6; text-align: right;"><strong>45,000đ</strong>
+                        </td>
                     </tr>
                     <tr>
                         <td style="padding: 10px; border: 1px solid #dee2e6;">14:18</td>
                         <td style="padding: 10px; border: 1px solid #dee2e6;">43D-321.09</td>
                         <td style="padding: 10px; border: 1px solid #dee2e6;">D2</td>
                         <td style="padding: 10px; border: 1px solid #dee2e6;">1h 20m</td>
-                        <td style="padding: 10px; border: 1px solid #dee2e6;"><span style="background: #6c757d; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">Thường</span></td>
-                        <td style="padding: 10px; border: 1px solid #dee2e6; text-align: right;"><strong>20,000đ</strong></td>
+                        <td style="padding: 10px; border: 1px solid #dee2e6;"><span
+                                style="background: #6c757d; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">Thường</span>
+                        </td>
+                        <td style="padding: 10px; border: 1px solid #dee2e6; text-align: right;"><strong>20,000đ</strong>
+                        </td>
                     </tr>
                     <tr>
                         <td style="padding: 10px; border: 1px solid #dee2e6;">14:02</td>
                         <td style="padding: 10px; border: 1px solid #dee2e6;">92G-345.67</td>
                         <td style="padding: 10px; border: 1px solid #dee2e6;">B5</td>
                         <td style="padding: 10px; border: 1px solid #dee2e6;">2h 15m</td>
-                        <td style="padding: 10px; border: 1px solid #dee2e6;"><span style="background: #28a745; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">VIP</span></td>
-                        <td style="padding: 10px; border: 1px solid #dee2e6; text-align: right;"><strong>25,000đ</strong></td>
+                        <td style="padding: 10px; border: 1px solid #dee2e6;"><span
+                                style="background: #28a745; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">VIP</span>
+                        </td>
+                        <td style="padding: 10px; border: 1px solid #dee2e6; text-align: right;"><strong>25,000đ</strong>
+                        </td>
                     </tr>
                     <tr>
                         <td style="padding: 10px; border: 1px solid #dee2e6;">13:45</td>
                         <td style="padding: 10px; border: 1px solid #dee2e6;">67I-234.56</td>
                         <td style="padding: 10px; border: 1px solid #dee2e6;">A9</td>
                         <td style="padding: 10px; border: 1px solid #dee2e6;">4h 10m</td>
-                        <td style="padding: 10px; border: 1px solid #dee2e6;"><span style="background: #6c757d; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">Thường</span></td>
-                        <td style="padding: 10px; border: 1px solid #dee2e6; text-align: right;"><strong>60,000đ</strong></td>
+                        <td style="padding: 10px; border: 1px solid #dee2e6;"><span
+                                style="background: #6c757d; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">Thường</span>
+                        </td>
+                        <td style="padding: 10px; border: 1px solid #dee2e6; text-align: right;"><strong>60,000đ</strong>
+                        </td>
                     </tr>
                     <tr>
                         <td style="padding: 10px; border: 1px solid #dee2e6;">13:20</td>
                         <td style="padding: 10px; border: 1px solid #dee2e6;">78K-567.89</td>
                         <td style="padding: 10px; border: 1px solid #dee2e6;">C2</td>
                         <td style="padding: 10px; border: 1px solid #dee2e6;">30 phút</td>
-                        <td style="padding: 10px; border: 1px solid #dee2e6;"><span style="background: #28a745; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">VIP</span></td>
-                        <td style="padding: 10px; border: 1px solid #dee2e6; text-align: right;"><strong>10,000đ</strong></td>
+                        <td style="padding: 10px; border: 1px solid #dee2e6;"><span
+                                style="background: #28a745; color: white; padding: 2px 6px; border-radius: 4px; font-size: 12px;">VIP</span>
+                        </td>
+                        <td style="padding: 10px; border: 1px solid #dee2e6; text-align: right;"><strong>10,000đ</strong>
+                        </td>
                     </tr>
                 </tbody>
             </table>
