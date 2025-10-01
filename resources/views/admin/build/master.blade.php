@@ -346,39 +346,6 @@
             @yield('content')
         </div>
 
-        <!-- Footer -->
-        <footer class="pt-8 pb-4">
-            <div class="w-full px-6 mx-auto">
-                <div class="bg-white rounded-2xl shadow-lg p-6">
-                    <div class="flex flex-wrap items-center justify-between">
-                        <div class="w-full max-w-full mb-4 lg:mb-0 lg:w-1/2">
-                            <div class="text-sm leading-normal text-gray-600">
-                                © {{ date('Y') }} <span class="font-semibold text-blue-600">Paspark</span> - Hệ thống quản lý bãi đỗ xe thông minh
-                            </div>
-                            <div class="text-xs text-gray-500 mt-1">
-                                Phiên bản 1.0.0 | Được phát triển với ❤️ bởi Paspark Team
-                            </div>
-                        </div>
-                        <div class="w-full max-w-full lg:w-1/2">
-                            <ul class="flex flex-wrap justify-center lg:justify-end space-x-6">
-                                <li>
-                                    <a href="{{ route('admin.dashboard') }}" class="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">Trang chủ</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('admin.documentation') }}" class="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">Tài liệu</a>
-                                </li>
-                                <li>
-                                    <a href="{{ route('admin.about') }}" class="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">Về chúng tôi</a>
-                                </li>
-                                <li>
-                                    <a href="#" class="text-sm font-medium text-gray-600 hover:text-blue-600 transition-colors">Hỗ trợ</a>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </footer>
     </main>
 
     <!-- Core Scripts -->
