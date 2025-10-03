@@ -14,12 +14,16 @@ class ParkingLot extends Model
         'address',
         'description',
         'capacity',
+        'total_spots',
+        'available_spots',
         'hourly_rate',
         'latitude',
         'longitude',
         'amenities',
+        'facilities',
         'operating_hours',
         'contact_info',
+        'status',
         'is_active'
     ];
 
@@ -27,7 +31,8 @@ class ParkingLot extends Model
         'latitude' => 'float',
         'longitude' => 'float',
         'hourly_rate' => 'decimal:2',
-        'is_active' => 'boolean'
+        'is_active' => 'boolean',
+        'facilities' => 'array'
     ];
 
     /**

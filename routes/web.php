@@ -32,10 +32,16 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     // Profile Management
     Route::get('/profile', [App\Http\Controllers\UserController::class, 'profile'])->name('profile');
     Route::put('/profile', [App\Http\Controllers\UserController::class, 'updateProfile'])->name('profile.update');
+    Route::put('/profile/password', [App\Http\Controllers\UserController::class, 'updatePassword'])->name('password.update');
+    Route::delete('/account', [App\Http\Controllers\UserController::class, 'deleteAccount'])->name('account.delete');
 
     // Booking System
-    Route::get('/booking', [App\Http\Controllers\UserController::class, 'booking'])->name('booking');
-    Route::get('/history', [App\Http\Controllers\UserController::class, 'history'])->name('history');
+    Route::get('/booking', [App\Http\Controllers\BookingController::class, 'index'])->name('booking');
+    Route::post('/booking', [App\Http\Controllers\BookingController::class, 'store'])->name('booking.store');
+    Route::get('/booking/{booking}', [App\Http\Controllers\BookingController::class, 'show'])->name('booking.show');
+    Route::patch('/booking/{booking}/cancel', [App\Http\Controllers\BookingController::class, 'cancel'])->name('booking.cancel');
+    Route::get('/history', [App\Http\Controllers\BookingController::class, 'history'])->name('history');
+    Route::get('/api/parking-lot/{id}', [App\Http\Controllers\BookingController::class, 'getParkingLotDetails'])->name('parking-lot.details');
 
     // Pricing & Services
     Route::get('/pricing', [App\Http\Controllers\UserController::class, 'pricing'])->name('pricing');
@@ -50,9 +56,20 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
         return view('user.why');
     })->name('why');
 
-    Route::get('/payment', function () {
-        return view('user.payment');
-    })->name('payment');
+    // Payment System
+    Route::get('/payment', [App\Http\Controllers\PaymentController::class, 'show'])->name('payment');
+    Route::post('/payment/process', [App\Http\Controllers\PaymentController::class, 'process'])->name('payment.process');
+    Route::get('/payment/success/{payment}', [App\Http\Controllers\PaymentController::class, 'success'])->name('payment.success');
+    Route::get('/payment/pending/{payment}', [App\Http\Controllers\PaymentController::class, 'pending'])->name('payment.pending');
+    Route::get('/payment/cash/{payment}', [App\Http\Controllers\PaymentController::class, 'cash'])->name('payment.cash');
+    Route::get('/payment/history', [App\Http\Controllers\PaymentController::class, 'history'])->name('payment.history');
+    Route::patch('/payment/{payment}/cancel', [App\Http\Controllers\PaymentController::class, 'cancel'])->name('payment.cancel');
+
+    // Service Packages
+    Route::get('/service-packages', [App\Http\Controllers\ServicePackageController::class, 'index'])->name('service-packages');
+    Route::get('/service-packages/{id}', [App\Http\Controllers\ServicePackageController::class, 'show'])->name('service-packages.show');
+    Route::get('/service-packages/compare', [App\Http\Controllers\ServicePackageController::class, 'compare'])->name('service-packages.compare');
+    Route::get('/api/service-packages', [App\Http\Controllers\ServicePackageController::class, 'getPackages'])->name('service-packages.api');
 });
 
 Route::get('/dashboard', function () {

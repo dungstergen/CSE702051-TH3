@@ -11,6 +11,7 @@ class Payment extends Model
 
     protected $fillable = [
         'booking_id',
+        'user_id',
         'amount',
         'payment_method',
         'payment_status',
@@ -34,6 +35,14 @@ class Payment extends Model
     public function booking()
     {
         return $this->belongsTo(Booking::class);
+    }
+
+    /**
+     * Get the user that owns the payment
+     */
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 
     /**
