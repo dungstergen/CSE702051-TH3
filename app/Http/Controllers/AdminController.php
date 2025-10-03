@@ -11,7 +11,42 @@ class AdminController extends Controller
      */
     public function dashboard()
     {
-        return view('admin.build.dashboard');
+        // Statistics for dashboard
+        $totalUsers = \App\Models\User::count();
+        $totalParkingLots = \App\Models\ParkingLot::count();
+        $totalBookings = \App\Models\Booking::count();
+        $totalRevenue = \App\Models\Payment::where('payment_status', 'completed')->sum('amount');
+
+        // Recent bookings with proper data handling
+        $recentBookings = \App\Models\Booking::with(['user', 'parkingLot'])
+                                ->orderBy('created_at', 'desc')
+                                ->limit(10)
+                                ->get() ?? collect();
+
+        // Service packages and testimonials stats for new admin features
+        $servicePackageStats = [
+            'total' => 3,  // In real app, get from ServicePackage model
+            'active' => 3,
+            'featured' => 1,
+        ];
+
+        $testimonialStats = [
+            'total' => 5,  // In real app, get from Testimonial model
+            'published' => 3,
+            'pending' => 1,
+            'featured' => 2,
+            'average_rating' => 4.6,
+        ];
+
+        return view('admin.dashboard', compact(
+            'totalUsers',
+            'totalParkingLots',
+            'totalBookings',
+            'totalRevenue',
+            'recentBookings',
+            'servicePackageStats',
+            'testimonialStats'
+        ));
     }
 
     /**
