@@ -21,6 +21,9 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
+        'phone',
+        'is_active',
+        'email_verified_at'
     ];
 
     /**
@@ -43,6 +46,63 @@ class User extends Authenticatable
         return [
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
+            'is_active' => 'boolean'
         ];
+    }
+
+    /**
+     * Get bookings for this user
+     */
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
+
+    /**
+     * Get payments for this user through bookings
+     */
+    public function payments()
+    {
+        return $this->hasManyThrough(Payment::class, Booking::class);
+    }
+
+    /**
+     * Get reviews for this user
+     */
+    public function reviews()
+    {
+        return $this->hasMany(Review::class);
+    }
+
+    /**
+     * Get active bookings
+     */
+    public function activeBookings()
+    {
+        return $this->bookings()->active();
+    }
+
+    /**
+     * Check if user is active
+     */
+    public function isActive()
+    {
+        return $this->is_active;
+    }
+
+    /**
+     * Scope for active users
+     */
+    public function scopeActive($query)
+    {
+        return $query->where('is_active', true);
+    }
+
+    /**
+     * Scope for inactive users
+     */
+    public function scopeInactive($query)
+    {
+        return $query->where('is_active', false);
     }
 }
