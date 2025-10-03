@@ -1,34 +1,59 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\AuthController;
 
+
+// Redirect trang chủ đến login
 Route::get('/', function () {
-    return view('user.index');
+    if (Auth::check()) {
+        $user = Auth::user();
+        if (in_array($user->role, ['admin', 'super_admin'])) {
+            return redirect()->route('admin.dashboard');
+        }
+        return redirect()->route('user.dashboard');
+    }
+    return redirect()->route('login');
 });
 
-Route::get('/about', function () {
-    return view('user.about');
+// Login & Register routes
+Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
+Route::post('/login', [AuthController::class, 'login'])->name('login.post');
+Route::get('/register', [AuthController::class, 'showRegister'])->name('register');
+Route::post('/register', [AuthController::class, 'register'])->name('register.post');
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
+
+
+Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
+    // Dashboard
+    Route::get('/dashboard', [App\Http\Controllers\UserController::class, 'dashboard'])->name('dashboard');
+
+    // Profile Management
+    Route::get('/profile', [App\Http\Controllers\UserController::class, 'profile'])->name('profile');
+    Route::put('/profile', [App\Http\Controllers\UserController::class, 'updateProfile'])->name('profile.update');
+
+    // Booking System
+    Route::get('/booking', [App\Http\Controllers\UserController::class, 'booking'])->name('booking');
+    Route::get('/history', [App\Http\Controllers\UserController::class, 'history'])->name('history');
+
+    // Pricing & Services
+    Route::get('/pricing', [App\Http\Controllers\UserController::class, 'pricing'])->name('pricing');
+    Route::get('/testimonial', [App\Http\Controllers\UserController::class, 'testimonials'])->name('testimonial');
+
+    // Static pages
+    Route::get('/about', function () {
+        return view('user.about');
+    })->name('about');
+
+    Route::get('/why', function () {
+        return view('user.why');
+    })->name('why');
+
+    Route::get('/payment', function () {
+        return view('user.payment');
+    })->name('payment');
 });
-
-Route::get('/pricing', function () {
-    return view('user.pricing');
-});
-
-Route::get('/why', function () {
-    return view('user.why');
-});
-
-Route::get('/testimonial', function () {
-    return view('user.testimonial');
-});
-
-Route::get('/login', function () {
-    return view('user.login');
-})->name('login');
-
-Route::get('/register', function () {
-    return view('user.register');
-})->name('register');
 
 Route::get('/dashboard', function () {
     return view('user.dashboard');
@@ -46,8 +71,8 @@ Route::get('/payment', function () {
     return view('user.payment');
 });
 
-//Admin Routes
-Route::prefix('admin')->name('admin.')->group(function () {
+
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
     // Redirect root admin to dashboard
     Route::get('/', function () {
         return redirect()->route('admin.dashboard');
@@ -93,10 +118,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::get('/reports/usage', [App\Http\Controllers\AdminReportController::class, 'usage'])->name('reports.usage');
     Route::get('/reports/export/{type}', [App\Http\Controllers\AdminReportController::class, 'export'])->name('reports.export');
 
-    // Profile & Authentication
+    // Profile Management
     Route::get('/profile', [App\Http\Controllers\AdminController::class, 'profile'])->name('profile');
     Route::put('/profile', [App\Http\Controllers\AdminController::class, 'updateProfile'])->name('profile.update');
-    Route::get('/login', [App\Http\Controllers\AdminController::class, 'showLogin'])->name('login');
-    Route::post('/login', [App\Http\Controllers\AdminController::class, 'login'])->name('login.post');
-    Route::post('/logout', [App\Http\Controllers\AdminController::class, 'logout'])->name('logout');
 });
