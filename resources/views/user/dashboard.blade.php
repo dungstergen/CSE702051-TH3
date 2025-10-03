@@ -78,14 +78,31 @@
                                 <a class="nav-link" href="{{ url('/booking') }}">Đặt chỗ</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url('/history') }}">Lịch sử</a>
+                                <a class="nav-link" href="{{ route('user.history') }}">Lịch sử</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('user.pricing') }}">Gói dịch vụ</a>
                             </li>
                         </ul>
-                        <form class="form-inline">
-                            <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit">
-                                <i class="fa fa-search" aria-hidden="true"></i>
-                            </button>
-                        </form>
+                        <div class="navbar-nav ml-auto">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-user"></i> {{ Auth::user()->name }}
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ route('user.profile') }}">
+                                        <i class="fa fa-user-circle mr-2"></i>Thông tin cá nhân
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item">
+                                            <i class="fa fa-sign-out mr-2"></i>Đăng xuất
+                                        </button>
+                                    </form>
+                                </div>
+                            </li>
+                        </div>
                     </div>
                 </nav>
             </div>
@@ -111,7 +128,7 @@
                     <div class="welcome_card">
                         <div class="row align-items-center">
                             <div class="col-md-8">
-                                <h3>Xin chào, <span class="user_name">Nguyễn Văn A</span>!</h3>
+                                <h3>Xin chào, <span class="user_name">{{ $user->name }}</span>!</h3>
                                 <p>Chúc mừng bạn đã quay trở lại với Paspark. Hãy quản lý các hoạt động đỗ xe của bạn tại đây.</p>
                             </div>
                             <div class="col-md-4 text-center">
@@ -132,7 +149,7 @@
                             <i class="fa fa-car"></i>
                         </div>
                         <div class="stats_content">
-                            <h4>15</h4>
+                            <h4>{{ $userStats['total_bookings'] }}</h4>
                             <p>Lần đỗ xe</p>
                         </div>
                     </div>
@@ -143,7 +160,7 @@
                             <i class="fa fa-clock-o"></i>
                         </div>
                         <div class="stats_content">
-                            <h4>48</h4>
+                            <h4>{{ number_format($userStats['total_hours'], 1) }}</h4>
                             <p>Giờ đỗ xe</p>
                         </div>
                     </div>
@@ -154,7 +171,7 @@
                             <i class="fa fa-money"></i>
                         </div>
                         <div class="stats_content">
-                            <h4>1,250,000</h4>
+                            <h4>{{ number_format($userStats['total_spent']) }}</h4>
                             <p>Tổng chi phí (VNĐ)</p>
                         </div>
                     </div>
@@ -162,11 +179,11 @@
                 <div class="col-lg-3 col-md-6">
                     <div class="stats_card">
                         <div class="stats_icon">
-                            <i class="fa fa-star"></i>
+                            <i class="fa fa-calendar-check-o"></i>
                         </div>
                         <div class="stats_content">
-                            <h4>4.8</h4>
-                            <p>Điểm đánh giá</p>
+                            <h4>{{ $userStats['active_bookings'] }}</h4>
+                            <p>Đang hoạt động</p>
                         </div>
                     </div>
                 </div>

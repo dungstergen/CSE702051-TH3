@@ -206,7 +206,14 @@
                                 </div>
                                 <ul class="dropdown-menu dropdown-menu-end">
                                     <li><a class="dropdown-item" href="{{ route('admin.profile') }}"><i class="fas fa-user-circle me-2"></i>Thông tin tài khoản</a></li>
-                                    <li><a class="dropdown-item" href="{{ route('admin.login') }}"><i class="fas fa-sign-out-alt me-2"></i>Đăng xuất</a></li>
+                                    <li>
+                                        <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="dropdown-item border-0 bg-transparent">
+                                                <i class="fas fa-sign-out-alt me-2"></i>Đăng xuất
+                                            </button>
+                                        </form>
+                                    </li>
                                 </ul>
                             </div>
                         </li>

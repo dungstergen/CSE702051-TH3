@@ -37,7 +37,7 @@
     <!-- responsive style -->
     <link href="{{ asset('user/css/responsive.css') }}" rel="stylesheet" />
     <!-- login page style -->
-    <link href="{{ asset('user/css/register.css') }}" rel="stylesheet" />
+    <link href="{{ asset('user/css/login.css') }}" rel="stylesheet" />
     <!-- loading screen style -->
     <link href="{{ asset('user/css/loading.css') }}" rel="stylesheet" />
 
@@ -85,7 +85,7 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url('/testimonial') }}">Đánh giá khách hàng</a>
                             </li>
-                            <li class="nav-item active">
+                             <li class="nav-item active">
                                 <a class="nav-link" href="{{ url('/login') }}">Đăng nhập <span
                                         class="sr-only">(current)</span> </a>
                             </li>
@@ -102,40 +102,38 @@
         <!-- end header section -->
     </div>
 
-    <!-- register section -->
+    <!-- about login -->
 
     <section class="login_section">
         <div class="container">
             <div class="login_container">
                 <div class="row no-gutters">
                     <div class="col-lg-6">
-                        <div class="login_right">
-                            <h3 class="form_title">Đăng Ký Tài Khoản</h3>
-                            <form action="/register" method="POST">
+                        <div class="login_left animate__animated animate__fadeInLeft">
+                            <div>
+                                <h2 class="login_title">Chào Mừng Trở Lại!</h2>
+                                <p class="login_subtitle">
+                                    Đăng nhập để quản lý chỗ đỗ xe của bạn và trải nghiệm dịch vụ bãi đỗ xe hiện đại,
+                                    an toàn và tiện lợi nhất.
+                                </p>
+                                <div class="mt-4">
+                                    <i class="fa fa-car fa-3x mb-3"></i>
+                                    <p>Hệ thống quản lý bãi đỗ xe thông minh</p>
+                                </div>
+                                <a href="{{ url('/register') }}" class="register_link">Tạo Tài Khoản Mới</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-lg-6">
+                        <div class="login_right animate__animated animate__fadeInRight">
+                            <h3 class="form_title">Đăng Nhập</h3>
+                            <form action="{{ route('login.post') }}" method="POST">
                                 @csrf
                                 <div class="form-group">
-                                    <input type="text" class="form-control @error('name') is-invalid @enderror"
-                                        name="name" value="{{ old('name') }}" placeholder="Họ và tên"
-                                        required>
-                                    @error('name')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <input type="email" class="form-control @error('email') is-invalid @enderror"
-                                        name="email" value="{{ old('email') }}" placeholder="Địa chỉ email"
+                                    <input type="text" class="form-control @error('email') is-invalid @enderror"
+                                        name="email" value="{{ old('email') }}" placeholder="Email hoặc Tên đăng nhập"
                                         required>
                                     @error('email')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <input type="tel" class="form-control @error('phone') is-invalid @enderror"
-                                        name="phone" value="{{ old('phone') }}" placeholder="Số điện thoại"
-                                        required>
-                                    @error('phone')
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
@@ -148,43 +146,28 @@
                                     @enderror
                                 </div>
 
-                                <div class="form-group">
-                                    <input type="password" class="form-control @error('password_confirmation') is-invalid @enderror"
-                                        name="password_confirmation" placeholder="Xác nhận mật khẩu" required>
-                                    @error('password_confirmation')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
+                                <div class="checkbox_container">
+                                    <input type="checkbox" id="remember" name="remember" {{ old('remember') ? 'checked' : '' }}>
+                                    <label for="remember">Ghi nhớ đăng nhập</label>
                                 </div>
 
                                 <button type="submit" class="btn_login">
-                                    <i class="fa fa-user-plus mr-2"></i>
-                                    Tạo Tài Khoản
+                                    <i class="fa fa-sign-in mr-2"></i>
+                                    Đăng Nhập
                                 </button>
 
-                                <div class="text-center mt-4">
-                                    <p class="text-muted">
-                                        Đã có tài khoản?
-                                        <a href="{{ url('/login') }}" style="color: #ff6f3c; font-weight: 600;">
-                                            Đăng nhập ngay
-                                        </a>
-                                    </p>
-                                </div>
+                                <a href="#" class="forgot_password">
+                                    Quên mật khẩu?
+                                </a>
                             </form>
-                        </div>
-                    </div>
-                    <div class="col-lg-6">
-                        <div class="login_left">
-                            <div>
-                                <h2 class="login_title">Tham Gia Cùng Chúng Tôi!</h2>
-                                <p class="login_subtitle">
-                                    Tạo tài khoản để trải nghiệm dịch vụ bãi đỗ xe hiện đại, an toàn và tiện lợi nhất.
-                                    Quản lý chỗ đỗ xe dễ dàng chỉ với vài thao tác đơn giản.
+
+                            <div class="text-center mt-4">
+                                <p class="text-muted">
+                                    Chưa có tài khoản?
+                                    <a href="{{ route('register') }}" style="color: #ff6f3c; font-weight: 600;">
+                                        Đăng ký ngay
+                                    </a>
                                 </p>
-                                <div class="mt-4">
-                                    <i class="fa fa-users fa-3x mb-3"></i>
-                                    <p>Hệ thống quản lý bãi đỗ xe thông minh</p>
-                                </div>
-                                <a href="{{ url('/login') }}" class="register_link">Đăng nhập</a>
                             </div>
                         </div>
                     </div>
@@ -199,7 +182,7 @@
     <script src="{{ asset('user/js/bootstrap.js') }}"></script>
 
     <script>
-        // Add some interactive effects for register page
+        // Add some interactive effects
         $(document).ready(function () {
             // Focus effects with smooth transitions
             $('.form-control').on('focus', function () {
@@ -226,7 +209,7 @@
 
                 // Add loading state
                 const originalText = $btn.html();
-                $btn.html('<i class="fa fa-spinner fa-spin mr-2"></i>Đang tạo tài khoản...');
+                $btn.html('<i class="fa fa-spinner fa-spin mr-2"></i>Đang xử lý...');
 
                 // Remove animation and restore text after delay
                 setTimeout(() => {
@@ -250,11 +233,11 @@
                 }
             );
 
-            // Add entrance animations - từ trong ra ngoài
-            $('.login_left').addClass('animate__animated animate__zoomIn');
-            $('.login_right').addClass('animate__animated animate__zoomIn');
+            // Add entrance animations
+            $('.login_left').addClass('animate__animated animate__fadeInLeft');
+            $('.login_right').addClass('animate__animated animate__fadeInRight');
 
-            // Set animation delays for staggered effect
+             // Set animation delays for staggered effect
             $('.login_right').css('animation-delay', '0.2s');
             $('.login_left').css('animation-delay', '0.4s');
 
@@ -394,12 +377,10 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/OwlCarousel2/2.3.4/owl.carousel.min.js">
     </script>
     <!-- custom js -->
-        <!-- custom js -->
     <script src="{{ asset('user/js/custom.js') }}"></script>
     <!-- loading screen js -->
     <script src="{{ asset('user/js/loading.js') }}"></script>
 
-    <script>
 </body>
 
 </html>
