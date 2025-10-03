@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Models\User;
 use App\Models\Booking;
 use App\Models\Payment;
@@ -140,6 +141,66 @@ class UserController extends Controller
         }
 
         return redirect()->route('user.profile')->with('success', 'Cập nhật thông tin thành công!');
+    }
+
+    /**
+     * Update user password
+     */
+    public function updatePassword(Request $request)
+    {
+        $request->validate([
+            'current_password' => 'required',
+            'new_password' => 'required|string|min:8|confirmed',
+        ], [
+            'current_password.required' => 'Vui lòng nhập mật khẩu hiện tại',
+            'new_password.required' => 'Vui lòng nhập mật khẩu mới',
+            'new_password.min' => 'Mật khẩu mới phải có ít nhất 8 ký tự',
+            'new_password.confirmed' => 'Xác nhận mật khẩu không khớp',
+        ]);
+
+        $user = Auth::user();
+
+        // Check if current password is correct
+        if (!Hash::check($request->current_password, $user->password)) {
+            return back()->withErrors(['current_password' => 'Mật khẩu hiện tại không đúng']);
+        }
+
+        // Update password
+        $user->password = Hash::make($request->new_password);
+        $user->save();
+
+        return redirect()->route('user.profile')->with('success', 'Đổi mật khẩu thành công!');
+    }
+
+    /**
+     * Delete user account
+     */
+    public function deleteAccount()
+    {
+        $user = Auth::user();
+
+        // Check if user has pending bookings
+        $pendingBookings = Booking::where('user_id', $user->id)
+            ->whereIn('status', ['pending', 'confirmed'])
+            ->where('start_time', '>', now())
+            ->count();
+
+        if ($pendingBookings > 0) {
+            return back()->withErrors(['error' => 'Không thể xóa tài khoản khi còn đặt chỗ đang chờ xử lý']);
+        }
+
+        // Cancel all unpaid bookings
+        Booking::where('user_id', $user->id)
+            ->where('payment_status', '!=', 'completed')
+            ->update(['status' => 'cancelled', 'payment_status' => 'cancelled']);
+
+        // Log out user
+        Auth::logout();
+
+        // Delete user account
+        $user->delete();
+
+        return redirect()->route('login')->with('success', 'Tài khoản đã được xóa thành công');
     }
 
     /**
