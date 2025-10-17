@@ -40,7 +40,9 @@ class ServicePackageController extends Controller
         // Get user's booking history with this package (if any)
         $userBookings = [];
         if (Auth::check()) {
-            $userBookings = Auth::user()->bookings()
+            /** @var \App\Models\User $user */
+            $user = Auth::user();
+            $userBookings = $user->bookings()
                 ->where('service_package_id', $servicePackage->id)
                 ->with('parkingLot')
                 ->orderBy('created_at', 'desc')

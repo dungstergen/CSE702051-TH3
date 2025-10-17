@@ -38,16 +38,12 @@
     <link href="{{ asset('user/css/responsive.css') }}" rel="stylesheet" />
     <!-- loading screen style -->
     <link href="{{ asset('user/css/loading.css') }}" rel="stylesheet" />
-    <!-- history page style -->
-    <link href="{{ asset('user/css/history.css') }}" rel="stylesheet" />
-    <!-- history style -->
-    <link href="{{ asset('user/css/history.css') }}" rel="stylesheet" />
+    <!-- dashboard style -->
+    <link href="{{ asset('user/css/dashboard.css') }}" rel="stylesheet" />
 
 </head>
 
 <body class="sub_page">
-
-<body>
 
     <div class="hero_area">
         <div class="bg-box">
@@ -81,14 +77,32 @@
                                 <a class="nav-link" href="{{ url('/booking') }}">Đặt chỗ</a>
                             </li>
                             <li class="nav-item active">
-                                <a class="nav-link" href="{{ url('/history') }}">Lịch sử <span class="sr-only">(current)</span></a>
+                                <a class="nav-link" href="{{ url('/dashboard') }}">Lịch sử<span
+                                        class="sr-only">(current)</span> </a>
                             </li>
+                            {{-- <li class="nav-item">
+                                <a class="nav-link" href="{{ route('user.pricing') }}">Gói dịch vụ</a>
+                            </li> --}}
                         </ul>
-                        <form class="form-inline">
-                            <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit">
-                                <i class="fa fa-search" aria-hidden="true"></i>
-                            </button>
-                        </form>
+                        <div class="navbar-nav ml-auto">
+                            <li class="nav-item dropdown">
+                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-user"></i> {{ Auth::user()->name }}
+                                </a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                    <a class="dropdown-item" href="{{ route('user.profile') }}">
+                                        <i class="fa fa-user-circle mr-2"></i>Thông tin cá nhân
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                                        @csrf
+                                        <button type="submit" class="dropdown-item">
+                                            <i class="fa fa-sign-out mr-2"></i>Đăng xuất
+                                        </button>
+                                    </form>
+                                </div>
+                            </li>
+                        </div>
                     </div>
                 </nav>
             </div>
@@ -182,7 +196,7 @@
                     </div>
 
                     <!-- Quick Stats -->
-                   
+
                 </div>
 
                 <div class="col-lg-9">
@@ -286,7 +300,8 @@
                                         <span class="review_date">Đánh giá ngày 15/09/2025</span>
                                     </div>
                                     <div class="review_comment">
-                                        <p>"Bãi đỗ xe rất tiện lợi, gần trung tâm thương mại. Nhân viên thân thiện, giá cả hợp lý. Sẽ quay lại sử dụng dịch vụ."</p>
+                                        <p>"Bãi đỗ xe rất tiện lợi, gần trung tâm thương mại. Nhân viên thân thiện, giá
+                                            cả hợp lý. Sẽ quay lại sử dụng dịch vụ."</p>
                                     </div>
                                     <div class="review_aspects">
                                         <div class="aspect_item">
@@ -351,7 +366,9 @@
                                         <!-- Comment -->
                                         <div class="form_group">
                                             <label>Nhận xét của bạn:</label>
-                                            <textarea class="review_textarea" placeholder="Chia sẻ trải nghiệm của bạn về bãi đỗ xe này..." rows="4">Bãi đỗ xe rất tiện lợi, gần trung tâm thương mại. Nhân viên thân thiện, giá cả hợp lý. Sẽ quay lại sử dụng dịch vụ.</textarea>
+                                            <textarea class="review_textarea"
+                                                placeholder="Chia sẻ trải nghiệm của bạn về bãi đỗ xe này..."
+                                                rows="4">Bãi đỗ xe rất tiện lợi, gần trung tâm thương mại. Nhân viên thân thiện, giá cả hợp lý. Sẽ quay lại sử dụng dịch vụ.</textarea>
                                         </div>
 
                                         <!-- Aspect Ratings -->
@@ -360,7 +377,8 @@
                                             <div class="aspect_ratings">
                                                 <div class="aspect_rating_item">
                                                     <span class="aspect_name">Vị trí:</span>
-                                                    <div class="interactive_stars aspect_rating" data-aspect="location" data-rating="5">
+                                                    <div class="interactive_stars aspect_rating" data-aspect="location"
+                                                        data-rating="5">
                                                         <i class="fa fa-star-o" data-star="1"></i>
                                                         <i class="fa fa-star-o" data-star="2"></i>
                                                         <i class="fa fa-star-o" data-star="3"></i>
@@ -370,7 +388,8 @@
                                                 </div>
                                                 <div class="aspect_rating_item">
                                                     <span class="aspect_name">Dịch vụ:</span>
-                                                    <div class="interactive_stars aspect_rating" data-aspect="service" data-rating="5">
+                                                    <div class="interactive_stars aspect_rating" data-aspect="service"
+                                                        data-rating="5">
                                                         <i class="fa fa-star-o" data-star="1"></i>
                                                         <i class="fa fa-star-o" data-star="2"></i>
                                                         <i class="fa fa-star-o" data-star="3"></i>
@@ -380,7 +399,8 @@
                                                 </div>
                                                 <div class="aspect_rating_item">
                                                     <span class="aspect_name">Giá cả:</span>
-                                                    <div class="interactive_stars aspect_rating" data-aspect="price" data-rating="4">
+                                                    <div class="interactive_stars aspect_rating" data-aspect="price"
+                                                        data-rating="4">
                                                         <i class="fa fa-star-o" data-star="1"></i>
                                                         <i class="fa fa-star-o" data-star="2"></i>
                                                         <i class="fa fa-star-o" data-star="3"></i>
@@ -390,7 +410,8 @@
                                                 </div>
                                                 <div class="aspect_rating_item">
                                                     <span class="aspect_name">An toàn:</span>
-                                                    <div class="interactive_stars aspect_rating" data-aspect="safety" data-rating="5">
+                                                    <div class="interactive_stars aspect_rating" data-aspect="safety"
+                                                        data-rating="5">
                                                         <i class="fa fa-star-o" data-star="1"></i>
                                                         <i class="fa fa-star-o" data-star="2"></i>
                                                         <i class="fa fa-star-o" data-star="3"></i>
@@ -497,7 +518,8 @@
                                         <span class="review_date">Đánh giá ngày 12/09/2025</span>
                                     </div>
                                     <div class="review_comment">
-                                        <p>"Bãi đỗ xe khá rộng rãi, dễ dàng di chuyển. Tuy nhiên giá hơi cao so với các bãi khác trong khu vực."</p>
+                                        <p>"Bãi đỗ xe khá rộng rãi, dễ dàng di chuyển. Tuy nhiên giá hơi cao so với các
+                                            bãi khác trong khu vực."</p>
                                     </div>
                                     <div class="review_aspects">
                                         <div class="aspect_item">
@@ -770,7 +792,9 @@
                                         <!-- Comment -->
                                         <div class="form_group">
                                             <label>Nhận xét của bạn:</label>
-                                            <textarea class="review_textarea" placeholder="Chia sẻ trải nghiệm của bạn về bãi đỗ xe này..." rows="4"></textarea>
+                                            <textarea class="review_textarea"
+                                                placeholder="Chia sẻ trải nghiệm của bạn về bãi đỗ xe này..."
+                                                rows="4"></textarea>
                                         </div>
 
                                         <!-- Aspect Ratings -->
@@ -779,7 +803,8 @@
                                             <div class="aspect_ratings">
                                                 <div class="aspect_rating_item">
                                                     <span class="aspect_name">Vị trí:</span>
-                                                    <div class="interactive_stars aspect_rating" data-aspect="location" data-rating="0">
+                                                    <div class="interactive_stars aspect_rating" data-aspect="location"
+                                                        data-rating="0">
                                                         <i class="fa fa-star-o" data-star="1"></i>
                                                         <i class="fa fa-star-o" data-star="2"></i>
                                                         <i class="fa fa-star-o" data-star="3"></i>
@@ -789,7 +814,8 @@
                                                 </div>
                                                 <div class="aspect_rating_item">
                                                     <span class="aspect_name">Dịch vụ:</span>
-                                                    <div class="interactive_stars aspect_rating" data-aspect="service" data-rating="0">
+                                                    <div class="interactive_stars aspect_rating" data-aspect="service"
+                                                        data-rating="0">
                                                         <i class="fa fa-star-o" data-star="1"></i>
                                                         <i class="fa fa-star-o" data-star="2"></i>
                                                         <i class="fa fa-star-o" data-star="3"></i>
@@ -799,7 +825,8 @@
                                                 </div>
                                                 <div class="aspect_rating_item">
                                                     <span class="aspect_name">Giá cả:</span>
-                                                    <div class="interactive_stars aspect_rating" data-aspect="price" data-rating="0">
+                                                    <div class="interactive_stars aspect_rating" data-aspect="price"
+                                                        data-rating="0">
                                                         <i class="fa fa-star-o" data-star="1"></i>
                                                         <i class="fa fa-star-o" data-star="2"></i>
                                                         <i class="fa fa-star-o" data-star="3"></i>
@@ -809,7 +836,8 @@
                                                 </div>
                                                 <div class="aspect_rating_item">
                                                     <span class="aspect_name">An toàn:</span>
-                                                    <div class="interactive_stars aspect_rating" data-aspect="safety" data-rating="0">
+                                                    <div class="interactive_stars aspect_rating" data-aspect="safety"
+                                                        data-rating="0">
                                                         <i class="fa fa-star-o" data-star="1"></i>
                                                         <i class="fa fa-star-o" data-star="2"></i>
                                                         <i class="fa fa-star-o" data-star="3"></i>
@@ -875,7 +903,7 @@
                                 </li>
                             </ul>
                         </nav>
-                    
+
                     </div>
                 </div>
             </div>

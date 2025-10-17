@@ -66,24 +66,24 @@
                     <div class="collapse navbar-collapse" id="navbarSupportedContent">
                         <ul class="navbar-nav  ">
                             <li class="nav-item active">
-                                <a class="nav-link" href="{{ url('/') }}">Trang chủ <span
+                                <a class="nav-link" href="{{ route('home') }}">Trang chủ <span
                                         class="sr-only">(current)</span></a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url('/about') }}"> Giới thiệu</a>
+                                <a class="nav-link" href="{{ route('user.about') }}"> Giới thiệu</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url('/pricing') }}">Bảng giá</a>
+                                <a class="nav-link" href="{{ route('user.pricing') }}">Bảng giá</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url('/why') }}">Tại sao chọn chúng tôi</a>
+                                <a class="nav-link" href="{{ route('user.why') }}">Tại sao chọn chúng tôi</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ url('/testimonial') }}">Đánh giá khách hàng</a>
+                                <a class="nav-link" href="{{ route('user.testimonial') }}">Đánh giá khách hàng</a>
                             </li>
                         </ul>
                         <div class="user_options">
-                            <a href="{{ url('/login') }}" class="login_btn">
+                            <a href="{{ route('login') }}" class="login_btn">
                                 <i class="fa fa-user" aria-hidden="true"></i>
                                 <span>Đăng nhập</span>
                             </a>

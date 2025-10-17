@@ -59,6 +59,6 @@ class ServicePackage extends Model
     // Accessors
     public function getFormattedPriceAttribute()
     {
-        return number_format($this->price, 0, ',', '.') . ' VNĐ';
+        return number_format((float)$this->price, 0, ',', '.') . ' VNĐ';
     }
 }

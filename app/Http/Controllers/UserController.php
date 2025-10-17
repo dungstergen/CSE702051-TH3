@@ -158,6 +158,7 @@ class UserController extends Controller
             'new_password.confirmed' => 'Xác nhận mật khẩu không khớp',
         ]);
 
+        /** @var User $user */
         $user = Auth::user();
 
         // Check if current password is correct
@@ -166,8 +167,9 @@ class UserController extends Controller
         }
 
         // Update password
-        $user->password = Hash::make($request->new_password);
-        $user->save();
+        $user->update([
+            'password' => Hash::make($request->new_password)
+        ]);
 
         return redirect()->route('user.profile')->with('success', 'Đổi mật khẩu thành công!');
     }
@@ -177,6 +179,7 @@ class UserController extends Controller
      */
     public function deleteAccount()
     {
+        /** @var User $user */
         $user = Auth::user();
 
         // Check if user has pending bookings
@@ -194,11 +197,14 @@ class UserController extends Controller
             ->where('payment_status', '!=', 'completed')
             ->update(['status' => 'cancelled', 'payment_status' => 'cancelled']);
 
+        // Get user ID before deletion
+        $userId = $user->id;
+
         // Log out user
         Auth::logout();
 
         // Delete user account
-        $user->delete();
+        User::destroy($userId);
 
         return redirect()->route('login')->with('success', 'Tài khoản đã được xóa thành công');
     }
