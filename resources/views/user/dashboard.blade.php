@@ -80,9 +80,9 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('user.history') }}">Lịch sử</a>
                             </li>
-                            {{-- <li class="nav-item">
-                                <a class="nav-link" href="{{ route('user.pricing') }}">Gói dịch vụ</a>
-                            </li> --}}
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('user.reviews') }}">Đánh giá</a>
+                            </li>
                         </ul>
                         <div class="navbar-nav ml-auto">
                             <li class="nav-item dropdown">

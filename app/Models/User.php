@@ -79,6 +79,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Get vehicles for this user
+     */
+    public function vehicles()
+    {
+        return $this->hasMany(Vehicle::class);
+    }
+
+    /**
      * Get active bookings
      */
     public function activeBookings()

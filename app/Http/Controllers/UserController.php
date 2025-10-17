@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Booking;
 use App\Models\Payment;
 use App\Models\ParkingLot;
+use App\Models\Vehicle;
 use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
@@ -94,7 +95,10 @@ class UserController extends Controller
         $user->date_of_birth = $user->date_of_birth ?? null;
         $user->gender = $user->gender ?? '';
 
-        return view('user.profile', compact('user'));
+        // Load user's vehicles
+        $vehicles = $user->vehicles;
+
+        return view('user.profile', compact('user', 'vehicles'));
     }
 
     /**
@@ -302,5 +306,54 @@ class UserController extends Controller
                         ->get();
 
         return view('user.testimonial', compact('testimonials'));
+    }
+
+    /**
+     * Update user vehicles
+     */
+    public function updateVehicles(Request $request)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'vehicles' => 'nullable|array',
+            'vehicles.*.number' => 'required|string|max:20',
+            'vehicles.*.type' => 'required|in:car,motorbike,truck',
+            'vehicles.*.brand' => 'nullable|string|max:50',
+        ], [
+            'vehicles.*.number.required' => 'Vui lòng nhập biển số xe',
+            'vehicles.*.number.max' => 'Biển số xe không được quá 20 ký tự',
+            'vehicles.*.type.required' => 'Vui lòng chọn loại xe',
+            'vehicles.*.type.in' => 'Loại xe không hợp lệ',
+            'vehicles.*.brand.max' => 'Nhãn hiệu không được quá 50 ký tự',
+        ]);
+
+        try {
+            // Delete all existing vehicles for this user
+            $user->vehicles()->delete();
+
+            // Create new vehicles
+            if ($request->has('vehicles') && is_array($request->vehicles)) {
+                foreach ($request->vehicles as $vehicleData) {
+                    // Skip if license plate is empty
+                    if (empty($vehicleData['number'])) {
+                        continue;
+                    }
+
+                    $user->vehicles()->create([
+                        'number' => strtoupper(trim($vehicleData['number'])), // Convert to uppercase and trim
+                        'type' => $vehicleData['type'],
+                        'brand' => !empty($vehicleData['brand']) ? trim($vehicleData['brand']) : null,
+                    ]);
+                }
+            }
+
+            return redirect()->route('user.profile', ['tab' => 'vehicle'])
+                ->with('success', 'Lưu thông tin xe thành công!');
+
+        } catch (\Exception $e) {
+            return redirect()->route('user.profile', ['tab' => 'vehicle'])
+                ->with('error', 'Có lỗi xảy ra: ' . $e->getMessage());
+        }
     }
 }
