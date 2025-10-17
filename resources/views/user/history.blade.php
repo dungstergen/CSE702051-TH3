@@ -80,6 +80,9 @@
                                 <a class="nav-link" href="{{ url('/dashboard') }}">Lịch sử<span
                                         class="sr-only">(current)</span> </a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('user.reviews') }}">Đánh giá</a>
+                            </li>
                             {{-- <li class="nav-item">
                                 <a class="nav-link" href="{{ route('user.pricing') }}">Gói dịch vụ</a>
                             </li> --}}
@@ -110,809 +113,137 @@
         <!-- end header section -->
     </div>
 
-    <!-- History section -->
+    <!-- History Section -->
     <section class="history_section layout_padding">
         <div class="container">
             <div class="heading_container heading_center">
-                <h2>
-                    Lịch sử đỗ xe
-                </h2>
-                <p>
-                    Xem lại tất cả các lần đỗ xe và quản lý hoạt động của bạn
-                </p>
+                <h2>Lịch sử đặt chỗ</h2>
+                <p>Xem và quản lý các lần đỗ xe của bạn</p>
             </div>
 
-            <!-- Filter & Stats Section -->
-            <div class="row">
-                <div class="col-lg-3">
-                    <div class="filter_panel">
-                        <h4>Bộ lọc</h4>
-
-                        <!-- Date Range Filter -->
-                        <div class="filter_group">
-                            <label>Khoảng thời gian</label>
-                            <div class="date_range">
-                                <input type="date" id="fromDate" class="form-control">
-                                <span class="date_separator">đến</span>
-                                <input type="date" id="toDate" class="form-control">
-                            </div>
+            <!-- Statistics Cards -->
+            <div class="row stats_overview mb-4">
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="stat_card">
+                        <div class="stat_icon">
+                            <i class="fa fa-check-circle"></i>
                         </div>
-
-                        <!-- Status Filter -->
-                        <div class="filter_group">
-                            <label>Trạng thái</label>
-                            <div class="status_filter">
-                                <label class="filter_item">
-                                    <input type="checkbox" value="completed" checked>
-                                    <span class="checkmark"></span>
-                                    Hoàn thành
-                                </label>
-                                <label class="filter_item">
-                                    <input type="checkbox" value="cancelled" checked>
-                                    <span class="checkmark"></span>
-                                    Đã hủy
-                                </label>
-                                <label class="filter_item">
-                                    <input type="checkbox" value="ongoing" checked>
-                                    <span class="checkmark"></span>
-                                    Đang diễn ra
-                                </label>
-                            </div>
+                        <div class="stat_content">
+                            <h4 id="completedBookings">0</h4>
+                            <p>Đã hoàn thành</p>
                         </div>
-
-                        <!-- Price Range Filter -->
-                        <div class="filter_group">
-                            <label>Khoảng giá</label>
-                            <div class="price_range">
-                                <input type="range" id="priceFilter" min="0" max="200000" value="200000" step="10000">
-                                <div class="price_display">
-                                    <span>0</span>
-                                    <span id="maxPrice">200,000</span>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Location Filter -->
-                        <div class="filter_group">
-                            <label>Địa điểm</label>
-                            <select id="locationFilter" class="form-control">
-                                <option value="">Tất cả địa điểm</option>
-                                <option value="vincom">Vincom Center</option>
-                                <option value="bigc">Big C Thăng Long</option>
-                                <option value="lotte">Lotte Center</option>
-                                <option value="aeon">Aeon Mall</option>
-                            </select>
-                        </div>
-
-                        <button type="button" class="btn_filter" id="applyFilter">
-                            <i class="fa fa-filter"></i>
-                            Áp dụng bộ lọc
-                        </button>
-
-                        <button type="button" class="btn_reset" id="resetFilter">
-                            <i class="fa fa-refresh"></i>
-                            Đặt lại
-                        </button>
                     </div>
-
-                    <!-- Quick Stats -->
-
                 </div>
-
-                <div class="col-lg-9">
-                    <!-- Search & Sort -->
-                    <div class="search_sort_bar">
-                        <div class="search_box">
-                            <i class="fa fa-search"></i>
-                            <input type="text" id="searchHistory" placeholder="Tìm kiếm theo địa điểm, mã đặt chỗ...">
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="stat_card">
+                        <div class="stat_icon">
+                            <i class="fa fa-clock-o"></i>
                         </div>
-                        <div class="sort_box">
-                            <select id="sortHistory" class="form-control">
-                                <option value="date_desc">Ngày mới nhất</option>
-                                <option value="date_asc">Ngày cũ nhất</option>
-                                <option value="price_desc">Giá cao nhất</option>
-                                <option value="price_asc">Giá thấp nhất</option>
-                                <option value="duration_desc">Thời gian dài nhất</option>
-                                <option value="duration_asc">Thời gian ngắn nhất</option>
-                            </select>
-                        </div>
-                        <div class="view_toggle">
-                            <button type="button" class="view_btn active" data-view="list">
-                                <i class="fa fa-list"></i>
-                            </button>
-                            <button type="button" class="view_btn" data-view="grid">
-                                <i class="fa fa-th"></i>
-                            </button>
+                        <div class="stat_content">
+                            <h4 id="activeBookings">0</h4>
+                            <p>Đang hoạt động</p>
                         </div>
                     </div>
-
-                    <!-- History Results -->
-                    <div class="history_results" id="historyResults">
-                        <!-- History Item 1 -->
-                        <div class="history_item" data-status="completed" data-price="45000" data-date="2025-09-15">
-                            <div class="history_header">
-                                <div class="booking_info">
-                                    <h5>Bãi đỗ xe Vincom Center</h5>
-                                    <span class="booking_code">#BP12345678</span>
-                                </div>
-                                <div class="status_badge completed">
-                                    <i class="fa fa-check-circle"></i>
-                                    Hoàn thành
-                                </div>
-                            </div>
-                            <div class="history_content">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="detail_group">
-                                            <div class="detail_item">
-                                                <i class="fa fa-map-marker"></i>
-                                                <span>72 Lê Thánh Tôn, Quận 1, TP.HCM</span>
-                                            </div>
-                                            <div class="detail_item">
-                                                <i class="fa fa-calendar"></i>
-                                                <span>15/09/2025</span>
-                                            </div>
-                                            <div class="detail_item">
-                                                <i class="fa fa-clock-o"></i>
-                                                <span>14:30 - 17:30 (3 giờ)</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="detail_group">
-                                            <div class="detail_item">
-                                                <i class="fa fa-car"></i>
-                                                <span>Ô tô - 51B-123.45</span>
-                                            </div>
-                                            <div class="detail_item">
-                                                <i class="fa fa-money"></i>
-                                                <span>45,000 VNĐ</span>
-                                            </div>
-                                            <div class="detail_item">
-                                                <i class="fa fa-star"></i>
-                                                <span>Đã đánh giá: 5 sao</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Customer Review Section -->
-                            <div class="customer_review_section">
-                                <div class="review_header">
-                                    <h6><i class="fa fa-comment-o"></i> Đánh giá của bạn</h6>
-                                    <button class="btn_edit_review" data-booking-id="1">
-                                        <i class="fa fa-edit"></i> Chỉnh sửa đánh giá
-                                    </button>
-                                </div>
-
-                                <!-- Existing Review Display -->
-                                <div class="existing_review" id="existingReview1">
-                                    <div class="rating_display">
-                                        <div class="stars">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                        </div>
-                                        <span class="rating_text">5.0 - Xuất sắc</span>
-                                        <span class="review_date">Đánh giá ngày 15/09/2025</span>
-                                    </div>
-                                    <div class="review_comment">
-                                        <p>"Bãi đỗ xe rất tiện lợi, gần trung tâm thương mại. Nhân viên thân thiện, giá
-                                            cả hợp lý. Sẽ quay lại sử dụng dịch vụ."</p>
-                                    </div>
-                                    <div class="review_aspects">
-                                        <div class="aspect_item">
-                                            <span class="aspect_label">Vị trí:</span>
-                                            <div class="aspect_stars">
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                            </div>
-                                        </div>
-                                        <div class="aspect_item">
-                                            <span class="aspect_label">Dịch vụ:</span>
-                                            <div class="aspect_stars">
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                            </div>
-                                        </div>
-                                        <div class="aspect_item">
-                                            <span class="aspect_label">Giá cả:</span>
-                                            <div class="aspect_stars">
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star-o"></i>
-                                            </div>
-                                        </div>
-                                        <div class="aspect_item">
-                                            <span class="aspect_label">An toàn:</span>
-                                            <div class="aspect_stars">
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <!-- Interactive Review Form -->
-                                <div class="review_form" id="reviewForm1" style="display: none;">
-                                    <form class="review_form_content">
-                                        <!-- Overall Rating -->
-                                        <div class="form_group">
-                                            <label>Đánh giá tổng thể:</label>
-                                            <div class="interactive_stars overall_rating" data-rating="5">
-                                                <i class="fa fa-star-o" data-star="1"></i>
-                                                <i class="fa fa-star-o" data-star="2"></i>
-                                                <i class="fa fa-star-o" data-star="3"></i>
-                                                <i class="fa fa-star-o" data-star="4"></i>
-                                                <i class="fa fa-star-o" data-star="5"></i>
-                                            </div>
-                                            <span class="rating_label">Xuất sắc</span>
-                                        </div>
-
-                                        <!-- Comment -->
-                                        <div class="form_group">
-                                            <label>Nhận xét của bạn:</label>
-                                            <textarea class="review_textarea"
-                                                placeholder="Chia sẻ trải nghiệm của bạn về bãi đỗ xe này..."
-                                                rows="4">Bãi đỗ xe rất tiện lợi, gần trung tâm thương mại. Nhân viên thân thiện, giá cả hợp lý. Sẽ quay lại sử dụng dịch vụ.</textarea>
-                                        </div>
-
-                                        <!-- Aspect Ratings -->
-                                        <div class="form_group">
-                                            <label>Đánh giá chi tiết:</label>
-                                            <div class="aspect_ratings">
-                                                <div class="aspect_rating_item">
-                                                    <span class="aspect_name">Vị trí:</span>
-                                                    <div class="interactive_stars aspect_rating" data-aspect="location"
-                                                        data-rating="5">
-                                                        <i class="fa fa-star-o" data-star="1"></i>
-                                                        <i class="fa fa-star-o" data-star="2"></i>
-                                                        <i class="fa fa-star-o" data-star="3"></i>
-                                                        <i class="fa fa-star-o" data-star="4"></i>
-                                                        <i class="fa fa-star-o" data-star="5"></i>
-                                                    </div>
-                                                </div>
-                                                <div class="aspect_rating_item">
-                                                    <span class="aspect_name">Dịch vụ:</span>
-                                                    <div class="interactive_stars aspect_rating" data-aspect="service"
-                                                        data-rating="5">
-                                                        <i class="fa fa-star-o" data-star="1"></i>
-                                                        <i class="fa fa-star-o" data-star="2"></i>
-                                                        <i class="fa fa-star-o" data-star="3"></i>
-                                                        <i class="fa fa-star-o" data-star="4"></i>
-                                                        <i class="fa fa-star-o" data-star="5"></i>
-                                                    </div>
-                                                </div>
-                                                <div class="aspect_rating_item">
-                                                    <span class="aspect_name">Giá cả:</span>
-                                                    <div class="interactive_stars aspect_rating" data-aspect="price"
-                                                        data-rating="4">
-                                                        <i class="fa fa-star-o" data-star="1"></i>
-                                                        <i class="fa fa-star-o" data-star="2"></i>
-                                                        <i class="fa fa-star-o" data-star="3"></i>
-                                                        <i class="fa fa-star-o" data-star="4"></i>
-                                                        <i class="fa fa-star-o" data-star="5"></i>
-                                                    </div>
-                                                </div>
-                                                <div class="aspect_rating_item">
-                                                    <span class="aspect_name">An toàn:</span>
-                                                    <div class="interactive_stars aspect_rating" data-aspect="safety"
-                                                        data-rating="5">
-                                                        <i class="fa fa-star-o" data-star="1"></i>
-                                                        <i class="fa fa-star-o" data-star="2"></i>
-                                                        <i class="fa fa-star-o" data-star="3"></i>
-                                                        <i class="fa fa-star-o" data-star="4"></i>
-                                                        <i class="fa fa-star-o" data-star="5"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Form Actions -->
-                                        <div class="form_actions">
-                                            <button type="button" class="btn_save_review">
-                                                <i class="fa fa-save"></i> Lưu đánh giá
-                                            </button>
-                                            <button type="button" class="btn_cancel_review">
-                                                <i class="fa fa-times"></i> Hủy
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-
-                            <div class="history_actions">
-                                <button type="button" class="action_btn view_details" data-id="1">
-                                    <i class="fa fa-eye"></i>
-                                    Chi tiết
-                                </button>
-                                <button type="button" class="action_btn download_receipt" data-id="1">
-                                    <i class="fa fa-download"></i>
-                                    Hóa đơn
-                                </button>
-                                <button type="button" class="action_btn book_again" data-id="1">
-                                    <i class="fa fa-repeat"></i>
-                                    Đặt lại
-                                </button>
-                            </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="stat_card">
+                        <div class="stat_icon">
+                            <i class="fa fa-times-circle"></i>
                         </div>
-
-                        <!-- History Item 2 -->
-                        <div class="history_item" data-status="completed" data-price="36000" data-date="2025-09-12">
-                            <div class="history_header">
-                                <div class="booking_info">
-                                    <h5>Bãi đỗ xe Big C Thăng Long</h5>
-                                    <span class="booking_code">#BP12345679</span>
-                                </div>
-                                <div class="status_badge completed">
-                                    <i class="fa fa-check-circle"></i>
-                                    Hoàn thành
-                                </div>
-                            </div>
-                            <div class="history_content">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="detail_group">
-                                            <div class="detail_item">
-                                                <i class="fa fa-map-marker"></i>
-                                                <span>222 Trần Hưng Đạo, Quận 5, TP.HCM</span>
-                                            </div>
-                                            <div class="detail_item">
-                                                <i class="fa fa-calendar"></i>
-                                                <span>12/09/2025</span>
-                                            </div>
-                                            <div class="detail_item">
-                                                <i class="fa fa-clock-o"></i>
-                                                <span>09:15 - 14:15 (5 giờ)</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="detail_group">
-                                            <div class="detail_item">
-                                                <i class="fa fa-car"></i>
-                                                <span>Ô tô - 51B-123.45</span>
-                                            </div>
-                                            <div class="detail_item">
-                                                <i class="fa fa-money"></i>
-                                                <span>60,000 VNĐ</span>
-                                            </div>
-                                            <div class="detail_item">
-                                                <i class="fa fa-star"></i>
-                                                <span>Đã đánh giá: 4 sao</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Customer Review Section -->
-                            <div class="customer_review_section">
-                                <div class="review_header">
-                                    <h6><i class="fa fa-comment-o"></i> Đánh giá của bạn</h6>
-                                </div>
-                                <div class="review_content">
-                                    <div class="rating_display">
-                                        <div class="stars">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </div>
-                                        <span class="rating_text">4.0 - Tốt</span>
-                                        <span class="review_date">Đánh giá ngày 12/09/2025</span>
-                                    </div>
-                                    <div class="review_comment">
-                                        <p>"Bãi đỗ xe khá rộng rãi, dễ dàng di chuyển. Tuy nhiên giá hơi cao so với các
-                                            bãi khác trong khu vực."</p>
-                                    </div>
-                                    <div class="review_aspects">
-                                        <div class="aspect_item">
-                                            <span class="aspect_label">Vị trí:</span>
-                                            <div class="aspect_stars">
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star-o"></i>
-                                            </div>
-                                        </div>
-                                        <div class="aspect_item">
-                                            <span class="aspect_label">Dịch vụ:</span>
-                                            <div class="aspect_stars">
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star-o"></i>
-                                            </div>
-                                        </div>
-                                        <div class="aspect_item">
-                                            <span class="aspect_label">Giá cả:</span>
-                                            <div class="aspect_stars">
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star-o"></i>
-                                                <i class="fa fa-star-o"></i>
-                                            </div>
-                                        </div>
-                                        <div class="aspect_item">
-                                            <span class="aspect_label">An toàn:</span>
-                                            <div class="aspect_stars">
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                                <i class="fa fa-star"></i>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="history_actions">
-                                <button type="button" class="action_btn view_details" data-id="2">
-                                    <i class="fa fa-eye"></i>
-                                    Chi tiết
-                                </button>
-                                <button type="button" class="action_btn download_receipt" data-id="2">
-                                    <i class="fa fa-download"></i>
-                                    Hóa đơn
-                                </button>
-                                <button type="button" class="action_btn book_again" data-id="2">
-                                    <i class="fa fa-repeat"></i>
-                                    Đặt lại
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- History Item 3 -->
-                        <div class="history_item" data-status="ongoing" data-price="30000" data-date="2025-09-19">
-                            <div class="history_header">
-                                <div class="booking_info">
-                                    <h5>Bãi đỗ xe Aeon Mall</h5>
-                                    <span class="booking_code">#BP12345680</span>
-                                </div>
-                                <div class="status_badge ongoing">
-                                    <i class="fa fa-clock-o"></i>
-                                    Đang diễn ra
-                                </div>
-                            </div>
-                            <div class="history_content">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="detail_group">
-                                            <div class="detail_item">
-                                                <i class="fa fa-map-marker"></i>
-                                                <span>30 Bờ Bao Tân Thắng, Quận Tân Phú, TP.HCM</span>
-                                            </div>
-                                            <div class="detail_item">
-                                                <i class="fa fa-calendar"></i>
-                                                <span>19/09/2025</span>
-                                            </div>
-                                            <div class="detail_item">
-                                                <i class="fa fa-clock-o"></i>
-                                                <span>15:00 - 17:00 (2 giờ)</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="detail_group">
-                                            <div class="detail_item">
-                                                <i class="fa fa-car"></i>
-                                                <span>Ô tô - 51B-123.45</span>
-                                            </div>
-                                            <div class="detail_item">
-                                                <i class="fa fa-money"></i>
-                                                <span>36,000 VNĐ (dự kiến)</span>
-                                            </div>
-                                            <div class="detail_item">
-                                                <i class="fa fa-hourglass-half"></i>
-                                                <span>Còn 1 giờ 23 phút</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="history_actions">
-                                <button type="button" class="action_btn view_details" data-id="3">
-                                    <i class="fa fa-eye"></i>
-                                    Chi tiết
-                                </button>
-                                <button type="button" class="action_btn extend_time" data-id="3">
-                                    <i class="fa fa-plus"></i>
-                                    Gia hạn
-                                </button>
-                                <button type="button" class="action_btn end_parking" data-id="3">
-                                    <i class="fa fa-stop"></i>
-                                    Kết thúc
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- History Item 4 -->
-                        <div class="history_item" data-status="cancelled" data-price="0" data-date="2025-09-08">
-                            <div class="history_header">
-                                <div class="booking_info">
-                                    <h5>Bãi đỗ xe Lotte Center</h5>
-                                    <span class="booking_code">#BP12345677</span>
-                                </div>
-                                <div class="status_badge cancelled">
-                                    <i class="fa fa-times-circle"></i>
-                                    Đã hủy
-                                </div>
-                            </div>
-                            <div class="history_content">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="detail_group">
-                                            <div class="detail_item">
-                                                <i class="fa fa-map-marker"></i>
-                                                <span>128 Nguyễn Huệ, Quận 1, TP.HCM</span>
-                                            </div>
-                                            <div class="detail_item">
-                                                <i class="fa fa-calendar"></i>
-                                                <span>08/09/2025</span>
-                                            </div>
-                                            <div class="detail_item">
-                                                <i class="fa fa-clock-o"></i>
-                                                <span>18:00 - 20:00 (2 giờ)</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="detail_group">
-                                            <div class="detail_item">
-                                                <i class="fa fa-car"></i>
-                                                <span>Ô tô - 51B-123.45</span>
-                                            </div>
-                                            <div class="detail_item">
-                                                <i class="fa fa-money"></i>
-                                                <span>Không tính phí</span>
-                                            </div>
-                                            <div class="detail_item">
-                                                <i class="fa fa-info-circle"></i>
-                                                <span>Hủy vì bận việc đột xuất</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="history_actions">
-                                <button type="button" class="action_btn view_details" data-id="4">
-                                    <i class="fa fa-eye"></i>
-                                    Chi tiết
-                                </button>
-                                <button type="button" class="action_btn book_again" data-id="4">
-                                    <i class="fa fa-repeat"></i>
-                                    Đặt lại
-                                </button>
-                            </div>
-                        </div>
-
-                        <!-- History Item 5 - No Review Yet -->
-                        <div class="history_item" data-status="completed" data-price="32000" data-date="2025-09-10">
-                            <div class="history_header">
-                                <div class="booking_info">
-                                    <h5>Bãi đỗ xe Diamond Plaza</h5>
-                                    <span class="booking_code">#BP12345676</span>
-                                </div>
-                                <div class="status_badge completed">
-                                    <i class="fa fa-check-circle"></i>
-                                    Hoàn thành
-                                </div>
-                            </div>
-                            <div class="history_content">
-                                <div class="row">
-                                    <div class="col-md-6">
-                                        <div class="detail_group">
-                                            <div class="detail_item">
-                                                <i class="fa fa-map-marker"></i>
-                                                <span>34 Lê Duẩn, Quận 1, TP.HCM</span>
-                                            </div>
-                                            <div class="detail_item">
-                                                <i class="fa fa-calendar"></i>
-                                                <span>10/09/2025</span>
-                                            </div>
-                                            <div class="detail_item">
-                                                <i class="fa fa-clock-o"></i>
-                                                <span>10:00 - 12:00 (2 giờ)</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6">
-                                        <div class="detail_group">
-                                            <div class="detail_item">
-                                                <i class="fa fa-car"></i>
-                                                <span>Ô tô - 51B-123.45</span>
-                                            </div>
-                                            <div class="detail_item">
-                                                <i class="fa fa-money"></i>
-                                                <span>32,000 VNĐ</span>
-                                            </div>
-                                            <div class="detail_item">
-                                                <i class="fa fa-star-o"></i>
-                                                <span>Chưa đánh giá</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- New Review Section -->
-                            <div class="customer_review_section">
-                                <div class="review_header">
-                                    <h6><i class="fa fa-comment-o"></i> Đánh giá bãi đỗ xe</h6>
-                                    <button class="btn_write_review" data-booking-id="5">
-                                        <i class="fa fa-edit"></i> Viết đánh giá
-                                    </button>
-                                </div>
-
-                                <!-- No Review Message -->
-                                <div class="no_review_message" id="noReviewMessage5">
-                                    <div class="empty_review_state">
-                                        <i class="fa fa-comment-o"></i>
-                                        <p>Bạn chưa đánh giá bãi đỗ xe này</p>
-                                        <small>Chia sẻ trải nghiệm của bạn để giúp những người khác</small>
-                                    </div>
-                                </div>
-
-                                <!-- New Review Form -->
-                                <div class="review_form" id="reviewForm5" style="display: none;">
-                                    <form class="review_form_content">
-                                        <!-- Overall Rating -->
-                                        <div class="form_group">
-                                            <label>Đánh giá tổng thể:</label>
-                                            <div class="interactive_stars overall_rating" data-rating="0">
-                                                <i class="fa fa-star-o" data-star="1"></i>
-                                                <i class="fa fa-star-o" data-star="2"></i>
-                                                <i class="fa fa-star-o" data-star="3"></i>
-                                                <i class="fa fa-star-o" data-star="4"></i>
-                                                <i class="fa fa-star-o" data-star="5"></i>
-                                            </div>
-                                            <span class="rating_label">Chọn đánh giá</span>
-                                        </div>
-
-                                        <!-- Comment -->
-                                        <div class="form_group">
-                                            <label>Nhận xét của bạn:</label>
-                                            <textarea class="review_textarea"
-                                                placeholder="Chia sẻ trải nghiệm của bạn về bãi đỗ xe này..."
-                                                rows="4"></textarea>
-                                        </div>
-
-                                        <!-- Aspect Ratings -->
-                                        <div class="form_group">
-                                            <label>Đánh giá chi tiết:</label>
-                                            <div class="aspect_ratings">
-                                                <div class="aspect_rating_item">
-                                                    <span class="aspect_name">Vị trí:</span>
-                                                    <div class="interactive_stars aspect_rating" data-aspect="location"
-                                                        data-rating="0">
-                                                        <i class="fa fa-star-o" data-star="1"></i>
-                                                        <i class="fa fa-star-o" data-star="2"></i>
-                                                        <i class="fa fa-star-o" data-star="3"></i>
-                                                        <i class="fa fa-star-o" data-star="4"></i>
-                                                        <i class="fa fa-star-o" data-star="5"></i>
-                                                    </div>
-                                                </div>
-                                                <div class="aspect_rating_item">
-                                                    <span class="aspect_name">Dịch vụ:</span>
-                                                    <div class="interactive_stars aspect_rating" data-aspect="service"
-                                                        data-rating="0">
-                                                        <i class="fa fa-star-o" data-star="1"></i>
-                                                        <i class="fa fa-star-o" data-star="2"></i>
-                                                        <i class="fa fa-star-o" data-star="3"></i>
-                                                        <i class="fa fa-star-o" data-star="4"></i>
-                                                        <i class="fa fa-star-o" data-star="5"></i>
-                                                    </div>
-                                                </div>
-                                                <div class="aspect_rating_item">
-                                                    <span class="aspect_name">Giá cả:</span>
-                                                    <div class="interactive_stars aspect_rating" data-aspect="price"
-                                                        data-rating="0">
-                                                        <i class="fa fa-star-o" data-star="1"></i>
-                                                        <i class="fa fa-star-o" data-star="2"></i>
-                                                        <i class="fa fa-star-o" data-star="3"></i>
-                                                        <i class="fa fa-star-o" data-star="4"></i>
-                                                        <i class="fa fa-star-o" data-star="5"></i>
-                                                    </div>
-                                                </div>
-                                                <div class="aspect_rating_item">
-                                                    <span class="aspect_name">An toàn:</span>
-                                                    <div class="interactive_stars aspect_rating" data-aspect="safety"
-                                                        data-rating="0">
-                                                        <i class="fa fa-star-o" data-star="1"></i>
-                                                        <i class="fa fa-star-o" data-star="2"></i>
-                                                        <i class="fa fa-star-o" data-star="3"></i>
-                                                        <i class="fa fa-star-o" data-star="4"></i>
-                                                        <i class="fa fa-star-o" data-star="5"></i>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <!-- Form Actions -->
-                                        <div class="form_actions">
-                                            <button type="button" class="btn_save_review">
-                                                <i class="fa fa-save"></i> Gửi đánh giá
-                                            </button>
-                                            <button type="button" class="btn_cancel_review">
-                                                <i class="fa fa-times"></i> Hủy
-                                            </button>
-                                        </div>
-                                    </form>
-                                </div>
-                            </div>
-
-                            <div class="history_actions">
-                                <button type="button" class="action_btn view_details" data-id="5">
-                                    <i class="fa fa-eye"></i>
-                                    Chi tiết
-                                </button>
-                                <button type="button" class="action_btn download_receipt" data-id="5">
-                                    <i class="fa fa-download"></i>
-                                    Hóa đơn
-                                </button>
-                                <button type="button" class="action_btn book_again" data-id="5">
-                                    <i class="fa fa-repeat"></i>
-                                    Đặt lại
-                                </button>
-                            </div>
+                        <div class="stat_content">
+                            <h4 id="cancelledBookings">0</h4>
+                            <p>Đã hủy</p>
                         </div>
                     </div>
+                </div>
+                <div class="col-lg-3 col-md-6 mb-3">
+                    <div class="stat_card">
+                        <div class="stat_icon">
+                            <i class="fa fa-money"></i>
+                        </div>
+                        <div class="stat_content">
+                            <h4 id="totalSpent">0đ</h4>
+                            <p>Tổng chi tiêu</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
-                    <!-- Pagination -->
-                    <div class="pagination_section">
-                        <nav aria-label="Page navigation">
-                            <ul class="pagination justify-content-center">
-                                <li class="page-item disabled">
-                                    <a class="page-link" href="#" tabindex="-1">
-                                        <i class="fa fa-chevron-left"></i>
-                                    </a>
-                                </li>
-                                <li class="page-item active">
-                                    <a class="page-link" href="#">1</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">2</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">3</a>
-                                </li>
-                                <li class="page-item">
-                                    <a class="page-link" href="#">
-                                        <i class="fa fa-chevron-right"></i>
-                                    </a>
-                                </li>
-                            </ul>
-                        </nav>
+            <!-- Filter & Sort Section -->
+            <div class="row mb-4">
+                <div class="col-12">
+                    <div class="filter_section">
+                        <form id="historyFilterForm">
+                            <div class="row align-items-end">
+                                <div class="col-md-3 mb-2">
+                                    <label>Trạng thái</label>
+                                    <select class="form-control" id="statusFilter" onchange="filterHistory()">
+                                        <option value="">Tất cả</option>
+                                        <option value="completed">Đã hoàn thành</option>
+                                        <option value="active">Đang hoạt động</option>
+                                        <option value="cancelled">Đã hủy</option>
+                                        <option value="pending">Chờ xác nhận</option>
+                                    </select>
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <label>Từ ngày</label>
+                                    <input type="date" class="form-control" id="dateFrom" onchange="filterHistory()">
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <label>Đến ngày</label>
+                                    <input type="date" class="form-control" id="dateTo" onchange="filterHistory()">
+                                </div>
+                                <div class="col-md-3 mb-2">
+                                    <button type="button" class="btn btn-secondary w-100" onclick="resetHistoryFilters()">
+                                        <i class="fa fa-refresh"></i> Đặt lại
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
 
+            <!-- Bookings History Table -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="history_table_container">
+                        <div class="table-responsive">
+                            <table class="table table-hover" id="historyTable">
+                                <thead>
+                                    <tr>
+                                        <th>Mã đặt chỗ</th>
+                                        <th>Bãi đỗ xe</th>
+                                        <th>Thời gian</th>
+                                        <th>Biển số xe</th>
+                                        <th>Tổng phí</th>
+                                        <th>Trạng thái</th>
+                                        <th>Hành động</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="historyTableBody">
+                                    <!-- Data will be loaded dynamically -->
+                                    <tr>
+                                        <td colspan="7" class="text-center py-5">
+                                            <i class="fa fa-spinner fa-spin fa-2x text-muted"></i>
+                                            <p class="mt-3">Đang tải dữ liệu...</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <!-- Pagination -->
+                        <div id="historyPagination" class="mt-3"></div>
                     </div>
                 </div>
             </div>
         </div>
     </section>
-    <!-- end history section -->
+    <!-- End History Section -->
 
-    <!-- Detail Modal -->
-    <div class="modal fade" id="detailModal" tabindex="-1" role="dialog">
+    <!-- Booking Detail Modal -->
+    <div class="modal fade" id="bookingDetailModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -921,21 +252,416 @@
                         <span>&times;</span>
                     </button>
                 </div>
-                <div class="modal-body">
-                    <div class="detail_content">
-                        <!-- Content will be populated by JavaScript -->
-                    </div>
+                <div class="modal-body" id="bookingDetailContent">
+                    <!-- Content will be loaded dynamically -->
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
-                    <button type="button" class="btn btn-primary" id="downloadDetailReceipt">
-                        <i class="fa fa-download"></i>
-                        Tải hóa đơn
+                    <button type="button" class="btn btn-danger" id="cancelBookingBtn" style="display: none;">
+                        <i class="fa fa-times"></i> Hủy đặt chỗ
                     </button>
                 </div>
             </div>
         </div>
     </div>
+
+    <!-- Custom Styles for History Page -->
+    <style>
+        .stat_card {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.08);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .stat_card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 25px rgba(0,0,0,0.15);
+        }
+
+        .stat_icon {
+            font-size: 40px;
+            color: #ffbe33;
+            margin-bottom: 15px;
+        }
+
+        .stat_content h4 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #252525;
+            margin-bottom: 5px;
+        }
+
+        .stat_content p {
+            color: #666;
+            margin: 0;
+        }
+
+        .filter_section {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.08);
+        }
+
+        .filter_section label {
+            font-weight: 600;
+            margin-bottom: 5px;
+            display: block;
+        }
+
+        .history_table_container {
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0,0,0,0.08);
+        }
+
+        .table thead th {
+            background: #ffbe33;
+            color: white;
+            border: none;
+            font-weight: 600;
+            padding: 15px;
+        }
+
+        .table tbody td {
+            padding: 15px;
+            vertical-align: middle;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .status-completed {
+            background: #28a745;
+            color: white;
+        }
+
+        .status-active {
+            background: #007bff;
+            color: white;
+        }
+
+        .status-cancelled {
+            background: #dc3545;
+            color: white;
+        }
+
+        .status-pending {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 5px;
+        }
+
+        .action-buttons .btn {
+            padding: 5px 10px;
+            font-size: 13px;
+        }
+    </style>
+
+    <!-- JavaScript for History Functionality -->
+    <script>
+        let bookingsHistory = [];
+        let filteredBookings = [];
+        let currentHistoryPage = 1;
+        const historyItemsPerPage = 10;
+
+        // Load bookings history on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            loadBookingsHistory();
+        });
+
+        function loadBookingsHistory() {
+            // Simulated data - replace with actual API call
+            bookingsHistory = [
+                {
+                    id: 'BK001',
+                    parking_lot: 'Bãi đỗ xe Vincom',
+                    address: '72 Lê Thánh Tôn, Quận 1',
+                    start_time: '2025-10-15 14:30',
+                    end_time: '2025-10-15 17:30',
+                    vehicle_number: '29A-12345',
+                    vehicle_type: 'car',
+                    total_fee: 45000,
+                    status: 'completed',
+                    payment_status: 'paid'
+                },
+                {
+                    id: 'BK002',
+                    parking_lot: 'Bãi đỗ xe Big C',
+                    address: '232 Nguyễn Đình Chiểu, Quận 3',
+                    start_time: '2025-10-16 09:15',
+                    end_time: '2025-10-16 14:15',
+                    vehicle_number: '29B-67890',
+                    vehicle_type: 'car',
+                    total_fee: 60000,
+                    status: 'active',
+                    payment_status: 'pending'
+                },
+                {
+                    id: 'BK003',
+                    parking_lot: 'Bãi đỗ xe Lotte',
+                    address: '20 Trần Phú, Quận 5',
+                    start_time: '2025-10-10 18:00',
+                    end_time: '2025-10-10 20:00',
+                    vehicle_number: '51F-11111',
+                    vehicle_type: 'motorbike',
+                    total_fee: 30000,
+                    status: 'completed',
+                    payment_status: 'paid'
+                }
+            ];
+
+            filteredBookings = [...bookingsHistory];
+            updateStatistics();
+            displayBookingsHistory();
+        }
+
+        function updateStatistics() {
+            const completed = bookingsHistory.filter(b => b.status === 'completed').length;
+            const active = bookingsHistory.filter(b => b.status === 'active').length;
+            const cancelled = bookingsHistory.filter(b => b.status === 'cancelled').length;
+            const totalSpent = bookingsHistory
+                .filter(b => b.payment_status === 'paid')
+                .reduce((sum, b) => sum + b.total_fee, 0);
+
+            document.getElementById('completedBookings').textContent = completed;
+            document.getElementById('activeBookings').textContent = active;
+            document.getElementById('cancelledBookings').textContent = cancelled;
+            document.getElementById('totalSpent').textContent = totalSpent.toLocaleString('vi-VN') + 'đ';
+        }
+
+        function displayBookingsHistory() {
+            const tbody = document.getElementById('historyTableBody');
+            tbody.innerHTML = '';
+
+            if (filteredBookings.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center py-5">
+                            <i class="fa fa-exclamation-circle fa-2x text-muted"></i>
+                            <p class="mt-3">Không có dữ liệu</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            const start = (currentHistoryPage - 1) * historyItemsPerPage;
+            const end = start + historyItemsPerPage;
+            const pageBookings = filteredBookings.slice(start, end);
+
+            pageBookings.forEach(booking => {
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td><strong>${booking.id}</strong></td>
+                    <td>
+                        <strong>${booking.parking_lot}</strong><br>
+                        <small class="text-muted">${booking.address}</small>
+                    </td>
+                    <td>
+                        <div><i class="fa fa-calendar"></i> ${formatDateTime(booking.start_time)}</div>
+                        <div><i class="fa fa-calendar"></i> ${formatDateTime(booking.end_time)}</div>
+                    </td>
+                    <td>${booking.vehicle_number}</td>
+                    <td><strong>${booking.total_fee.toLocaleString('vi-VN')}đ</strong></td>
+                    <td>${getStatusBadge(booking.status)}</td>
+                    <td>
+                        <div class="action-buttons">
+                            <button class="btn btn-sm btn-info" onclick="viewBookingDetail('${booking.id}')">
+                                <i class="fa fa-eye"></i> Chi tiết
+                            </button>
+                            ${booking.status === 'active' || booking.status === 'pending' ?
+                                `<button class="btn btn-sm btn-danger" onclick="cancelBooking('${booking.id}')">
+                                    <i class="fa fa-times"></i> Hủy
+                                </button>` : ''}
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+
+            renderHistoryPagination();
+        }
+
+        function getStatusBadge(status) {
+            const statusMap = {
+                'completed': { text: 'Đã hoàn thành', class: 'status-completed' },
+                'active': { text: 'Đang hoạt động', class: 'status-active' },
+                'cancelled': { text: 'Đã hủy', class: 'status-cancelled' },
+                'pending': { text: 'Chờ xác nhận', class: 'status-pending' }
+            };
+
+            const statusInfo = statusMap[status] || { text: status, class: '' };
+            return `<span class="status-badge ${statusInfo.class}">${statusInfo.text}</span>`;
+        }
+
+        function formatDateTime(dateTimeString) {
+            const date = new Date(dateTimeString);
+            const day = String(date.getDate()).padStart(2, '0');
+            const month = String(date.getMonth() + 1).padStart(2, '0');
+            const year = date.getFullYear();
+            const hours = String(date.getHours()).padStart(2, '0');
+            const minutes = String(date.getMinutes()).padStart(2, '0');
+            return `${day}/${month}/${year} ${hours}:${minutes}`;
+        }
+
+        function filterHistory() {
+            const statusFilter = document.getElementById('statusFilter').value;
+            const dateFrom = document.getElementById('dateFrom').value;
+            const dateTo = document.getElementById('dateTo').value;
+
+            filteredBookings = bookingsHistory.filter(booking => {
+                let matches = true;
+
+                if (statusFilter && booking.status !== statusFilter) {
+                    matches = false;
+                }
+
+                if (dateFrom) {
+                    const bookingDate = new Date(booking.start_time);
+                    const filterDate = new Date(dateFrom);
+                    if (bookingDate < filterDate) {
+                        matches = false;
+                    }
+                }
+
+                if (dateTo) {
+                    const bookingDate = new Date(booking.start_time);
+                    const filterDate = new Date(dateTo);
+                    if (bookingDate > filterDate) {
+                        matches = false;
+                    }
+                }
+
+                return matches;
+            });
+
+            currentHistoryPage = 1;
+            displayBookingsHistory();
+        }
+
+        function resetHistoryFilters() {
+            document.getElementById('historyFilterForm').reset();
+            filteredBookings = [...bookingsHistory];
+            currentHistoryPage = 1;
+            displayBookingsHistory();
+        }
+
+        function viewBookingDetail(bookingId) {
+            const booking = bookingsHistory.find(b => b.id === bookingId);
+            if (!booking) return;
+
+            const content = `
+                <div class="booking-detail">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <h6>Mã đặt chỗ</h6>
+                            <p><strong>${booking.id}</strong></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Trạng thái</h6>
+                            <p>${getStatusBadge(booking.status)}</p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-12">
+                            <h6>Bãi đỗ xe</h6>
+                            <p><strong>${booking.parking_lot}</strong><br>${booking.address}</p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <h6>Thời gian bắt đầu</h6>
+                            <p>${formatDateTime(booking.start_time)}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Thời gian kết thúc</h6>
+                            <p>${formatDateTime(booking.end_time)}</p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <h6>Biển số xe</h6>
+                            <p>${booking.vehicle_number}</p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Loại xe</h6>
+                            <p>${booking.vehicle_type === 'car' ? 'Ô tô' : 'Xe máy'}</p>
+                        </div>
+                    </div>
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <h6>Tổng phí</h6>
+                            <p><strong style="color: #ffbe33; font-size: 20px;">${booking.total_fee.toLocaleString('vi-VN')}đ</strong></p>
+                        </div>
+                        <div class="col-md-6">
+                            <h6>Trạng thái thanh toán</h6>
+                            <p>${booking.payment_status === 'paid' ? '<span class="badge badge-success">Đã thanh toán</span>' : '<span class="badge badge-warning">Chưa thanh toán</span>'}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('bookingDetailContent').innerHTML = content;
+
+            const cancelBtn = document.getElementById('cancelBookingBtn');
+            if (booking.status === 'active' || booking.status === 'pending') {
+                cancelBtn.style.display = 'inline-block';
+                cancelBtn.onclick = () => cancelBooking(bookingId);
+            } else {
+                cancelBtn.style.display = 'none';
+            }
+
+            $('#bookingDetailModal').modal('show');
+        }
+
+        function cancelBooking(bookingId) {
+            if (confirm('Bạn có chắc chắn muốn hủy đặt chỗ này?')) {
+                // Implement cancel booking API call
+                alert('Chức năng hủy đặt chỗ đang được phát triển');
+                $('#bookingDetailModal').modal('hide');
+            }
+        }
+
+        function renderHistoryPagination() {
+            const totalPages = Math.ceil(filteredBookings.length / historyItemsPerPage);
+            const pagination = document.getElementById('historyPagination');
+
+            if (totalPages <= 1) {
+                pagination.innerHTML = '';
+                return;
+            }
+
+            let html = '<nav><ul class="pagination justify-content-center">';
+
+            for (let i = 1; i <= totalPages; i++) {
+                html += `<li class="page-item ${i === currentHistoryPage ? 'active' : ''}">
+                    <a class="page-link" href="#" onclick="goToHistoryPage(${i}); return false;">${i}</a>
+                </li>`;
+            }
+
+            html += '</ul></nav>';
+            pagination.innerHTML = html;
+        }
+
+        function goToHistoryPage(page) {
+            currentHistoryPage = page;
+            displayBookingsHistory();
+        }
+    </script>
 
     <!-- info section -->
     <section class="info_section ">
@@ -1027,6 +753,7 @@
         </div>
     </section>
     <!-- end info_section -->
+
     <!-- footer section -->
     <footer class="footer_section">
         <div class="container">

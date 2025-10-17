@@ -40,7 +40,13 @@ Route::prefix('user')->name('user.')->group(function () {
 
     // Booking - View parking lots (Public)
     Route::get('/booking', [App\Http\Controllers\BookingController::class, 'index'])->name('booking');
-    Route::get('/api/parking-lot/{id}', [App\Http\Controllers\BookingController::class, 'getParkingLotDetails'])->name('parking-lot.details');
+
+    // Parking Lot Detail (Public)
+    Route::get('/parking-lot/{id}', [App\Http\Controllers\BookingController::class, 'showParkingLot'])->name('parking-lot.detail');
+
+    // API endpoints for parking lots
+    Route::get('/api/parking-lots', [App\Http\Controllers\BookingController::class, 'getParkingLots'])->name('api.parking-lots');
+    Route::get('/api/parking-lot/{id}', [App\Http\Controllers\BookingController::class, 'getParkingLotDetails'])->name('api.parking-lot.details');
 });
 
 // Protected User Routes (Require Authentication)
@@ -52,13 +58,20 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::get('/profile', [App\Http\Controllers\UserController::class, 'profile'])->name('profile');
     Route::put('/profile', [App\Http\Controllers\UserController::class, 'updateProfile'])->name('profile.update');
     Route::put('/profile/password', [App\Http\Controllers\UserController::class, 'updatePassword'])->name('password.update');
+    Route::put('/profile/vehicles', [App\Http\Controllers\UserController::class, 'updateVehicles'])->name('vehicles.update');
     Route::delete('/account', [App\Http\Controllers\UserController::class, 'deleteAccount'])->name('account.delete');
 
     // Booking System (Requires Auth)
     Route::post('/booking', [App\Http\Controllers\BookingController::class, 'store'])->name('booking.store');
     Route::get('/booking/{booking}', [App\Http\Controllers\BookingController::class, 'show'])->name('booking.show');
     Route::patch('/booking/{booking}/cancel', [App\Http\Controllers\BookingController::class, 'cancel'])->name('booking.cancel');
+
+    // History
     Route::get('/history', [App\Http\Controllers\BookingController::class, 'history'])->name('history');
+
+    // API endpoints for history
+    Route::get('/api/bookings', [App\Http\Controllers\BookingController::class, 'getUserBookings'])->name('api.bookings');
+    Route::get('/api/booking/{id}', [App\Http\Controllers\BookingController::class, 'getBookingDetail'])->name('api.booking.detail');
 
     // Payment System
     Route::get('/payment', [App\Http\Controllers\PaymentController::class, 'show'])->name('payment');
@@ -66,8 +79,10 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::get('/payment/success/{payment}', [App\Http\Controllers\PaymentController::class, 'success'])->name('payment.success');
     Route::get('/payment/pending/{payment}', [App\Http\Controllers\PaymentController::class, 'pending'])->name('payment.pending');
     Route::get('/payment/cash/{payment}', [App\Http\Controllers\PaymentController::class, 'cash'])->name('payment.cash');
-    Route::get('/payment/history', [App\Http\Controllers\PaymentController::class, 'history'])->name('payment.history');
     Route::patch('/payment/{payment}/cancel', [App\Http\Controllers\PaymentController::class, 'cancel'])->name('payment.cancel');
+
+    // API endpoints for payment
+    Route::get('/api/payments', [App\Http\Controllers\PaymentController::class, 'getUserPayments'])->name('api.payments');
 
     // Reviews (User's own reviews - requires auth)
     Route::get('/reviews', [App\Http\Controllers\ReviewController::class, 'index'])->name('reviews');
@@ -77,6 +92,10 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::get('/reviews/{id}/edit', [App\Http\Controllers\ReviewController::class, 'edit'])->name('reviews.edit');
     Route::put('/reviews/{id}', [App\Http\Controllers\ReviewController::class, 'update'])->name('reviews.update');
     Route::delete('/reviews/{id}', [App\Http\Controllers\ReviewController::class, 'destroy'])->name('reviews.destroy');
+
+    // API endpoints for reviews
+    Route::get('/api/reviews', [App\Http\Controllers\ReviewController::class, 'getUserReviews'])->name('api.reviews');
+    Route::get('/api/pending-reviews', [App\Http\Controllers\ReviewController::class, 'getPendingReviews'])->name('api.pending-reviews');
 });
 
 // Redirect helpers for backward compatibility
