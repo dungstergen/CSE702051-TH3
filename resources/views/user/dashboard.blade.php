@@ -110,201 +110,387 @@
         <!-- end header section -->
     </div>
 
-    <!-- Dashboard section -->
-    <section class="dashboard_section layout_padding">
+    <!-- Hero Banner Section -->
+    <section class="hero_banner_section">
+        <div class="hero_overlay"></div>
         <div class="container">
-            <div class="heading_container heading_center">
-                <h2>
-                    Bảng điều khiển của bạn
-                </h2>
-                <p>
-                    Quản lý thông tin đỗ xe và tài khoản của bạn
-                </p>
+            <div class="hero_content">
+                <h1 class="hero_title">Đặt Chỗ Đỗ Xe Ô Tô & Xe Máy</h1>
+                <p class="hero_subtitle">Tìm kiếm và đặt chỗ đỗ xe nhanh chóng, an toàn với giá tốt nhất</p>
             </div>
 
-            <!-- User Welcome Card -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="welcome_card">
-                        <div class="row align-items-center">
-                            <div class="col-md-8">
-                                <h3>Xin chào, <span class="user_name">{{ $user->name }}</span>!</h3>
-                                <p>Chúc mừng bạn đã quay trở lại với Paspark. Hãy quản lý các hoạt động đỗ xe của bạn tại đây.</p>
-                            </div>
-                            <div class="col-md-4 text-center">
-                                <div class="user_avatar">
-                                    <i class="fa fa-user-circle"></i>
+            <!-- Search Tabs -->
+            <div class="search_container">
+                <div class="search_tabs">
+                    <button class="tab_button active" data-tab="car">
+                        <i class="fa fa-car"></i> Ô tô
+                    </button>
+                    <button class="tab_button" data-tab="motorbike">
+                        <i class="fa fa-motorcycle"></i> Xe máy
+                    </button>
+                </div>
+
+                <!-- Search Form -->
+                <div class="search_form_wrapper">
+                    <form class="search_form" action="{{ route('user.booking') }}" method="GET">
+                        <div class="form_grid">
+                            <div class="form_item">
+                                <label class="form_label">Địa điểm</label>
+                                <div class="input_wrapper">
+                                    <i class="fa fa-map-marker input_icon"></i>
+                                    <input type="text" class="form_input" name="location" placeholder="Tìm bãi đỗ xe..." required>
                                 </div>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
 
-            <!-- Dashboard Stats -->
-            <div class="row stats_row">
-                <div class="col-lg-3 col-md-6">
-                    <div class="stats_card">
-                        <div class="stats_icon">
-                            <i class="fa fa-car"></i>
+                            <div class="form_divider">
+                                <i class="fa fa-arrows-h"></i>
+                            </div>
+
+                            <div class="form_item">
+                                <label class="form_label">Thời gian bắt đầu</label>
+                                <div class="input_wrapper">
+                                    <i class="fa fa-clock-o input_icon"></i>
+                                    <input type="datetime-local" class="form_input" name="start_time" required>
+                                </div>
+                            </div>
+
+                            <div class="form_item">
+                                <label class="form_label">Thời gian kết thúc</label>
+                                <div class="input_wrapper">
+                                    <i class="fa fa-calendar input_icon"></i>
+                                    <input type="datetime-local" class="form_input" name="end_time" required>
+                                </div>
+                            </div>
+
+                            <div class="form_item">
+                                <button type="submit" class="btn_search_submit">
+                                    Tìm kiếm
+                                </button>
+                            </div>
                         </div>
-                        <div class="stats_content">
-                            <h4>{{ $userStats['total_bookings'] }}</h4>
-                            <p>Lần đỗ xe</p>
+                    </form>
+                </div>
+
+                <!-- Contact Info Cards -->
+                <div class="contact_info_row">
+                    <div class="contact_card">
+                        <div class="contact_icon">
+                            <i class="fa fa-shield"></i>
+                        </div>
+                        <div class="contact_text">
+                            <p class="contact_label">An toàn & Bảo mật</p>
+                            <p class="contact_value">Camera 24/7 - Bảo vệ chuyên nghiệp</p>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="stats_card">
-                        <div class="stats_icon">
+                    <div class="contact_card">
+                        <div class="contact_icon">
                             <i class="fa fa-clock-o"></i>
                         </div>
-                        <div class="stats_content">
-                            <h4>{{ number_format($userStats['total_hours'], 1) }}</h4>
-                            <p>Giờ đỗ xe</p>
+                        <div class="contact_text">
+                            <p class="contact_label">Mở cửa liên tục</p>
+                            <p class="contact_value">Phục vụ 24/7 mọi lúc mọi nơi</p>
                         </div>
                     </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="stats_card">
-                        <div class="stats_icon">
-                            <i class="fa fa-money"></i>
+                    <div class="contact_card">
+                        <div class="contact_icon">
+                            <i class="fa fa-phone"></i>
                         </div>
-                        <div class="stats_content">
-                            <h4>{{ number_format($userStats['total_spent']) }}</h4>
-                            <p>Tổng chi phí (VNĐ)</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6">
-                    <div class="stats_card">
-                        <div class="stats_icon">
-                            <i class="fa fa-calendar-check-o"></i>
-                        </div>
-                        <div class="stats_content">
-                            <h4>{{ $userStats['active_bookings'] }}</h4>
-                            <p>Đang hoạt động</p>
+                        <div class="contact_text">
+                            <p class="contact_label">Hotline hỗ trợ</p>
+                            <p class="contact_value">Liên hệ: +84 083 364 526</p>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+    </section>
 
-            <!-- Quick Actions -->
-            <div class="row">
-                <div class="col-12">
-                    <div class="quick_actions_section">
-                        <h3>Thao tác nhanh</h3>
-                        <div class="row">
-                            <div class="col-lg-4 col-md-6">
-                                <a href="{{ url('/booking') }}" class="action_card">
-                                    <div class="action_icon">
-                                        <i class="fa fa-plus-circle"></i>
-                                    </div>
-                                    <div class="action_content">
-                                        <h5>Đặt chỗ đỗ xe mới</h5>
-                                        <p>Tìm và đặt chỗ đỗ xe gần bạn</p>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-lg-4 col-md-6">
-                                <a href="{{ url('/history') }}" class="action_card">
-                                    <div class="action_icon">
-                                        <i class="fa fa-history"></i>
-                                    </div>
-                                    <div class="action_content">
-                                        <h5>Lịch sử đỗ xe</h5>
-                                        <p>Xem chi tiết các lần đỗ xe trước</p>
-                                    </div>
-                                </a>
-                            </div>
-                            <div class="col-lg-4 col-md-6">
-                                <a href="{{ url('/payment') }}" class="action_card">
-                                    <div class="action_icon">
-                                        <i class="fa fa-credit-card"></i>
-                                    </div>
-                                    <div class="action_content">
-                                        <h5>Thanh toán</h5>
-                                        <p>Quản lý phương thức thanh toán</p>
-                                    </div>
-                                </a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
+    <!-- Destination Section -->
+    <section class="destination_section">
+        <div class="container">
+            <div class="section_heading">
+                <span class="section_label">Bãi Đỗ Xe Nổi Bật</span>
+                <h2 class="section_title">Điểm Đến Tuyệt Vời Của Bạn</h2>
             </div>
 
-            <!-- Recent Activities -->
-            <div class="row">
-                <div class="col-lg-8">
-                    <div class="recent_activities">
-                        <h3>Hoạt động gần đây</h3>
-                        <div class="activity_list">
-                            <div class="activity_item">
-                                <div class="activity_icon">
-                                    <i class="fa fa-car"></i>
-                                </div>
-                                <div class="activity_content">
-                                    <h6>Đỗ xe tại Bãi đỗ xe Vincom</h6>
-                                    <p>15/09/2025 - 14:30 | Thời gian: 3 giờ | Phí: 45,000 VNĐ</p>
-                                </div>
-                                <div class="activity_status success">
-                                    <span>Hoàn thành</span>
-                                </div>
+            <div class="row destination_grid">
+                <!-- Parking Card 1 -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="destination_card">
+                        <div class="card_image_wrapper">
+                            <img src="{{ asset('user/images/slider-bg.jpg') }}" alt="Bãi Đỗ Xe Vincom" class="card_image">
+                            <div class="card_badge discount_badge">
+                                <span>-32%</span>
                             </div>
-                            <div class="activity_item">
-                                <div class="activity_icon">
-                                    <i class="fa fa-car"></i>
-                                </div>
-                                <div class="activity_content">
-                                    <h6>Đỗ xe tại Bãi đỗ xe Big C</h6>
-                                    <p>12/09/2025 - 09:15 | Thời gian: 5 giờ | Phí: 60,000 VNĐ</p>
-                                </div>
-                                <div class="activity_status success">
-                                    <span>Hoàn thành</span>
-                                </div>
-                            </div>
-                            <div class="activity_item">
-                                <div class="activity_icon">
-                                    <i class="fa fa-car"></i>
-                                </div>
-                                <div class="activity_content">
-                                    <h6>Đỗ xe tại Bãi đỗ xe Lotte</h6>
-                                    <p>10/09/2025 - 18:00 | Thời gian: 2 giờ | Phí: 30,000 VNĐ</p>
-                                </div>
-                                <div class="activity_status success">
-                                    <span>Hoàn thành</span>
-                                </div>
+                            <div class="card_badge hot_badge">
+                                <span>🔥 HOT</span>
                             </div>
                         </div>
-                        <div class="text-center">
-                            <a href="{{ url('/history') }}" class="btn_box">Xem tất cả</a>
+                        <div class="card_content">
+                            <div class="card_header">
+                                <h4 class="card_destination">
+                                    <i class="fa fa-building-o"></i> Bãi Đỗ Xe Vincom Center
+                                </h4>
+                                <div class="card_rating">
+                                    <i class="fa fa-star"></i>
+                                    <span>4.8</span>
+                                </div>
+                            </div>
+                            <p class="card_address">
+                                <i class="fa fa-map-marker"></i> 72 Lê Thánh Tôn, Quận 1, TP.HCM
+                            </p>
+                            <div class="card_details">
+                                <div class="detail_item">
+                                    <i class="fa fa-car"></i>
+                                    <span>Ô tô & Xe máy</span>
+                                </div>
+                                <div class="detail_item">
+                                    <i class="fa fa-shield"></i>
+                                    <span>Bảo vệ 24/7</span>
+                                </div>
+                            </div>
+                            <div class="card_footer">
+                                <div class="price_wrapper">
+                                    <span class="price_icon"><i class="fa fa-tag"></i></span>
+                                    <span class="price">15.000₫</span>
+                                    <span class="price_unit">/ giờ</span>
+                                </div>
+                                <a href="{{ route('user.booking') }}" class="btn_book">
+                                    <i class="fa fa-calendar-check-o"></i> Đặt chỗ ngay
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <div class="col-lg-4">
-                    <div class="sidebar_widgets">
-                        <!-- Current Parking Status -->
-                        <div class="widget_card">
-                            <h4>Trạng thái hiện tại</h4>
-                            <div class="current_status">
-                                <div class="status_icon inactive">
-                                    <i class="fa fa-car"></i>
-                                </div>
-                                <p>Hiện tại bạn không đỗ xe ở đâu</p>
-                                <a href="{{ url('/booking') }}" class="btn_small">Đặt chỗ ngay</a>
+                <!-- Parking Card 2 -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="destination_card">
+                        <div class="card_image_wrapper">
+                            <img src="{{ asset('user/images/slider-bg.jpg') }}" alt="Bãi Đỗ Xe Lotte" class="card_image">
+                            <div class="card_badge new_badge">
+                                <span>MỚI</span>
                             </div>
                         </div>
-
-                        <!-- Upcoming Reservations -->
-                        <div class="widget_card">
-                            <h4>Đặt chỗ sắp tới</h4>
-                            <div class="upcoming_list">
-                                <div class="upcoming_item">
-                                    <h6>Bãi đỗ xe Aeon Mall</h6>
-                                    <p>20/09/2025 - 15:00</p>
-                                    <span class="status_badge pending">Đã đặt</span>
+                        <div class="card_content">
+                            <div class="card_header">
+                                <h4 class="card_destination">
+                                    <i class="fa fa-building-o"></i> Bãi Đỗ Xe Lotte Mart
+                                </h4>
+                                <div class="card_rating">
+                                    <i class="fa fa-star"></i>
+                                    <span>4.5</span>
                                 </div>
+                            </div>
+                            <p class="card_address">
+                                <i class="fa fa-map-marker"></i> 20 Trần Phú, Quận 5, TP.HCM
+                            </p>
+                            <div class="card_details">
+                                <div class="detail_item">
+                                    <i class="fa fa-car"></i>
+                                    <span>Rộng rãi</span>
+                                </div>
+                                <div class="detail_item">
+                                    <i class="fa fa-video-camera"></i>
+                                    <span>Camera HD</span>
+                                </div>
+                            </div>
+                            <div class="card_footer">
+                                <div class="price_wrapper">
+                                    <span class="price_icon"><i class="fa fa-tag"></i></span>
+                                    <span class="price">12.000₫</span>
+                                    <span class="price_unit">/ giờ</span>
+                                </div>
+                                <a href="{{ route('user.booking') }}" class="btn_book">
+                                    <i class="fa fa-calendar-check-o"></i> Đặt chỗ ngay
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Parking Card 3 -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="destination_card">
+                        <div class="card_image_wrapper">
+                            <img src="{{ asset('user/images/slider-bg.jpg') }}" alt="Bãi Đỗ Xe Aeon" class="card_image">
+                            <div class="card_badge discount_badge">
+                                <span>-20%</span>
+                            </div>
+                        </div>
+                        <div class="card_content">
+                            <div class="card_header">
+                                <h4 class="card_destination">
+                                    <i class="fa fa-building-o"></i> Bãi Đỗ Xe Aeon Mall
+                                </h4>
+                                <div class="card_rating">
+                                    <i class="fa fa-star"></i>
+                                    <span>4.9</span>
+                                </div>
+                            </div>
+                            <p class="card_address">
+                                <i class="fa fa-map-marker"></i> 30 Bờ Bao Tân Thắng, Tân Phú, TP.HCM
+                            </p>
+                            <div class="card_details">
+                                <div class="detail_item">
+                                    <i class="fa fa-wifi"></i>
+                                    <span>Free WiFi</span>
+                                </div>
+                                <div class="detail_item">
+                                    <i class="fa fa-sun-o"></i>
+                                    <span>Có mái che</span>
+                                </div>
+                            </div>
+                            <div class="card_footer">
+                                <div class="price_wrapper">
+                                    <span class="price_icon"><i class="fa fa-tag"></i></span>
+                                    <span class="price">18.000₫</span>
+                                    <span class="price_unit">/ giờ</span>
+                                </div>
+                                <a href="{{ route('user.booking') }}" class="btn_book">
+                                    <i class="fa fa-calendar-check-o"></i> Đặt chỗ ngay
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Parking Card 4 -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="destination_card">
+                        <div class="card_image_wrapper">
+                            <img src="{{ asset('user/images/slider-bg.jpg') }}" alt="Bãi Đỗ Xe BigC" class="card_image">
+                            <div class="card_badge hot_badge">
+                                <span>🔥 HOT</span>
+                            </div>
+                        </div>
+                        <div class="card_content">
+                            <div class="card_header">
+                                <h4 class="card_destination">
+                                    <i class="fa fa-building-o"></i> Bãi Đỗ Xe Big C
+                                </h4>
+                                <div class="card_rating">
+                                    <i class="fa fa-star"></i>
+                                    <span>4.7</span>
+                                </div>
+                            </div>
+                            <p class="card_address">
+                                <i class="fa fa-map-marker"></i> 232 Nguyễn Đình Chiểu, Quận 3, TP.HCM
+                            </p>
+                            <div class="card_details">
+                                <div class="detail_item">
+                                    <i class="fa fa-motorcycle"></i>
+                                    <span>Xe máy</span>
+                                </div>
+                                <div class="detail_item">
+                                    <i class="fa fa-lock"></i>
+                                    <span>An toàn</span>
+                                </div>
+                            </div>
+                            <div class="card_footer">
+                                <div class="price_wrapper">
+                                    <span class="price_icon"><i class="fa fa-tag"></i></span>
+                                    <span class="price">10.000₫</span>
+                                    <span class="price_unit">/ giờ</span>
+                                </div>
+                                <a href="{{ route('user.booking') }}" class="btn_book">
+                                    <i class="fa fa-calendar-check-o"></i> Đặt chỗ ngay
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Parking Card 5 -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="destination_card">
+                        <div class="card_image_wrapper">
+                            <img src="{{ asset('user/images/slider-bg.jpg') }}" alt="Bãi Đỗ Xe Parkson" class="card_image">
+                            <div class="card_badge discount_badge">
+                                <span>-15%</span>
+                            </div>
+                        </div>
+                        <div class="card_content">
+                            <div class="card_header">
+                                <h4 class="card_destination">
+                                    <i class="fa fa-building-o"></i> Bãi Đỗ Xe Parkson
+                                </h4>
+                                <div class="card_rating">
+                                    <i class="fa fa-star"></i>
+                                    <span>4.6</span>
+                                </div>
+                            </div>
+                            <p class="card_address">
+                                <i class="fa fa-map-marker"></i> 45 Lê Thánh Tôn, Quận 1, TP.HCM
+                            </p>
+                            <div class="card_details">
+                                <div class="detail_item">
+                                    <i class="fa fa-car"></i>
+                                    <span>Đa dạng</span>
+                                </div>
+                                <div class="detail_item">
+                                    <i class="fa fa-users"></i>
+                                    <span>Valet parking</span>
+                                </div>
+                            </div>
+                            <div class="card_footer">
+                                <div class="price_wrapper">
+                                    <span class="price_icon"><i class="fa fa-tag"></i></span>
+                                    <span class="price">14.000₫</span>
+                                    <span class="price_unit">/ giờ</span>
+                                </div>
+                                <a href="{{ route('user.booking') }}" class="btn_book">
+                                    <i class="fa fa-calendar-check-o"></i> Đặt chỗ ngay
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Parking Card 6 -->
+                <div class="col-lg-4 col-md-6 mb-4">
+                    <div class="destination_card">
+                        <div class="card_image_wrapper">
+                            <img src="{{ asset('user/images/slider-bg.jpg') }}" alt="Bãi Đỗ Xe Coopmart" class="card_image">
+                            <div class="card_badge new_badge">
+                                <span>MỚI</span>
+                            </div>
+                            <div class="card_badge hot_badge">
+                                <span>🔥 HOT</span>
+                            </div>
+                        </div>
+                        <div class="card_content">
+                            <div class="card_header">
+                                <h4 class="card_destination">
+                                    <i class="fa fa-building-o"></i> Bãi Đỗ Xe Coopmart
+                                </h4>
+                                <div class="card_rating">
+                                    <i class="fa fa-star"></i>
+                                    <span>5.0</span>
+                                </div>
+                            </div>
+                            <p class="card_address">
+                                <i class="fa fa-map-marker"></i> 168 Nguyễn Văn Cừ, Quận 5, TP.HCM
+                            </p>
+                            <div class="card_details">
+                                <div class="detail_item">
+                                    <i class="fa fa-star"></i>
+                                    <span>Ưu đãi</span>
+                                </div>
+                                <div class="detail_item">
+                                    <i class="fa fa-refresh"></i>
+                                    <span>Linh hoạt</span>
+                                </div>
+                            </div>
+                            <div class="card_footer">
+                                <div class="price_wrapper">
+                                    <span class="price_icon"><i class="fa fa-tag"></i></span>
+                                    <span class="price">11.000₫</span>
+                                    <span class="price_unit">/ giờ</span>
+                                </div>
+                                <a href="{{ route('user.booking') }}" class="btn_book">
+                                    <i class="fa fa-calendar-check-o"></i> Đặt chỗ ngay
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -312,7 +498,6 @@
             </div>
         </div>
     </section>
-    <!-- end dashboard section -->
 
     <!-- info section -->
     <section class="info_section ">
