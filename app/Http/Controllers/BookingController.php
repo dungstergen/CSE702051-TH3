@@ -19,8 +19,6 @@ class BookingController extends Controller
      */
     public function index()
     {
-        $user = Auth::user();
-
         // Get available parking lots
         $parkingLots = ParkingLot::where('status', 'active')
             ->where('available_spots', '>', 0)
@@ -32,12 +30,15 @@ class BookingController extends Controller
             ->orderBy('price')
             ->get();
 
-        // Get user's recent bookings for quick rebooking
-        $recentBookings = Booking::where('user_id', $user->id)
-            ->with(['parkingLot', 'servicePackage'])
-            ->orderBy('created_at', 'desc')
-            ->limit(3)
-            ->get();
+        // Get user's recent bookings for quick rebooking (only if logged in)
+        $recentBookings = collect([]);
+        if (Auth::check()) {
+            $recentBookings = Booking::where('user_id', Auth::id())
+                ->with(['parkingLot', 'servicePackage'])
+                ->orderBy('created_at', 'desc')
+                ->limit(3)
+                ->get();
+        }
 
         return view('user.booking', compact('parkingLots', 'servicePackages', 'recentBookings'));
     }
@@ -151,7 +152,7 @@ class BookingController extends Controller
             ->orderBy('created_at', 'desc')
             ->paginate(10);
 
-        return view('user.booking-history', compact('bookings'));
+        return view('user.history', compact('bookings'));
     }
 
     /**

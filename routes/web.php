@@ -5,17 +5,10 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\AuthController;
 
 
-// Redirect trang chủ đến login
+// Public Home Page (Landing Page)
 Route::get('/', function () {
-    if (Auth::check()) {
-        $user = Auth::user();
-        if (in_array($user->role, ['admin', 'super_admin'])) {
-            return redirect()->route('admin.dashboard');
-        }
-        return redirect()->route('user.dashboard');
-    }
-    return redirect()->route('login');
-});
+    return view('user.index');
+})->name('home');
 
 // Login & Register routes
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');
@@ -24,7 +17,33 @@ Route::get('/register', [AuthController::class, 'showRegister'])->name('register
 Route::post('/register', [AuthController::class, 'register'])->name('register.post');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+// Public Pages (Accessible without authentication)
+Route::prefix('user')->name('user.')->group(function () {
+    // Static Public Pages
+    Route::get('/about', function () {
+        return view('user.about');
+    })->name('about');
 
+    Route::get('/why', function () {
+        return view('user.why');
+    })->name('why');
+
+    // Pricing & Services (Public)
+    Route::get('/pricing', [App\Http\Controllers\UserController::class, 'pricing'])->name('pricing');
+    Route::get('/testimonial', [App\Http\Controllers\UserController::class, 'testimonials'])->name('testimonial');
+
+    // Service Packages (Public - View Only)
+    Route::get('/service-packages', [App\Http\Controllers\ServicePackageController::class, 'index'])->name('service-packages');
+    Route::get('/service-packages/{id}', [App\Http\Controllers\ServicePackageController::class, 'show'])->name('service-packages.show');
+    Route::get('/service-packages/compare', [App\Http\Controllers\ServicePackageController::class, 'compare'])->name('service-packages.compare');
+    Route::get('/api/service-packages', [App\Http\Controllers\ServicePackageController::class, 'getPackages'])->name('service-packages.api');
+
+    // Booking - View parking lots (Public)
+    Route::get('/booking', [App\Http\Controllers\BookingController::class, 'index'])->name('booking');
+    Route::get('/api/parking-lot/{id}', [App\Http\Controllers\BookingController::class, 'getParkingLotDetails'])->name('parking-lot.details');
+});
+
+// Protected User Routes (Require Authentication)
 Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     // Dashboard
     Route::get('/dashboard', [App\Http\Controllers\UserController::class, 'dashboard'])->name('dashboard');
@@ -35,26 +54,11 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::put('/profile/password', [App\Http\Controllers\UserController::class, 'updatePassword'])->name('password.update');
     Route::delete('/account', [App\Http\Controllers\UserController::class, 'deleteAccount'])->name('account.delete');
 
-    // Booking System
-    Route::get('/booking', [App\Http\Controllers\BookingController::class, 'index'])->name('booking');
+    // Booking System (Requires Auth)
     Route::post('/booking', [App\Http\Controllers\BookingController::class, 'store'])->name('booking.store');
     Route::get('/booking/{booking}', [App\Http\Controllers\BookingController::class, 'show'])->name('booking.show');
     Route::patch('/booking/{booking}/cancel', [App\Http\Controllers\BookingController::class, 'cancel'])->name('booking.cancel');
     Route::get('/history', [App\Http\Controllers\BookingController::class, 'history'])->name('history');
-    Route::get('/api/parking-lot/{id}', [App\Http\Controllers\BookingController::class, 'getParkingLotDetails'])->name('parking-lot.details');
-
-    // Pricing & Services
-    Route::get('/pricing', [App\Http\Controllers\UserController::class, 'pricing'])->name('pricing');
-    Route::get('/testimonial', [App\Http\Controllers\UserController::class, 'testimonials'])->name('testimonial');
-
-    // Static pages
-    Route::get('/about', function () {
-        return view('user.about');
-    })->name('about');
-
-    Route::get('/why', function () {
-        return view('user.why');
-    })->name('why');
 
     // Payment System
     Route::get('/payment', [App\Http\Controllers\PaymentController::class, 'show'])->name('payment');
@@ -65,28 +69,21 @@ Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
     Route::get('/payment/history', [App\Http\Controllers\PaymentController::class, 'history'])->name('payment.history');
     Route::patch('/payment/{payment}/cancel', [App\Http\Controllers\PaymentController::class, 'cancel'])->name('payment.cancel');
 
-    // Service Packages
-    Route::get('/service-packages', [App\Http\Controllers\ServicePackageController::class, 'index'])->name('service-packages');
-    Route::get('/service-packages/{id}', [App\Http\Controllers\ServicePackageController::class, 'show'])->name('service-packages.show');
-    Route::get('/service-packages/compare', [App\Http\Controllers\ServicePackageController::class, 'compare'])->name('service-packages.compare');
-    Route::get('/api/service-packages', [App\Http\Controllers\ServicePackageController::class, 'getPackages'])->name('service-packages.api');
+    // Reviews (User's own reviews - requires auth)
+    Route::get('/reviews', [App\Http\Controllers\ReviewController::class, 'index'])->name('reviews');
+    Route::get('/reviews/create', [App\Http\Controllers\ReviewController::class, 'create'])->name('reviews.create');
+    Route::post('/reviews', [App\Http\Controllers\ReviewController::class, 'store'])->name('reviews.store');
+    Route::get('/reviews/{id}', [App\Http\Controllers\ReviewController::class, 'show'])->name('reviews.show');
+    Route::get('/reviews/{id}/edit', [App\Http\Controllers\ReviewController::class, 'edit'])->name('reviews.edit');
+    Route::put('/reviews/{id}', [App\Http\Controllers\ReviewController::class, 'update'])->name('reviews.update');
+    Route::delete('/reviews/{id}', [App\Http\Controllers\ReviewController::class, 'destroy'])->name('reviews.destroy');
 });
 
-Route::get('/dashboard', function () {
-    return view('user.dashboard');
-});
-
-Route::get('/booking', function () {
-    return view('user.booking');
-});
-
-Route::get('/history', function () {
-    return view('user.history');
-});
-
-Route::get('/payment', function () {
-    return view('user.payment');
-});
+// Redirect helpers for backward compatibility
+Route::redirect('/dashboard', '/user/dashboard')->middleware('auth');
+Route::redirect('/booking', '/user/booking');
+Route::redirect('/history', '/user/history')->middleware('auth');
+Route::redirect('/payment', '/user/payment')->middleware('auth');
 
 
 Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
