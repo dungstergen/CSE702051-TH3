@@ -383,50 +383,33 @@
             loadBookingsHistory();
         });
 
-        function loadBookingsHistory() {
-            // Simulated data - replace with actual API call
-            bookingsHistory = [
-                {
-                    id: 'BK001',
-                    parking_lot: 'Bãi đỗ xe Vincom',
-                    address: '72 Lê Thánh Tôn, Quận 1',
-                    start_time: '2025-10-15 14:30',
-                    end_time: '2025-10-15 17:30',
-                    vehicle_number: '29A-12345',
-                    vehicle_type: 'car',
-                    total_fee: 45000,
-                    status: 'completed',
-                    payment_status: 'paid'
-                },
-                {
-                    id: 'BK002',
-                    parking_lot: 'Bãi đỗ xe Big C',
-                    address: '232 Nguyễn Đình Chiểu, Quận 3',
-                    start_time: '2025-10-16 09:15',
-                    end_time: '2025-10-16 14:15',
-                    vehicle_number: '29B-67890',
-                    vehicle_type: 'car',
-                    total_fee: 60000,
-                    status: 'active',
-                    payment_status: 'pending'
-                },
-                {
-                    id: 'BK003',
-                    parking_lot: 'Bãi đỗ xe Lotte',
-                    address: '20 Trần Phú, Quận 5',
-                    start_time: '2025-10-10 18:00',
-                    end_time: '2025-10-10 20:00',
-                    vehicle_number: '51F-11111',
-                    vehicle_type: 'motorbike',
-                    total_fee: 30000,
-                    status: 'completed',
-                    payment_status: 'paid'
-                }
-            ];
+        async function loadBookingsHistory() {
+            try {
+                // Gọi API để lấy dữ liệu thực từ database
+                const response = await fetch('/user/api/bookings');
 
-            filteredBookings = [...bookingsHistory];
-            updateStatistics();
-            displayBookingsHistory();
+                if (!response.ok) {
+                    throw new Error('Failed to load bookings history');
+                }
+
+                bookingsHistory = await response.json();
+                filteredBookings = [...bookingsHistory];
+                updateStatistics();
+                displayBookingsHistory();
+            } catch (error) {
+                console.error('Error loading bookings:', error);
+                // Hiển thị thông báo lỗi
+                const tbody = document.getElementById('historyTableBody');
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" class="text-center py-5">
+                            <i class="fa fa-exclamation-triangle fa-2x text-danger"></i>
+                            <p class="mt-3 text-danger">Không thể tải lịch sử đặt chỗ. Vui lòng thử lại sau!</p>
+                            <button class="btn btn-primary mt-2" onclick="loadBookingsHistory()">Thử lại</button>
+                        </td>
+                    </tr>
+                `;
+            }
         }
 
         function updateStatistics() {

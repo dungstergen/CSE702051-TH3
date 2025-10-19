@@ -703,42 +703,29 @@
             loadParkingLots();
         });
 
-        function loadParkingLots() {
-            // Simulated data - replace with actual API call
-            parkingLots = [
-                {
-                    id: 1,
-                    name: 'Bãi đỗ xe Vincom',
-                    address: '72 Lê Thánh Tôn, Quận 1, TP.HCM',
-                    available_spaces: 45,
-                    total_spaces: 100,
-                    hourly_rate: 15000,
-                    rating: 4.5,
-                    image: '{{ asset("user/images/parking1.jpg") }}'
-                },
-                {
-                    id: 2,
-                    name: 'Bãi đỗ xe Big C',
-                    address: '232 Nguyễn Đình Chiểu, Quận 3, TP.HCM',
-                    available_spaces: 20,
-                    total_spaces: 80,
-                    hourly_rate: 12000,
-                    rating: 4.2,
-                    image: '{{ asset("user/images/parking2.jpg") }}'
-                },
-                {
-                    id: 3,
-                    name: 'Bãi đỗ xe Lotte',
-                    address: '20 Trần Phú, Quận 5, TP.HCM',
-                    available_spaces: 60,
-                    total_spaces: 150,
-                    hourly_rate: 18000,
-                    rating: 4.7,
-                    image: '{{ asset("user/images/parking3.jpg") }}'
-                }
-            ];
+        async function loadParkingLots() {
+            try {
+                // Gọi API để lấy dữ liệu thực từ database
+                const response = await fetch('/user/api/parking-lots');
 
-            displayParkingLots();
+                if (!response.ok) {
+                    throw new Error('Failed to load parking lots');
+                }
+
+                parkingLots = await response.json();
+                displayParkingLots();
+            } catch (error) {
+                console.error('Error loading parking lots:', error);
+                // Hiển thị thông báo lỗi cho user
+                const container = document.getElementById('parkingLotsList');
+                container.innerHTML = `
+                    <div class="text-center py-5">
+                        <i class="fa fa-exclamation-triangle fa-3x text-danger"></i>
+                        <p class="mt-3 text-danger">Không thể tải danh sách bãi đỗ xe. Vui lòng thử lại sau!</p>
+                        <button class="btn btn-primary mt-2" onclick="loadParkingLots()">Thử lại</button>
+                    </div>
+                `;
+            }
         }
 
         function displayParkingLots() {
