@@ -14,6 +14,12 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         $this->call([
+            // Thứ tự quan trọng: ParkingLot và User trước, sau đó Booking, Payment, Review
+            ParkingLotSeeder::class,
+            UserSeeder::class,
+            BookingSeeder::class,
+            PaymentSeeder::class,
+            ReviewSeeder::class,
             AdminTestDataSeeder::class,
         ]);
     }
