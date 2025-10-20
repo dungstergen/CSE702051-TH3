@@ -12,10 +12,10 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->enum('role', ['user', 'admin', 'staff'])->default('user')->after('password');
-
-            // Add index
-            $table->index(['role']);
+            $table->string('phone', 20)->nullable()->after('email');
+            $table->enum('role', ['user', 'admin', 'super_admin'])->default('user')->after('password');
+            $table->text('address')->nullable()->after('phone');
+            $table->string('avatar')->nullable()->after('address');
         });
     }
 
@@ -25,8 +25,7 @@ return new class extends Migration
     public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropIndex(['role']);
-            $table->dropColumn('role');
+            $table->dropColumn(['phone', 'role', 'address', 'avatar']);
         });
     }
 };

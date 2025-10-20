@@ -15,23 +15,23 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('parking_lot_id')->constrained()->onDelete('cascade');
+            $table->foreignId('service_package_id')->nullable()->constrained()->onDelete('set null');
+            $table->string('booking_code')->unique();
             $table->date('booking_date');
             $table->dateTime('start_time');
             $table->dateTime('end_time');
             $table->integer('duration_hours');
-            $table->decimal('total_amount', 10, 2);
-            $table->enum('status', ['pending', 'confirmed', 'cancelled', 'completed'])->default('pending');
             $table->string('vehicle_type')->nullable();
-            $table->string('vehicle_number')->nullable();
-            $table->text('notes')->nullable();
+            $table->string('license_plate', 20);
+            $table->string('phone_number', 15);
+            $table->text('special_requests')->nullable();
+            $table->decimal('total_cost', 10, 2);
+            $table->enum('status', ['pending', 'confirmed', 'cancelled', 'completed'])->default('pending');
+            $table->enum('payment_status', ['pending', 'completed', 'failed', 'cancelled'])->default('pending');
             $table->timestamps();
 
-            // Indexes
-            $table->index(['user_id']);
-            $table->index(['parking_lot_id']);
-            $table->index(['status']);
-            $table->index(['booking_date']);
-            $table->index(['start_time', 'end_time']);
+            $table->index(['user_id', 'booking_date']);
+            $table->index(['parking_lot_id', 'start_time']);
         });
     }
 

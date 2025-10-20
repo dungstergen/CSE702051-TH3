@@ -21,7 +21,7 @@ class PaymentSeeder extends Seeder
             return;
         }
 
-        $paymentMethods = ['momo', 'zalopay', 'bank_transfer', 'cash'];
+        $paymentMethods = ['e_wallet', 'bank_transfer', 'cash', 'credit_card'];
 
         foreach ($bookings as $booking) {
             $paymentStatus = $booking->payment_status;

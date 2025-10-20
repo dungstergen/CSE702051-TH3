@@ -79,8 +79,11 @@ class ReviewSeeder extends Seeder
                 'parking_lot_id' => $booking->parking_lot_id,
                 'booking_id' => $booking->id,
                 'rating' => $commentData['rating'],
+                'title' => 'Đánh giá bãi đỗ xe',
                 'comment' => $commentData['comment'],
-                'is_visible' => rand(0, 10) > 1, // 90% visible
+                'would_recommend' => $commentData['rating'] >= 4,
+                'is_verified' => true,
+                'status' => 'active',
                 'created_at' => $booking->end_time->addHours(rand(1, 48)),
                 'updated_at' => now(),
             ]);
