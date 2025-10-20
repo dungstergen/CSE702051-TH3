@@ -71,8 +71,9 @@ class AdminBookingController extends Controller
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
             'vehicle_type' => 'nullable|string|max:50',
-            'vehicle_number' => 'nullable|string|max:20',
-            'notes' => 'nullable|string',
+            'license_plate' => 'nullable|string|max:20',
+            'phone_number' => 'nullable|string|max:20',
+            'special_requests' => 'nullable|string',
             'status' => 'required|in:pending,confirmed,cancelled,completed'
         ]);
 
@@ -82,12 +83,12 @@ class AdminBookingController extends Controller
         $durationHours = ceil(($endTime - $startTime) / 3600);
 
         $parkingLot = ParkingLot::find($validated['parking_lot_id']);
-        $totalAmount = $durationHours * $parkingLot->hourly_rate;
+    $totalAmount = $durationHours * $parkingLot->hourly_rate;
 
-        $validated['duration_hours'] = $durationHours;
-        $validated['total_amount'] = $totalAmount;
-        $validated['start_time'] = $validated['booking_date'] . ' ' . $validated['start_time'];
-        $validated['end_time'] = $validated['booking_date'] . ' ' . $validated['end_time'];
+    $validated['duration_hours'] = $durationHours;
+    $validated['total_cost'] = $totalAmount;
+    $validated['start_time'] = $validated['booking_date'] . ' ' . $validated['start_time'];
+    $validated['end_time'] = $validated['booking_date'] . ' ' . $validated['end_time'];
 
         Booking::create($validated);
 
@@ -127,8 +128,9 @@ class AdminBookingController extends Controller
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
             'vehicle_type' => 'nullable|string|max:50',
-            'vehicle_number' => 'nullable|string|max:20',
-            'notes' => 'nullable|string',
+            'license_plate' => 'nullable|string|max:20',
+            'phone_number' => 'nullable|string|max:20',
+            'special_requests' => 'nullable|string',
             'status' => 'required|in:pending,confirmed,cancelled,completed'
         ]);
 
@@ -138,12 +140,12 @@ class AdminBookingController extends Controller
         $durationHours = ceil(($endTime - $startTime) / 3600);
 
         $parkingLot = ParkingLot::find($validated['parking_lot_id']);
-        $totalAmount = $durationHours * $parkingLot->hourly_rate;
+    $totalAmount = $durationHours * $parkingLot->hourly_rate;
 
-        $validated['duration_hours'] = $durationHours;
-        $validated['total_amount'] = $totalAmount;
-        $validated['start_time'] = $validated['booking_date'] . ' ' . $validated['start_time'];
-        $validated['end_time'] = $validated['booking_date'] . ' ' . $validated['end_time'];
+    $validated['duration_hours'] = $durationHours;
+    $validated['total_cost'] = $totalAmount;
+    $validated['start_time'] = $validated['booking_date'] . ' ' . $validated['start_time'];
+    $validated['end_time'] = $validated['booking_date'] . ' ' . $validated['end_time'];
 
         $booking->update($validated);
 

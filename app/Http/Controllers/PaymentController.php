@@ -96,6 +96,14 @@ class PaymentController extends Controller
         // Generate transaction ID
         $transactionId = 'TXN' . date('YmdHis') . strtoupper(Str::random(4));
 
+        // Normalize method to match DB enum
+        $normalizedMethod = match ($request->payment_method) {
+            'momo', 'zalopay' => 'e_wallet',
+            'bank_transfer' => 'bank_transfer',
+            'cash' => 'cash',
+            default => 'bank_transfer',
+        };
+
         // Update or create payment record
         $payment = $booking->payment;
         if (!$payment) {
@@ -103,24 +111,24 @@ class PaymentController extends Controller
                 'booking_id' => $booking->id,
                 'user_id' => $user->id,
                 'amount' => $booking->total_cost,
-                'payment_method' => $request->payment_method,
+                'payment_method' => $normalizedMethod,
                 'payment_status' => 'pending',
                 'transaction_id' => $transactionId,
-                'payment_details' => json_encode([
+                'gateway_response' => [
                     'phone_number' => $request->phone_number,
-                    'payment_time' => now(),
-                    'ip_address' => $request->ip()
-                ])
+                    'init_time' => now()->toDateTimeString(),
+                    'ip_address' => $request->ip(),
+                ]
             ]);
         } else {
             $payment->update([
-                'payment_method' => $request->payment_method,
+                'payment_method' => $normalizedMethod,
                 'transaction_id' => $transactionId,
-                'payment_details' => json_encode([
+                'gateway_response' => [
                     'phone_number' => $request->phone_number,
-                    'payment_time' => now(),
-                    'ip_address' => $request->ip()
-                ])
+                    'init_time' => now()->toDateTimeString(),
+                    'ip_address' => $request->ip(),
+                ]
             ]);
         }
 
@@ -168,9 +176,9 @@ class PaymentController extends Controller
      */
     private function processBankTransfer($booking, $payment)
     {
-        // Bank transfer requires manual verification
+        // Bank transfer requires manual verification; keep status pending
         $payment->update([
-            'payment_status' => 'pending_verification'
+            'payment_status' => 'pending'
         ]);
 
         return redirect()->route('user.payment.pending', ['payment' => $payment->id])
@@ -182,9 +190,9 @@ class PaymentController extends Controller
      */
     private function processCashPayment($booking, $payment)
     {
-        // Cash payment will be collected on-site
+        // Cash payment will be collected on-site; keep status pending
         $payment->update([
-            'payment_status' => 'pending_cash'
+            'payment_status' => 'pending'
         ]);
 
         $booking->update([

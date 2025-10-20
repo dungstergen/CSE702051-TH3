@@ -41,10 +41,10 @@ class AdminReportController extends Controller
                                    ->count();
 
         // Top performing parking lots
-        $topParkingLots = Booking::with('parkingLot')
+    $topParkingLots = Booking::with('parkingLot')
                                 ->whereYear('created_at', Carbon::now()->year)
                                 ->whereMonth('created_at', Carbon::now()->month)
-                                ->selectRaw('parking_lot_id, COUNT(*) as booking_count, SUM(total_amount) as total_revenue')
+                ->selectRaw('parking_lot_id, COUNT(*) as booking_count, SUM(total_cost) as total_revenue')
                                 ->groupBy('parking_lot_id')
                                 ->orderBy('total_revenue', 'desc')
                                 ->limit(5)
@@ -247,7 +247,7 @@ class AdminReportController extends Controller
                     $booking->parkingLot->name,
                     $booking->status,
                     $booking->duration_hours . ' hours',
-                    $booking->total_amount
+                    $booking->total_cost
                 ]);
             }
 
@@ -283,7 +283,7 @@ class AdminReportController extends Controller
                     $booking->parkingLot->name,
                     $booking->status,
                     $booking->duration_hours . ' hours',
-                    $booking->total_amount,
+                    $booking->total_cost,
                     $booking->payment ? $booking->payment->payment_status : 'No payment'
                 ]);
             }

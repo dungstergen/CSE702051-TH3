@@ -15,9 +15,15 @@
                 <!-- Profile Avatar -->
                 <div class="absolute -bottom-12 left-1/2 transform -translate-x-1/2">
                     <div class="relative">
-                        <img src="https://ui-avatars.com/api/?name=Admin&size=100&background=3b82f6&color=ffffff&rounded=true"
-                             alt="Profile"
-                             class="w-24 h-24 rounded-full border-4 border-white shadow-lg">
+                        @if($admin->avatar ?? false)
+                            <img src="{{ asset('storage/' . $admin->avatar) }}"
+                                 alt="Profile"
+                                 class="w-24 h-24 rounded-full border-4 border-white shadow-lg object-cover">
+                        @else
+                            <img src="https://ui-avatars.com/api/?name={{ urlencode($admin->name ?? 'Admin') }}&size=100&background=3b82f6&color=ffffff&rounded=true"
+                                 alt="Profile"
+                                 class="w-24 h-24 rounded-full border-4 border-white shadow-lg">
+                        @endif
                         <div class="absolute bottom-0 right-0 w-6 h-6 bg-green-500 border-2 border-white rounded-full"></div>
                     </div>
                 </div>
@@ -25,7 +31,8 @@
 
             <div class="flex-auto p-6 pt-16 text-center">
                 <h5 class="mb-1 font-bold text-slate-700 dark:text-white">{{ $admin->name ?? 'Administrator' }}</h5>
-                <p class="mb-3 text-sm font-semibold text-slate-400">{{ $admin->role ?? 'Quản trị viên hệ thống' }}</p>
+                <p class="mb-3 text-sm font-semibold text-slate-400">{{ $admin->email ?? 'admin@paspark.com' }}</p>
+                <p class="mb-3 text-xs text-slate-400">Quản trị viên hệ thống</p>
 
                 <div class="flex justify-center mb-4">
                     <div class="px-4 py-2 bg-blue-50 rounded-lg">
@@ -131,20 +138,20 @@
                                 Số điện thoại
                             </label>
                             <input type="tel" name="phone" id="phone"
-                                   value="{{ old('phone', $admin->phone ?? '+84 123 456 789') }}"
+                                   value="{{ old('phone', $admin->phone ?? '') }}"
                                    class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none focus:transition-shadow"
-                                   placeholder="+84 123 456 789">
+                                   placeholder="Nhập số điện thoại">
                             @error('phone')
                                 <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                             @enderror
                         </div>
 
                         <div class="w-full max-w-full px-3 mb-6 md:w-6/12 md:flex-none">
-                            <label class="mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80" for="role">
-                                Vai trò
+                            <label class="mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80" for="created_at">
+                                Ngày tạo tài khoản
                             </label>
-                            <input type="text" name="role" id="role"
-                                   value="{{ old('role', $admin->role ?? 'Quản trị viên hệ thống') }}"
+                            <input type="text" name="created_at" id="created_at"
+                                   value="{{ $admin->created_at ? $admin->created_at->format('d/m/Y H:i') : 'N/A' }}"
                                    class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-gray-100 bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all"
                                    readonly>
                         </div>
@@ -227,7 +234,7 @@
                         <button type="button" onclick="resetForm()" class="inline-block px-6 py-3 mr-3 font-bold text-center text-gray-700 uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer leading-pro text-xs ease-soft-in tracking-tight-soft hover:scale-102 active:opacity-85">
                             Đặt lại
                         </button>
-                        <button type="submit" class="inline-block px-6 py-3 font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer bg-gradient-to-tl from-blue-600 to-cyan-400 leading-pro text-xs ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs">
+                        <button type="submit" class="inline-block px-6 py-3 font-bold text-center text-gray-700 uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer bg-gradient-to-tl from-blue-600 to-cyan-400 leading-pro text-xs ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs">
                             <i class="fas fa-save mr-2"></i>Cập nhật
                         </button>
                     </div>
@@ -237,7 +244,7 @@
     </div>
 </div>
 
-<!-- Activity Log -->
+{{-- <!-- Activity Log -->
 <div class="flex flex-wrap -mx-3 mt-6">
     <div class="w-full max-w-full px-3">
         <div class="relative flex flex-col min-w-0 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
@@ -276,7 +283,7 @@
             </div>
         </div>
     </div>
-</div>
+</div> --}}
 @endsection
 
 @push('scripts')

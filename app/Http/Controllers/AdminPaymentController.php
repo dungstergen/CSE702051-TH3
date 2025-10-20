@@ -73,7 +73,8 @@ class AdminPaymentController extends Controller
     public function update(Request $request, Payment $payment)
     {
         $validated = $request->validate([
-            'payment_method' => 'nullable|in:momo,zalopay,vnpay,banking,cash',
+            // Align with payments table enum: credit_card, debit_card, bank_transfer, e_wallet, cash
+            'payment_method' => 'nullable|in:credit_card,debit_card,bank_transfer,e_wallet,cash',
             'payment_status' => 'required|in:pending,completed,failed,refunded',
             'notes' => 'nullable|string'
         ]);
