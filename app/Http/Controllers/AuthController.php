@@ -6,37 +6,28 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Models\User;
-use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
-    /**
-     * Show login form
-     */
+    // Hiển thị trang đăng nhập
     public function showLogin()
     {
         if (Auth::check()) {
             return $this->redirectToDashboard();
         }
-
         return view('auth.login');
     }
 
-    /**
-     * Show register form
-     */
+    // Hiển thị trang đăng ký
     public function showRegister()
     {
         if (Auth::check()) {
             return $this->redirectToDashboard();
         }
-
         return view('auth.register');
     }
 
-    /**
-     * Handle login request
-     */
+    // Xử lý đăng nhập
     public function login(Request $request)
     {
         $request->validate([
@@ -49,39 +40,29 @@ class AuthController extends Controller
             'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự.',
         ]);
 
-        $credentials = $request->only('email', 'password');
-        $remember = $request->boolean('remember');
-
-        if (Auth::attempt($credentials, $remember)) {
+        if (Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
             $request->session()->regenerate();
-
             return $this->redirectToDashboard()->with('success', 'Đăng nhập thành công!');
         }
 
-        return back()->withErrors([
-            'email' => 'Thông tin đăng nhập không chính xác.',
-        ])->withInput($request->except('password'));
+        return back()->withErrors(['email' => 'Thông tin đăng nhập không chính xác.'])
+            ->withInput($request->except('password'));
     }
 
-    /**
-     * Handle register request
-     */
+    // Xử lý đăng ký
     public function register(Request $request)
     {
         $request->validate([
             'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:6|confirmed',
+            'email' => 'required|email|max:255|unique:users',
+            'password' => 'required|min:6|confirmed',
             'phone' => 'nullable|string|max:20',
         ], [
             'name.required' => 'Vui lòng nhập họ tên.',
             'email.required' => 'Vui lòng nhập email.',
-            'email.email' => 'Email không đúng định dạng.',
             'email.unique' => 'Email này đã được sử dụng.',
             'password.required' => 'Vui lòng nhập mật khẩu.',
-            'password.min' => 'Mật khẩu phải có ít nhất 6 ký tự.',
             'password.confirmed' => 'Xác nhận mật khẩu không khớp.',
-            'phone.max' => 'Số điện thoại không được quá 20 ký tự.',
         ]);
 
         $user = User::create([
@@ -89,31 +70,26 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'phone' => $request->phone,
-            'role' => 'user', // Default role
+            'role' => 'user',
         ]);
 
         Auth::login($user);
         $request->session()->regenerate();
 
-        return $this->redirectToDashboard()->with('success', 'Đăng ký tài khoản thành công! Chào mừng bạn đến với Paspark.');
+        return $this->redirectToDashboard()->with('success', 'Đăng ký thành công!');
     }
 
-    /**
-     * Handle logout request
-     */
+    // Đăng xuất
     public function logout(Request $request)
     {
-        Auth::guard('web')->logout();
-
+        Auth::logout();
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login')->with('message', 'Đã đăng xuất thành công!');
+        return redirect()->route('login')->with('message', 'Đã đăng xuất!');
     }
 
-    /**
-     * Redirect to appropriate dashboard based on user role
-     */
+    // Chuyển hướng theo role
     protected function redirectToDashboard()
     {
         $user = Auth::user();
