@@ -15,22 +15,19 @@ return new class extends Migration
             $table->id();
             $table->foreignId('user_id')->constrained()->onDelete('cascade');
             $table->foreignId('parking_lot_id')->constrained()->onDelete('cascade');
-            $table->foreignId('booking_id')->nullable()->constrained()->onDelete('set null');
-            $table->tinyInteger('rating')->unsigned();
-            $table->text('comment')->nullable();
-            $table->boolean('is_visible')->default(true);
-            $table->text('admin_note')->nullable();
+            $table->foreignId('booking_id')->constrained()->onDelete('cascade');
+            $table->integer('rating'); // 1-5
+            $table->string('title');
+            $table->text('comment');
+            $table->text('pros')->nullable();
+            $table->text('cons')->nullable();
+            $table->boolean('would_recommend')->default(true);
+            $table->boolean('is_verified')->default(false);
+            $table->enum('status', ['active', 'hidden', 'pending'])->default('active');
             $table->timestamps();
 
-            // Indexes
-            $table->index(['user_id']);
-            $table->index(['parking_lot_id']);
-            $table->index(['booking_id']);
-            $table->index(['rating']);
-            $table->index(['is_visible']);
-
-            // Note: SQLite doesn't support CHECK constraints in Laravel migrations
-            // Validation will be handled in the model
+            $table->index(['parking_lot_id', 'rating']);
+            $table->index('user_id');
         });
     }
 

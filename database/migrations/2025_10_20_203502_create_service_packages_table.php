@@ -18,8 +18,7 @@ return new class extends Migration
             $table->decimal('price', 10, 2);
             $table->integer('duration_hours')->nullable();
             $table->json('features')->nullable();
-            $table->enum('status', ['active', 'inactive'])->default('active');
-            $table->boolean('is_featured')->default(false);
+            $table->boolean('is_active')->default(true);
             $table->timestamps();
         });
     }

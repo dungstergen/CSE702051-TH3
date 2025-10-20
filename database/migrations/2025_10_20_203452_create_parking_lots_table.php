@@ -16,19 +16,16 @@ return new class extends Migration
             $table->string('name');
             $table->text('address');
             $table->text('description')->nullable();
-            $table->integer('capacity');
-            $table->decimal('hourly_rate', 8, 2);
-            $table->decimal('latitude', 10, 8)->nullable();
-            $table->decimal('longitude', 11, 8)->nullable();
-            $table->text('amenities')->nullable();
-            $table->string('operating_hours')->nullable();
-            $table->text('contact_info')->nullable();
-            $table->boolean('is_active')->default(true);
+            $table->integer('total_spots');
+            $table->integer('available_spots');
+            $table->decimal('hourly_rate', 10, 2);
+            $table->enum('status', ['active', 'inactive', 'maintenance'])->default('active');
+            $table->decimal('latitude', 10, 7)->nullable();
+            $table->decimal('longitude', 10, 7)->nullable();
+            $table->json('facilities')->nullable();
+            $table->string('contact_phone', 20)->nullable();
+            $table->string('image')->nullable();
             $table->timestamps();
-
-            // Indexes
-            $table->index(['is_active']);
-            $table->index(['latitude', 'longitude']);
         });
     }
 

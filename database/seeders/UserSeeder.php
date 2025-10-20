@@ -21,7 +21,6 @@ class UserSeeder extends Seeder
             'password' => Hash::make('password'),
             'phone' => '0901234567',
             'role' => 'admin',
-            'is_active' => true,
             'email_verified_at' => now(),
         ]);
 
@@ -33,7 +32,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'phone' => '0912345678',
                 'role' => 'user',
-                'is_active' => true,
                 'email_verified_at' => now(),
             ],
             [
@@ -42,7 +40,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'phone' => '0923456789',
                 'role' => 'user',
-                'is_active' => true,
                 'email_verified_at' => now(),
             ],
             [
@@ -51,7 +48,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'phone' => '0934567890',
                 'role' => 'user',
-                'is_active' => true,
                 'email_verified_at' => now(),
             ],
             [
@@ -60,7 +56,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'phone' => '0945678901',
                 'role' => 'user',
-                'is_active' => true,
                 'email_verified_at' => now(),
             ],
             [
@@ -69,7 +64,6 @@ class UserSeeder extends Seeder
                 'password' => Hash::make('password'),
                 'phone' => '0956789012',
                 'role' => 'user',
-                'is_active' => true,
                 'email_verified_at' => now(),
             ],
         ];

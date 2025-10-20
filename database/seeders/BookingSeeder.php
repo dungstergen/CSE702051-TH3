@@ -57,6 +57,7 @@ class BookingSeeder extends Seeder
                 'user_id' => $user->id,
                 'parking_lot_id' => $parkingLot->id,
                 'booking_code' => 'BK' . date('Ymd') . str_pad($i + 1, 4, '0', STR_PAD_LEFT),
+                'booking_date' => $startTime->toDateString(),
                 'start_time' => $startTime,
                 'end_time' => $endTime,
                 'duration_hours' => $durationHours,

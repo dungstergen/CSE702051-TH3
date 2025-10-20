@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             BookingSeeder::class,
             PaymentSeeder::class,
             ReviewSeeder::class,
-            AdminTestDataSeeder::class,
+            // AdminTestDataSeeder::class, // Tắt vì dùng cột is_active không tồn tại
         ]);
     }
 }
