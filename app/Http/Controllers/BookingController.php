@@ -9,33 +9,22 @@ use App\Models\ServicePackage;
 use App\Models\Payment;
 use Illuminate\Support\Facades\Auth;
 use Carbon\Carbon;
-use App\Http\Requests\StoreBookingRequest;
-use App\Services\BookingService;
 
 class BookingController extends Controller
 {
-    public function __construct(
-        private BookingService $bookingService
-    ) {}
-
-    /**
-     * Display the booking page with available parking lots
-     */
+    // Hiển thị trang đặt chỗ
     public function index()
     {
-        // Get available parking lots
         $parkingLots = ParkingLot::where('status', 'active')
             ->where('available_spots', '>', 0)
             ->orderBy('hourly_rate')
             ->get();
 
-        // Get service packages
         $servicePackages = ServicePackage::where('is_active', true)
             ->orderBy('price')
             ->get();
 
-        // Get user's recent bookings for quick rebooking (only if logged in)
-        $recentBookings = collect([]);
+        $recentBookings = [];
         if (Auth::check()) {
             $recentBookings = Booking::where('user_id', Auth::id())
                 ->with(['parkingLot', 'servicePackage'])
@@ -47,46 +36,82 @@ class BookingController extends Controller
         return view('user.booking', compact('parkingLots', 'servicePackages', 'recentBookings'));
     }
 
-    /**
-     * Show a parking lot detail page
-     */
+
+    // Xem chi tiết bãi đỗ xe
     public function showParkingLot($id)
     {
-        $parkingLot = ParkingLot::with(['reviews' => function($q){
-            $q->visible()->orderBy('created_at', 'desc')->limit(10);
-        }, 'servicePackages'])->findOrFail($id);
-
-        $averageRating = method_exists($parkingLot, 'getAverageRatingAttribute')
-            ? $parkingLot->average_rating
-            : ($parkingLot->reviews()->visible()->avg('rating') ?? 0);
+        $parkingLot = ParkingLot::with(['reviews', 'servicePackages'])->findOrFail($id);
+        $averageRating = $parkingLot->reviews()->avg('rating') ?? 0;
 
         return view('user.parking-lot-detail', compact('parkingLot', 'averageRating'));
     }
 
-    /**
-     * Store a new booking
-     */
-    public function store(StoreBookingRequest $request)
+    // Tạo đặt chỗ mới
+    public function store(Request $request)
     {
-        try {
-            $booking = $this->bookingService->createBooking(
-                $request->validated(),
-                Auth::user()
-            );
+        // Validate dữ liệu
+        $validated = $request->validate([
+            'parking_lot_id' => 'required|exists:parking_lots,id',
+            'booking_date' => 'required|date',
+            'start_time' => 'required|date',
+            'end_time' => 'required|date|after:start_time',
+            'license_plate' => 'required|string|max:20',
+            'phone_number' => 'required|string|max:15',
+            'vehicle_type' => 'nullable|string',
+            'service_package_id' => 'nullable|exists:service_packages,id',
+            'special_requests' => 'nullable|string',
+        ]);
 
-            return redirect()
-                ->route('user.booking.show', $booking->id)
-                ->with('success', 'Đặt chỗ thành công! Vui lòng thanh toán để xác nhận.');
-        } catch (\Exception $e) {
-            return back()
-                ->withInput()
-                ->withErrors(['error' => $e->getMessage()]);
+        // Lấy thông tin bãi đỗ
+        $parkingLot = ParkingLot::findOrFail($validated['parking_lot_id']);
+
+        // Kiểm tra bãi có khả dụng không
+        if ($parkingLot->status !== 'active' || $parkingLot->available_spots <= 0) {
+            return back()->withErrors(['error' => 'Bãi đỗ xe không khả dụng'])->withInput();
         }
+
+        // Tính thời gian và giá
+        $startTime = Carbon::parse($validated['start_time']);
+        $endTime = Carbon::parse($validated['end_time']);
+        $hours = ceil($endTime->diffInHours($startTime));
+        $totalCost = $hours * $parkingLot->hourly_rate;
+
+        // Nếu có gói dịch vụ thì dùng giá gói
+        if (!empty($validated['service_package_id'])) {
+            $package = ServicePackage::find($validated['service_package_id']);
+            if ($package) {
+                $totalCost = $package->price;
+            }
+        }
+
+        // Tạo mã booking
+        $bookingCode = 'BK' . now()->format('YmdHis') . strtoupper(substr(md5(rand()), 0, 4));
+
+        // Tạo booking
+        $booking = Booking::create([
+            'user_id' => Auth::id(),
+            'parking_lot_id' => $validated['parking_lot_id'],
+            'service_package_id' => $validated['service_package_id'] ?? null,
+            'booking_code' => $bookingCode,
+            'booking_date' => $validated['booking_date'],
+            'start_time' => $startTime,
+            'end_time' => $endTime,
+            'duration_hours' => $hours,
+            'vehicle_type' => $validated['vehicle_type'] ?? null,
+            'license_plate' => $validated['license_plate'],
+            'phone_number' => $validated['phone_number'],
+            'special_requests' => $validated['special_requests'] ?? null,
+            'total_cost' => $totalCost,
+            'status' => 'pending',
+            'payment_status' => 'pending',
+        ]);
+
+        return redirect()->route('user.booking.show', $booking->id)
+            ->with('success', 'Đặt chỗ thành công! Vui lòng thanh toán để xác nhận.');
     }
 
-    /**
-     * Show booking details
-     */
+
+    // Xem chi tiết booking
     public function show($id)
     {
         $booking = Booking::with(['parkingLot', 'servicePackage', 'payment'])
@@ -96,9 +121,7 @@ class BookingController extends Controller
         return view('user.booking-details', compact('booking'));
     }
 
-    /**
-     * Show booking history
-     */
+    // Lịch sử đặt chỗ
     public function history()
     {
         $bookings = Booking::where('user_id', Auth::id())
@@ -109,27 +132,27 @@ class BookingController extends Controller
         return view('user.history', compact('bookings'));
     }
 
-    /**
-     * Cancel a booking
-     */
+    // Hủy đặt chỗ
     public function cancel($id)
     {
-        try {
-            $booking = Booking::where('user_id', Auth::id())
-                ->where('status', '!=', 'completed')
-                ->findOrFail($id);
+        $booking = Booking::where('user_id', Auth::id())
+            ->where('status', '!=', 'completed')
+            ->findOrFail($id);
 
-            $this->bookingService->cancelBooking($booking);
-
-            return back()->with('success', 'Đã hủy đặt chỗ thành công');
-        } catch (\Exception $e) {
-            return back()->withErrors(['error' => $e->getMessage()]);
+        if ($booking->status === 'completed') {
+            return back()->withErrors(['error' => 'Không thể hủy đặt chỗ đã hoàn thành']);
         }
+
+        $booking->update([
+            'status' => 'cancelled',
+            'payment_status' => $booking->payment_status === 'completed' ? $booking->payment_status : 'cancelled',
+        ]);
+
+        return back()->with('success', 'Đã hủy đặt chỗ thành công');
     }
 
-    /**
-     * Get parking lot details for AJAX
-     */
+
+    // API: Lấy thông tin bãi đỗ
     public function getParkingLotDetails($id)
     {
         $parkingLot = ParkingLot::with('servicePackages')->findOrFail($id);
@@ -146,82 +169,35 @@ class BookingController extends Controller
         ]);
     }
 
-    /**
-     * Get all parking lots for API (AJAX)
-     */
+    // API: Danh sách bãi đỗ
     public function getParkingLots()
     {
         $parkingLots = ParkingLot::where('status', 'active')
             ->where('available_spots', '>', 0)
             ->orderBy('hourly_rate')
-            ->get()
-            ->map(function($lot) {
-                return [
-                    'id' => $lot->id,
-                    'name' => $lot->name,
-                    'address' => $lot->address,
-                    'available_spaces' => $lot->available_spots,
-                    'total_spaces' => $lot->total_spots,
-                    'hourly_rate' => $lot->hourly_rate,
-                    'rating' => 4.5, // TODO: Calculate from reviews
-                    'image' => asset('user/images/parking1.jpg') // Default image
-                ];
-            });
+            ->get();
 
         return response()->json($parkingLots);
     }
 
-    /**
-     * Get user bookings for API (AJAX)
-     */
+    // API: Lịch sử booking của user
     public function getUserBookings()
     {
-        $user = Auth::user();
-
-        $bookings = Booking::where('user_id', $user->id)
+        $bookings = Booking::where('user_id', Auth::id())
             ->with(['parkingLot'])
             ->orderBy('created_at', 'desc')
-            ->get()
-            ->map(function($booking) {
-                return [
-                    'id' => $booking->booking_code ?? 'BK' . $booking->id,
-                    'parking_lot' => $booking->parkingLot->name,
-                    'address' => $booking->parkingLot->address,
-                    'start_time' => $booking->start_time->format('Y-m-d H:i'),
-                    'end_time' => $booking->end_time->format('Y-m-d H:i'),
-                    'vehicle_number' => $booking->license_plate,
-                    'vehicle_type' => $booking->vehicle_type,
-                    'total_fee' => $booking->total_cost,
-                    'status' => $booking->status,
-                    'payment_status' => $booking->payment_status
-                ];
-            });
+            ->get();
 
         return response()->json($bookings);
     }
 
-    /**
-     * Get booking detail for API (AJAX)
-     */
+    // API: Chi tiết booking
     public function getBookingDetail($id)
     {
         $booking = Booking::with(['parkingLot', 'payment'])
             ->where('user_id', Auth::id())
             ->findOrFail($id);
 
-        return response()->json([
-            'id' => $booking->booking_code ?? 'BK' . $booking->id,
-            'parking_lot' => $booking->parkingLot->name,
-            'address' => $booking->parkingLot->address,
-            'start_time' => $booking->start_time->format('Y-m-d H:i'),
-            'end_time' => $booking->end_time->format('Y-m-d H:i'),
-            'duration_hours' => $booking->duration_hours,
-            'vehicle_type' => $booking->vehicle_type,
-            'license_plate' => $booking->license_plate,
-            'total_cost' => $booking->total_cost,
-            'status' => $booking->status,
-            'payment_status' => $booking->payment_status,
-            'payment' => $booking->payment
-        ]);
+        return response()->json($booking);
     }
 }
