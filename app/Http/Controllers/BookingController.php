@@ -48,6 +48,22 @@ class BookingController extends Controller
     }
 
     /**
+     * Show a parking lot detail page
+     */
+    public function showParkingLot($id)
+    {
+        $parkingLot = ParkingLot::with(['reviews' => function($q){
+            $q->visible()->orderBy('created_at', 'desc')->limit(10);
+        }, 'servicePackages'])->findOrFail($id);
+
+        $averageRating = method_exists($parkingLot, 'getAverageRatingAttribute')
+            ? $parkingLot->average_rating
+            : ($parkingLot->reviews()->visible()->avg('rating') ?? 0);
+
+        return view('user.parking-lot-detail', compact('parkingLot', 'averageRating'));
+    }
+
+    /**
      * Store a new booking
      */
     public function store(StoreBookingRequest $request)
