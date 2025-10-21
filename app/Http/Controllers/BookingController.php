@@ -106,6 +106,16 @@ class BookingController extends Controller
             'payment_status' => 'pending',
         ]);
 
+        // Tạo payment ngay lập tức
+        Payment::create([
+            'user_id' => Auth::id(),
+            'booking_id' => $booking->id,
+            'amount' => $totalCost,
+            'payment_method' => 'bank_transfer', // Mặc định
+            'payment_status' => 'pending',
+            'transaction_id' => 'TXN' . now()->format('YmdHis') . rand(1000, 9999),
+        ]);
+
         return redirect()->route('user.booking.show', $booking->id)
             ->with('success', 'Đặt chỗ thành công! Vui lòng thanh toán để xác nhận.');
     }

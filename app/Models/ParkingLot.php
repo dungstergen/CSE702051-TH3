@@ -81,7 +81,7 @@ class ParkingLot extends Model
      */
     public function getAverageRatingAttribute()
     {
-        return $this->reviews()->where('is_visible', true)->avg('rating') ?? 0;
+        return $this->reviews()->where('status', 'active')->avg('rating') ?? 0;
     }
 
     /**

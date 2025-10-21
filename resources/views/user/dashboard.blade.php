@@ -214,35 +214,36 @@
             </div>
 
             <div class="row destination_grid">
-                <!-- Parking Card 1 -->
-                <div class="col-lg-4 col-md-6 mb-4">
+                @forelse($favoriteLots ?? [] as $lot)
+                <!-- Parking Card from Database -->
+                                <div class="col-lg-4 col-md-6 mb-4">
                     <div class="destination_card">
                         <div class="card_image_wrapper">
-                            <img src="{{ asset('user/images/slider-bg.jpg') }}" alt="Bãi Đỗ Xe Vincom" class="card_image">
-                            <div class="card_badge discount_badge">
-                                <span>-32%</span>
-                            </div>
-                            <div class="card_badge hot_badge">
-                                <span>🔥 HOT</span>
-                            </div>
+                            <img src="{{ $lot->image_url ?? asset('user/images/slider-bg.jpg') }}"
+                                 alt="{{ $lot->name }}" class="card_image">
+                            @if($lot->available_spots < 10)
+                                <div class="card_badge hot_badge">
+                                    <span>🔥 HOT</span>
+                                </div>
+                            @endif
                         </div>
                         <div class="card_content">
                             <div class="card_header">
                                 <h4 class="card_destination">
-                                    <i class="fa fa-building-o"></i> Bãi Đỗ Xe Vincom Center
+                                    <i class="fa fa-building-o"></i> {{ $lot->name }}
                                 </h4>
                                 <div class="card_rating">
                                     <i class="fa fa-star"></i>
-                                    <span>4.8</span>
+                                    <span>{{ number_format($lot->average_rating ?? 0, 1) }}</span>
                                 </div>
                             </div>
                             <p class="card_address">
-                                <i class="fa fa-map-marker"></i> 72 Lê Thánh Tôn, Quận 1, TP.HCM
+                                <i class="fa fa-map-marker"></i> {{ $lot->address }}
                             </p>
                             <div class="card_details">
                                 <div class="detail_item">
                                     <i class="fa fa-car"></i>
-                                    <span>Ô tô & Xe máy</span>
+                                    <span>{{ $lot->available_spots }}/{{ $lot->total_spots }} chỗ</span>
                                 </div>
                                 <div class="detail_item">
                                     <i class="fa fa-shield"></i>
@@ -252,16 +253,21 @@
                             <div class="card_footer">
                                 <div class="price_wrapper">
                                     <span class="price_icon"><i class="fa fa-tag"></i></span>
-                                    <span class="price">15.000₫</span>
+                                    <span class="price">{{ number_format($lot->price_per_hour) }}₫</span>
                                     <span class="price_unit">/ giờ</span>
                                 </div>
-                                <a href="{{ route('user.booking') }}" class="btn_book">
+                                <a href="{{ route('user.booking') }}?lot={{ $lot->id }}" class="btn_book">
                                     <i class="fa fa-calendar-check-o"></i> Đặt chỗ ngay
                                 </a>
                             </div>
                         </div>
                     </div>
                 </div>
+                @empty
+                <div class="col-12">
+                    <p class="text-center text-muted">Chưa có bãi đỗ xe nào</p>
+                </div>
+                @endforelse
 
                 <!-- Parking Card 2 -->
                 <div class="col-lg-4 col-md-6 mb-4">

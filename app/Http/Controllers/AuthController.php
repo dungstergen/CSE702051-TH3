@@ -70,8 +70,11 @@ class AuthController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'phone' => $request->phone,
-            'role' => 'user',
+            'role' => 'user', // Giữ lại để tương thích
         ]);
+
+        // Gán role mặc định cho user mới
+        $user->assignRole('user');
 
         Auth::login($user);
         $request->session()->regenerate();
@@ -89,12 +92,13 @@ class AuthController extends Controller
         return redirect()->route('login')->with('message', 'Đã đăng xuất!');
     }
 
-    // Chuyển hướng theo role
+    // Chuyển hướng theo role (dùng Spatie)
     protected function redirectToDashboard()
     {
         $user = Auth::user();
 
-        if (in_array($user->role, ['admin', 'super_admin'])) {
+        // Kiểm tra bằng Spatie Permission
+        if ($user->hasRole('admin')) {
             return redirect()->route('admin.dashboard');
         }
 

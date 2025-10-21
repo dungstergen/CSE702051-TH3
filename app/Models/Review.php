@@ -14,14 +14,19 @@ class Review extends Model
         'parking_lot_id',
         'booking_id',
         'rating',
+        'title',
         'comment',
-        'is_visible',
-        'admin_note'
+        'pros',
+        'cons',
+        'would_recommend',
+        'is_verified',
+        'status'
     ];
 
     protected $casts = [
         'rating' => 'integer',
-        'is_visible' => 'boolean'
+        'would_recommend' => 'boolean',
+        'is_verified' => 'boolean'
     ];
 
     /**
@@ -79,7 +84,7 @@ class Review extends Model
      */
     public function scopeVisible($query)
     {
-        return $query->where('is_visible', true);
+        return $query->where('status', 'active');
     }
 
     /**
@@ -87,7 +92,15 @@ class Review extends Model
      */
     public function scopeHidden($query)
     {
-        return $query->where('is_visible', false);
+        return $query->where('status', 'hidden');
+    }
+
+    /**
+     * Scope for pending reviews
+     */
+    public function scopePending($query)
+    {
+        return $query->where('status', 'pending');
     }
 
     /**
