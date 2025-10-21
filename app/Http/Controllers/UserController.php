@@ -63,16 +63,18 @@ class UserController extends Controller
                                 ->limit(3)
                                 ->get();
 
-        $favoriteLots = [];
-        foreach ($favoriteParkingLots as $favorite) {
-            $parkingLot = ParkingLot::find($favorite->parking_lot_id);
-            if ($parkingLot) {
-                $favoriteLots[] = [
-                    'parking_lot' => $parkingLot,
-                    'booking_count' => $favorite->booking_count
-                ];
-            }
-        }
+        // Lấy tất cả parking lots
+        $favoriteLots = ParkingLot::inRandomOrder()
+                                   ->limit(6)
+                                   ->get()
+                                   ->map(function($lot) {
+                                       // Tính rating trung bình thủ công
+                                       $avgRating = $lot->reviews()
+                                                        ->where('status', 'active')
+                                                        ->avg('rating');
+                                       $lot->average_rating = $avgRating ?? 0;
+                                       return $lot;
+                                   });
 
         return view('user.dashboard', compact(
             'user',

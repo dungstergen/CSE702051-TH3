@@ -49,8 +49,8 @@ Route::prefix('user')->name('user.')->group(function () {
     Route::get('/api/parking-lot/{id}', [App\Http\Controllers\BookingController::class, 'getParkingLotDetails'])->name('api.parking-lot.details');
 });
 
-// Protected User Routes (Require Authentication)
-Route::middleware(['auth'])->prefix('user')->name('user.')->group(function () {
+// Protected User Routes (Require Authentication + Role User)
+Route::middleware(['auth', 'role:user'])->prefix('user')->name('user.')->group(function () {
     // Dashboard
     Route::get('/dashboard', [App\Http\Controllers\UserController::class, 'dashboard'])->name('dashboard');
 
@@ -105,7 +105,8 @@ Route::redirect('/history', '/user/history')->middleware('auth');
 Route::redirect('/payment', '/user/payment')->middleware('auth');
 
 
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+// Admin Routes (Require Authentication + Role Admin)
+Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->group(function () {
     // Redirect root admin to dashboard
     Route::get('/', function () {
         return redirect()->route('admin.dashboard');
