@@ -136,77 +136,36 @@
 
                             <div class="filter_section">
                                 <h4>Địa điểm</h4>
-                                <input type="text" class="filter_input" placeholder="Nhập địa điểm..." value="Quận 1, TP.HCM">
+                                <input type="text" id="filter_location" class="filter_input" placeholder="Nhập địa điểm...">
                             </div>
 
                             <div class="filter_section">
                                 <h4>Loại xe</h4>
-                                <input type="text" class="filter_input" placeholder="Chọn loại xe">
+                                <select id="filter_vehicle_type" class="filter_input">
+                                    <option value="">Tất cả</option>
+                                    <option value="car">Ô tô</option>
+                                    <option value="motorbike">Xe máy</option>
+                                    <option value="truck">Xe tải</option>
+                                    <option value="other">Khác</option>
+                                </select>
                             </div>
 
                             <div class="filter_section">
                                 <h4>Khoảng giá (VNĐ/giờ)</h4>
                                 <div class="price_range_filter">
-                                    <input type="number" class="filter_input" placeholder="Từ" value="10000">
+                                    <input type="number" id="filter_price_min" class="filter_input" placeholder="Từ" min="0">
                                     <span class="range_separator">-</span>
-                                    <input type="number" class="filter_input" placeholder="Đến" value="50000">
+                                    <input type="number" id="filter_price_max" class="filter_input" placeholder="Đến" min="0">
                                 </div>
                             </div>
 
                             <div class="filter_section">
-                                <h4>Tiện ích</h4>
-                                <div class="amenities_filter">
-                                    <div class="amenity_item">
-                                        <input type="checkbox" id="amenity1">
-                                        <label for="amenity1">
-                                            <i class="fa fa-shield"></i> Bảo vệ 24/7
-                                        </label>
-                                    </div>
-                                    <div class="amenity_item">
-                                        <input type="checkbox" id="amenity2">
-                                        <label for="amenity2">
-                                            <i class="fa fa-video-camera"></i> Camera giám sát
-                                        </label>
-                                    </div>
-                                    <div class="amenity_item">
-                                        <input type="checkbox" id="amenity3">
-                                        <label for="amenity3">
-                                            <i class="fa fa-bolt"></i> Sạc điện
-                                        </label>
-                                    </div>
-                                    <div class="amenity_item">
-                                        <input type="checkbox" id="amenity4">
-                                        <label for="amenity4">
-                                            <i class="fa fa-clock-o"></i> Mở cửa 24/7
-                                        </label>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div class="filter_section">
-                                <h4>Xếp hạng</h4>
-                                <div class="rating_filter">
-                                    <div class="rating_item">
-                                        <input type="checkbox" id="rating5">
-                                        <label for="rating5">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                        </label>
-                                    </div>
-                                    <div class="rating_item">
-                                        <input type="checkbox" id="rating4">
-                                        <label for="rating4">
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star"></i>
-                                            <i class="fa fa-star-o"></i>
-                                        </label>
-                                    </div>
-                                </div>
+                                <button type="button" class="btn btn-primary btn-block" onclick="applyFilters()">
+                                    <i class="fa fa-search"></i> Áp dụng
+                                </button>
+                                <button type="button" class="btn btn-secondary btn-block mt-2" onclick="clearFilters()">
+                                    <i class="fa fa-refresh"></i> Xóa lọc
+                                </button>
                             </div>
                         </div>
                     </div>
@@ -218,176 +177,93 @@
                         <!-- Header Title -->
                         <div class="booking_header">
                             <h2>Danh Sách Bãi Đỗ Xe</h2>
+                            <p class="text-muted">Tìm thấy <span id="total_lots">{{ count($parkingLots) }}</span> bãi đỗ xe</p>
                         </div>
 
-                        <!-- Search Tabs -->
-                        <div class="search_tabs_wrapper">
-                            <div class="search_tabs">
-                                <button class="search_tab active">
-                                    <i class="fa fa-car"></i> Ô tô
-                                </button>
-                                <button class="search_tab">
-                                    <i class="fa fa-motorcycle"></i> Xe máy
+                        @if(session('success'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                {{ session('success') }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
                                 </button>
                             </div>
+                        @endif
 
-                            <!-- Search Form -->
-                            <div class="search_form_inline">
-                                <div class="search_input_group">
-                                    <i class="fa fa-map-marker"></i>
-                                    <input type="text" placeholder="Địa điểm" value="Quận 1, TP.HCM">
-                                </div>
-                                <div class="search_input_group">
-                                    <i class="fa fa-calendar"></i>
-                                    <input type="date" placeholder="Ngày đặt" value="2025-10-25">
-                                </div>
-                                <div class="search_input_group">
-                                    <i class="fa fa-clock-o"></i>
-                                    <input type="time" placeholder="Giờ" value="09:00">
-                                </div>
-                                <button class="btn_search_inline">Tìm kiếm</button>
+                        @if($errors->any())
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <ul class="mb-0">
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
                             </div>
-                        </div>
+                        @endif
 
                         <!-- Parking Lots List -->
-                        <div class="parking_lots_list">
-                            <!-- Parking Lot Item 1 -->
-                            <div class="parking_lot_item">
-                                <div class="parking_logo">
-                                    <img src="{{ asset('user/images/c1.jpg') }}" alt="Vincom Center">
-                                    <span class="parking_name">Vincom Center</span>
-                                </div>
-                                <div class="parking_info">
-                                    <div class="parking_details">
-                                        <h4>Bãi Đỗ Xe Vincom - Đồng Khởi</h4>
-                                        <p><i class="fa fa-map-marker"></i> 72 Lê Thánh Tôn, Quận 1, TP.HCM</p>
-                                    </div>
-                                    <div class="parking_features">
-                                        <span class="feature_badge"><i class="fa fa-shield"></i> Bảo vệ 24/7</span>
-                                        <span class="feature_badge"><i class="fa fa-video-camera"></i> Camera</span>
-                                        <span class="feature_text"><i class="fa fa-star"></i> 4.8 (120 đánh giá)</span>
-                                    </div>
-                                </div>
-                                <div class="parking_price">
-                                    <h3 class="price_amount">15.000₫<span>/giờ</span></h3>
-                                    <button class="btn_book_parking">Đặt chỗ</button>
-                                </div>
-                            </div>
+                        <div class="parking_lots_list" id="parking_lots_container">
+                            @forelse($parkingLots as $lot)
+                            <div class="parking_lot_card"
+                                data-location="{{ strtolower($lot->address) }}"
+                                data-price="{{ $lot->hourly_rate }}"
+                                data-rating="{{ $lot->average_rating ?? 0 }}">
 
-                            <!-- Parking Lot Item 2 -->
-                            <div class="parking_lot_item">
-                                <div class="parking_logo">
-                                    <img src="{{ asset('user/images/c2.jpg') }}" alt="Lotte Mart">
-                                    <span class="parking_name">Lotte Mart</span>
-                                </div>
-                                <div class="parking_info">
-                                    <div class="parking_details">
-                                        <h4>Bãi Đỗ Xe Lotte Mart - Cộng Hòa</h4>
-                                        <p><i class="fa fa-map-marker"></i> 469 Nguyễn Hữu Thọ, Quận 7, TP.HCM</p>
-                                    </div>
-                                    <div class="parking_features">
-                                        <span class="feature_badge hot_deal"><i class="fa fa-fire"></i> Giá rẻ nhất</span>
-                                        <span class="feature_badge"><i class="fa fa-bolt"></i> Sạc điện</span>
-                                        <span class="feature_text"><i class="fa fa-star"></i> 4.5 (89 đánh giá)</span>
+                                <!-- Left: Image and Name -->
+                                <div class="parking_card_image">
+                                    <img src="{{ asset('user/images/c' . (($loop->index % 3) + 1) . '.jpg') }}" alt="{{ $lot->name }}">
+                                    <div class="parking_card_name">
+                                        <strong>{{ $lot->name }}</strong>
                                     </div>
                                 </div>
-                                <div class="parking_price">
-                                    <h3 class="price_amount">10.000₫<span>/giờ</span></h3>
-                                    <button class="btn_book_parking">Đặt chỗ</button>
-                                </div>
-                            </div>
 
-                            <!-- Parking Lot Item 3 -->
-                            <div class="parking_lot_item">
-                                <div class="parking_logo">
-                                    <img src="{{ asset('user/images/c1.jpg') }}" alt="Aeon Mall">
-                                    <span class="parking_name">Aeon Mall</span>
-                                </div>
-                                <div class="parking_info">
-                                    <div class="parking_details">
-                                        <h4>Bãi Đỗ Xe Aeon Mall - Tân Phú</h4>
-                                        <p><i class="fa fa-map-marker"></i> 30 Bờ Bao Tân Thắng, Tân Phú, TP.HCM</p>
-                                    </div>
-                                    <div class="parking_features">
-                                        <span class="feature_badge"><i class="fa fa-shield"></i> Bảo vệ 24/7</span>
-                                        <span class="feature_badge"><i class="fa fa-clock-o"></i> Mở cửa 24/7</span>
-                                        <span class="feature_text"><i class="fa fa-star"></i> 4.9 (200 đánh giá)</span>
-                                    </div>
-                                </div>
-                                <div class="parking_price">
-                                    <h3 class="price_amount">18.000₫<span>/giờ</span></h3>
-                                    <button class="btn_book_parking">Đặt chỗ</button>
-                                </div>
-                            </div>
+                                <!-- Middle: Details -->
+                                <div class="parking_card_details">
+                                    <h4 class="parking_title">{{ $lot->name }}</h4>
 
-                            <!-- Parking Lot Item 4 -->
-                            <div class="parking_lot_item">
-                                <div class="parking_logo">
-                                    <img src="{{ asset('user/images/c2.jpg') }}" alt="Big C">
-                                    <span class="parking_name">Big C</span>
-                                </div>
-                                <div class="parking_info">
-                                    <div class="parking_details">
-                                        <h4>Bãi Đỗ Xe Big C - Miền Đông</h4>
-                                        <p><i class="fa fa-map-marker"></i> 1-5 Đường D1, Bình Thạnh, TP.HCM</p>
+                                    <div class="parking_info_row">
+                                        <i class="fa fa-map-marker text-danger"></i>
+                                        <span>{{ $lot->address }}</span>
                                     </div>
-                                    <div class="parking_features">
-                                        <span class="feature_badge"><i class="fa fa-video-camera"></i> Camera</span>
-                                        <span class="feature_badge"><i class="fa fa-shield"></i> An toàn</span>
-                                        <span class="feature_text"><i class="fa fa-star"></i> 4.6 (150 đánh giá)</span>
-                                    </div>
-                                </div>
-                                <div class="parking_price">
-                                    <h3 class="price_amount">12.000₫<span>/giờ</span></h3>
-                                    <button class="btn_book_parking">Đặt chỗ</button>
-                                </div>
-                            </div>
 
-                            <!-- Parking Lot Item 5 -->
-                            <div class="parking_lot_item">
-                                <div class="parking_logo">
-                                    <img src="{{ asset('user/images/c1.jpg') }}" alt="Parkson">
-                                    <span class="parking_name">Parkson</span>
-                                </div>
-                                <div class="parking_info">
-                                    <div class="parking_details">
-                                        <h4>Bãi Đỗ Xe Parkson - Hùng Vương</h4>
-                                        <p><i class="fa fa-map-marker"></i> 126 Hùng Vương, Quận 5, TP.HCM</p>
+                                    <div class="parking_info_row">
+                                        <i class="fa fa-car text-primary"></i>
+                                        <span>Chỗ trống: {{ $lot->available_spots }}/{{ $lot->capacity }}</span>
                                     </div>
-                                    <div class="parking_features">
-                                        <span class="feature_badge"><i class="fa fa-bolt"></i> Sạc điện</span>
-                                        <span class="feature_badge"><i class="fa fa-clock-o"></i> 24/7</span>
-                                        <span class="feature_text"><i class="fa fa-star"></i> 4.7 (95 đánh giá)</span>
-                                    </div>
-                                </div>
-                                <div class="parking_price">
-                                    <h3 class="price_amount">14.000₫<span>/giờ</span></h3>
-                                    <button class="btn_book_parking">Đặt chỗ</button>
-                                </div>
-                            </div>
 
-                            <!-- Parking Lot Item 6 -->
-                            <div class="parking_lot_item">
-                                <div class="parking_logo">
-                                    <img src="{{ asset('user/images/c2.jpg') }}" alt="CoopMart">
-                                    <span class="parking_name">CoopMart</span>
-                                </div>
-                                <div class="parking_info">
-                                    <div class="parking_details">
-                                        <h4>Bãi Đỗ Xe CoopMart - Nguyễn Kiệm</h4>
-                                        <p><i class="fa fa-map-marker"></i> 168 Nguyễn Kiệm, Phú Nhuận, TP.HCM</p>
-                                    </div>
-                                    <div class="parking_features">
-                                        <span class="feature_badge"><i class="fa fa-shield"></i> Bảo vệ 24/7</span>
-                                        <span class="feature_badge"><i class="fa fa-video-camera"></i> Camera</span>
-                                        <span class="feature_text"><i class="fa fa-star"></i> 4.4 (78 đánh giá)</span>
+                                    <div class="parking_meta">
+                                        @if($lot->hourly_rate < 15000)
+                                            <span class="badge badge-danger">
+                                                <i class="fa fa-fire"></i> Giá rẻ
+                                            </span>
+                                        @endif
+                                        <span class="parking_rating">
+                                            <i class="fa fa-star text-warning"></i>
+                                            {{ number_format($lot->average_rating ?? 0, 1) }}
+                                            <small class="text-muted">({{ $lot->reviews_count ?? 0 }} đánh giá)</small>
+                                        </span>
                                     </div>
                                 </div>
-                                <div class="parking_price">
-                                    <h3 class="price_amount">13.000₫<span>/giờ</span></h3>
-                                    <button class="btn_book_parking">Đặt chỗ</button>
+
+                                <!-- Right: Price and Button -->
+                                <div class="parking_card_action">
+                                    <div class="parking_price_display">
+                                        <h3 class="price_number">{{ number_format($lot->hourly_rate) }}₫</h3>
+                                        <span class="price_unit">/giờ</span>
+                                    </div>
+                                    <button class="btn_book_now" onclick="openBookingModal({{ $lot->id }}, '{{ $lot->name }}', {{ $lot->hourly_rate }})">
+                                        Đặt chỗ
+                                    </button>
                                 </div>
                             </div>
+                            @empty
+                            <div class="text-center py-5">
+                                <i class="fa fa-car fa-4x text-muted mb-3"></i>
+                                <h4>Không tìm thấy bãi đỗ xe nào</h4>
+                                <p class="text-muted">Vui lòng thử lại với điều kiện khác</p>
+                            </div>
+                            @endforelse
                         </div>
                     </div>
                 </div>
@@ -396,8 +272,131 @@
     </section>
     <!-- End Booking Section -->
 
-    <!-- Seat Selection Modal -->
-    <div class="seat_selection_modal" id="seatSelectionModal">
+    <!-- Booking Modal -->
+    <div class="modal fade" id="bookingModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Đặt chỗ đỗ xe</h5>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <form action="{{ route('user.booking.store') }}" method="POST" id="bookingForm">
+                    @csrf
+                    <div class="modal-body">
+                        <input type="hidden" name="parking_lot_id" id="modal_parking_lot_id">
+
+                        <div class="alert alert-info">
+                            <strong>Bãi đỗ:</strong> <span id="modal_parking_name"></span><br>
+                            <strong>Giá:</strong> <span id="modal_parking_price"></span>₫/giờ
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Ngày đặt <span class="text-danger">*</span></label>
+                                    <input type="date" name="booking_date" class="form-control" required min="{{ date('Y-m-d') }}">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Số điện thoại <span class="text-danger">*</span></label>
+                                    <input type="text" name="phone_number" class="form-control" placeholder="0123456789" required
+                                           value="{{ Auth::check() ? Auth::user()->phone : '' }}">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Giờ bắt đầu <span class="text-danger">*</span></label>
+                                    <input type="datetime-local" name="start_time" class="form-control" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Giờ kết thúc <span class="text-danger">*</span></label>
+                                    <input type="datetime-local" name="end_time" class="form-control" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Biển số xe <span class="text-danger">*</span></label>
+                                    <input type="text" name="license_plate" class="form-control" placeholder="VD: 51A-12345" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Loại xe</label>
+                                    <select name="vehicle_type" class="form-control">
+                                        <option value="">-- Chọn loại xe --</option>
+                                        <option value="car">Ô tô</option>
+                                        <option value="motorbike">Xe máy</option>
+                                        <option value="truck">Xe tải</option>
+                                        <option value="other">Khác</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if(count($servicePackages) > 0)
+                        <div class="form-group">
+                            <label>Gói dịch vụ (tùy chọn)</label>
+                            <select name="service_package_id" class="form-control">
+                                <option value="">-- Không chọn gói --</option>
+                                @foreach($servicePackages as $package)
+                                <option value="{{ $package->id }}" data-price="{{ $package->price }}">
+                                    {{ $package->name }} - {{ number_format($package->price) }}₫ ({{ $package->duration_hours }} giờ)
+                                </option>
+                                @endforeach
+                            </select>
+                        </div>
+                        @endif
+
+                        <div class="form-group">
+                            <label>Yêu cầu đặc biệt</label>
+                            <textarea name="special_requests" class="form-control" rows="3" placeholder="Ghi chú thêm (nếu có)..."></textarea>
+                        </div>
+
+                        <div class="alert alert-warning">
+                            <i class="fa fa-info-circle"></i>
+                            Sau khi đặt chỗ thành công, bạn cần thanh toán để xác nhận đơn hàng.
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                        <button type="submit" class="btn btn-primary">
+                            <i class="fa fa-check"></i> Xác nhận đặt chỗ
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- info section -->
+    <section class="info_section ">
+
+        <div class="container">
+            <div class="info_top ">
+                <div class="row ">
+                    <div class="col-md-6 col-lg-3 info_col">
+                        <div class="info_form">
+                            <h4>
+                                Kết Nối Với Chúng Tôi
+                            </h4>
+                            <form action="">
+                                <input type="text" placeholder="Nhập Email Của Bạn" />
+                                <button type="submit">
+                                    Đăng Ký
+                                </button>
+                            </form>
+                            <div class="social_box">
         <div class="seat_modal_overlay" onclick="closeSeatModal()"></div>
         <div class="seat_modal_content">
             <!-- Step Indicator -->
@@ -626,6 +625,194 @@
 
     <!-- Custom Styles for Booking Page -->
     <style>
+        /* Parking Lots List Container */
+        .parking_lots_list {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        /* Parking Card - Horizontal Layout like in image */
+        .parking_lot_card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            border: 1px solid #f0f0f0;
+        }
+
+        .parking_lot_card:hover {
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+            transform: translateY(-2px);
+        }
+
+        /* Left Section - Image and Name */
+        .parking_card_image {
+            flex-shrink: 0;
+            width: 140px;
+            text-align: center;
+        }
+
+        .parking_card_image img {
+            width: 100px;
+            height: 100px;
+            border-radius: 10px;
+            object-fit: cover;
+            margin-bottom: 10px;
+            border: 2px solid #f0f0f0;
+        }
+
+        .parking_card_name {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .parking_card_name strong {
+            display: block;
+            font-weight: 600;
+        }
+
+        /* Middle Section - Details */
+        .parking_card_details {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .parking_title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #333;
+            margin: 0 0 5px 0;
+        }
+
+        .parking_info_row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #666;
+        }
+
+        .parking_info_row i {
+            width: 18px;
+            font-size: 14px;
+        }
+
+        .parking_meta {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-top: 5px;
+        }
+
+        .parking_meta .badge {
+            padding: 4px 10px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .parking_rating {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .parking_rating i {
+            color: #ffc107;
+            font-size: 16px;
+        }
+
+        .parking_rating small {
+            font-weight: 400;
+        }
+
+        /* Right Section - Price and Button */
+        .parking_card_action {
+            flex-shrink: 0;
+            text-align: right;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 15px;
+            min-width: 150px;
+        }
+
+        .parking_price_display {
+            display: flex;
+            align-items: baseline;
+            gap: 3px;
+        }
+
+        .price_number {
+            font-size: 28px;
+            font-weight: 700;
+            color: #ff6b35;
+            margin: 0;
+            line-height: 1;
+        }
+
+        .price_unit {
+            font-size: 14px;
+            color: #666;
+            font-weight: 500;
+        }
+
+        .btn_book_now {
+            background: linear-gradient(135deg, #ffc107 0%, #ffb300 100%);
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            border-radius: 25px;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(255, 193, 7, 0.3);
+            white-space: nowrap;
+        }
+
+        .btn_book_now:hover {
+            background: linear-gradient(135deg, #ffb300 0%, #ffa000 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(255, 193, 7, 0.4);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .parking_lot_card {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .parking_card_image {
+                width: 100%;
+            }
+
+            .parking_card_details {
+                align-items: center;
+                text-align: center;
+            }
+
+            .parking_card_action {
+                align-items: center;
+                width: 100%;
+            }
+
+            .parking_price_display {
+                justify-content: center;
+            }
+        }
+
+        /* Filter Section Styles */
         .search_filter_card {
             background: white;
             padding: 30px;
@@ -637,37 +824,6 @@
             font-weight: 600;
             margin-bottom: 8px;
             display: block;
-        }
-
-        .parking_lot_card {
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 15px rgba(0,0,0,0.08);
-            transition: transform 0.3s;
-        }
-
-        .parking_lot_card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 5px 25px rgba(0,0,0,0.15);
-        }
-
-        .parking_lot_image {
-            width: 100%;
-            height: 150px;
-            object-fit: cover;
-            border-radius: 8px;
-        }
-
-        .parking_lot_name {
-            color: #ffbe33;
-            font-weight: 700;
-            margin-bottom: 10px;
-        }
-
-        .parking_lot_address {
-            color: #666;
-            margin-bottom: 10px;
         }
 
         .booking_form_container {
@@ -1032,6 +1188,94 @@
     <script src="{{ asset('user/js/custom.js') }}"></script>
     <!-- loading screen js -->
     <script src="{{ asset('user/js/loading.js') }}"></script>
+
+    <!-- Booking Page JavaScript -->
+    <script>
+        // Open booking modal
+        function openBookingModal(lotId, lotName, hourlyRate) {
+            @guest
+                alert('Vui lòng đăng nhập để đặt chỗ!');
+                window.location.href = '{{ route("login") }}';
+                return;
+            @endguest
+
+            document.getElementById('modal_parking_lot_id').value = lotId;
+            document.getElementById('modal_parking_name').textContent = lotName;
+            document.getElementById('modal_parking_price').textContent = hourlyRate.toLocaleString('vi-VN');
+
+            $('#bookingModal').modal('show');
+        }
+
+        // Apply filters
+        function applyFilters() {
+            const location = document.getElementById('filter_location').value.toLowerCase();
+            const vehicleType = document.getElementById('filter_vehicle_type').value;
+            const priceMin = parseInt(document.getElementById('filter_price_min').value) || 0;
+            const priceMax = parseInt(document.getElementById('filter_price_max').value) || Infinity;
+
+            const items = document.querySelectorAll('.parking_lot_card[data-location]');
+            let visibleCount = 0;
+
+            items.forEach(item => {
+                const itemLocation = item.getAttribute('data-location');
+                const itemPrice = parseInt(item.getAttribute('data-price'));
+
+                const matchLocation = !location || itemLocation.includes(location);
+                const matchPrice = itemPrice >= priceMin && itemPrice <= priceMax;
+
+                if (matchLocation && matchPrice) {
+                    item.style.display = 'flex';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+
+            document.getElementById('total_lots').textContent = visibleCount;
+        }
+
+        // Clear filters
+        function clearFilters() {
+            document.getElementById('filter_location').value = '';
+            document.getElementById('filter_vehicle_type').value = '';
+            document.getElementById('filter_price_min').value = '';
+            document.getElementById('filter_price_max').value = '';
+
+            const items = document.querySelectorAll('.parking_lot_card');
+            items.forEach(item => {
+                item.style.display = 'flex';
+            });
+
+            document.getElementById('total_lots').textContent = items.length;
+        }
+
+        // Set minimum datetime for booking
+        document.addEventListener('DOMContentLoaded', function() {
+            const now = new Date();
+            now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
+            const minDateTime = now.toISOString().slice(0, 16);
+
+            const startTimeInput = document.querySelector('input[name="start_time"]');
+            const endTimeInput = document.querySelector('input[name="end_time"]');
+
+            if (startTimeInput) {
+                startTimeInput.min = minDateTime;
+
+                // Auto set end time when start time changes
+                startTimeInput.addEventListener('change', function() {
+                    const startTime = new Date(this.value);
+                    startTime.setHours(startTime.getHours() + 1);
+                    endTimeInput.min = startTime.toISOString().slice(0, 16);
+
+                    // Auto-fill end time (1 hour after start)
+                    if (!endTimeInput.value || new Date(endTimeInput.value) <= new Date(this.value)) {
+                        endTimeInput.value = startTime.toISOString().slice(0, 16);
+                    }
+                });
+            }
+        });
+
+    </script>
 
 </body>
 

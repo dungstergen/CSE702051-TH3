@@ -22,7 +22,8 @@ class AdminMiddleware
 
         $user = Auth::user();
 
-        if (!in_array($user->role, ['admin', 'super_admin'])) {
+        // Dùng Spatie Permission thay vì kiểm tra role trực tiếp
+        if (!$user->hasRole('admin')) {
             return redirect()->route('user.dashboard')->with('error', 'Bạn không có quyền truy cập khu vực admin.');
         }
 
