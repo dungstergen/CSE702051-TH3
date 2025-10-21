@@ -11,9 +11,18 @@ class Vehicle extends Model
 
     protected $fillable = [
         'user_id',
-        'number',
-        'type',
+        'license_plate',
+        'vehicle_type',
         'brand',
+        'model',
+        'color',
+        'year',
+        'is_default',
+    ];
+
+    protected $casts = [
+        'is_default' => 'boolean',
+        'year' => 'integer',
     ];
 
     /**
