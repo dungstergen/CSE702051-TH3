@@ -111,7 +111,7 @@
                                     </div>
                                 </td>
                                 <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                                    <span class="px-2 py-1 text-xs font-semibold text-white rounded {{ $testimonial['status'] == 'published' ? 'bg-green-500' : ($testimonial['status'] == 'pending' ? 'bg-yellow-500' : 'bg-red-500') }}">
+                                    <span class="px-2 py-1 text-xs font-semibold text-white rounded {{ $testimonial['status'] == 'published' ? 'bg-black' : ($testimonial['status'] == 'pending' ? 'bg-black' : 'bg-black') }}">
                                         @switch($testimonial['status'])
                                             @case('published')
                                                 <i class="fas fa-check mr-1"></i>Đã xuất bản
