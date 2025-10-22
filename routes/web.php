@@ -61,6 +61,9 @@ Route::middleware(['auth', 'role:user'])->prefix('user')->name('user.')->group(f
     Route::put('/profile/vehicles', [App\Http\Controllers\UserController::class, 'updateVehicles'])->name('vehicles.update');
     Route::delete('/account', [App\Http\Controllers\UserController::class, 'deleteAccount'])->name('account.delete');
 
+    // API: Lấy danh sách xe của user hiện tại
+    Route::get('/api/vehicles', [App\Http\Controllers\UserController::class, 'getVehicles'])->name('api.vehicles');
+
     // Booking System (Requires Auth)
     Route::post('/booking', [App\Http\Controllers\BookingController::class, 'store'])->name('booking.store');
     Route::get('/booking/{booking}', [App\Http\Controllers\BookingController::class, 'show'])->name('booking.show');

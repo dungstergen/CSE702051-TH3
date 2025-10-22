@@ -13,26 +13,22 @@ class ParkingLot extends Model
         'name',
         'address',
         'description',
-        'capacity',
         'total_spots',
         'available_spots',
         'hourly_rate',
+        'status',
         'latitude',
         'longitude',
-        'amenities',
         'facilities',
-        'operating_hours',
-        'contact_info',
-        'status',
-        'is_active'
+        'contact_phone',
+        'image',
     ];
 
     protected $casts = [
         'latitude' => 'float',
         'longitude' => 'float',
         'hourly_rate' => 'decimal:2',
-        'is_active' => 'boolean',
-        'facilities' => 'array'
+        'facilities' => 'array',
     ];
 
     /**
@@ -62,11 +58,11 @@ class ParkingLot extends Model
     /**
      * Get available spots
      */
-    public function getAvailableSpotsAttribute()
-    {
-        $activeBookings = $this->activeBookings()->count();
-        return max(0, $this->capacity - $activeBookings);
-    }
+    // public function getAvailableSpotsAttribute()
+    // {
+    //     $activeBookings = $this->activeBookings()->count();
+    //     return max(0, $this->capacity - $activeBookings);
+    // }
 
     /**
      * Check if parking lot is available

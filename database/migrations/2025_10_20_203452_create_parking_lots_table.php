@@ -13,18 +13,18 @@ return new class extends Migration
     {
         Schema::create('parking_lots', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
+            $table->string('name', 255);
             $table->text('address');
-            $table->text('description')->nullable();
+            $table->text('description');
             $table->integer('total_spots');
             $table->integer('available_spots');
             $table->decimal('hourly_rate', 10, 2);
             $table->enum('status', ['active', 'inactive', 'maintenance'])->default('active');
-            $table->decimal('latitude', 10, 7)->nullable();
-            $table->decimal('longitude', 10, 7)->nullable();
-            $table->json('facilities')->nullable();
-            $table->string('contact_phone', 20)->nullable();
-            $table->string('image')->nullable();
+            $table->decimal('latitude', 10, 7);
+            $table->decimal('longitude', 10, 7);
+            $table->json('facilities');
+            $table->string('contact_phone', 20);
+            $table->string('image', 255);
             $table->timestamps();
         });
     }

@@ -309,50 +309,66 @@ class UserController extends Controller
      * Update user vehicles
      */
 
-public function updateVehicles(Request $request)
-{
-    $user = Auth::user();
+    public function updateVehicles(Request $request)
+    {
+        $user = Auth::user();
 
-    $request->validate([
-        'vehicles' => 'nullable|array',
-        'vehicles.*.number' => 'required|string|max:20',
-        'vehicles.*.type' => 'required|in:car,motorbike,truck,other',
-        'vehicles.*.brand' => 'nullable|string|max:50',
-    ], [
-        'vehicles.*.number.required' => 'Vui lòng nhập biển số xe',
-        'vehicles.*.number.max' => 'Biển số xe không được quá 20 ký tự',
-        'vehicles.*.type.required' => 'Vui lòng chọn loại xe',
-        'vehicles.*.type.in' => 'Loại xe không hợp lệ',
-        'vehicles.*.brand.max' => 'Nhãn hiệu không được quá 50 ký tự',
-    ]);
+        $request->validate([
+            'vehicles' => 'nullable|array',
+            'vehicles.*.number' => 'required|string|max:20',
+            'vehicles.*.type' => 'required|in:car,motorbike,truck,other',
+            'vehicles.*.brand' => 'nullable|string|max:50',
+        ], [
+            'vehicles.*.number.required' => 'Vui lòng nhập biển số xe',
+            'vehicles.*.number.max' => 'Biển số xe không được quá 20 ký tự',
+            'vehicles.*.type.required' => 'Vui lòng chọn loại xe',
+            'vehicles.*.type.in' => 'Loại xe không hợp lệ',
+            'vehicles.*.brand.max' => 'Nhãn hiệu không được quá 50 ký tự',
+        ]);
 
-    $inputVehicles = $request->vehicles ?? [];
-    $inputIds = collect($inputVehicles)->pluck('id')->filter()->all();
+        $inputVehicles = $request->vehicles ?? [];
+        $inputIds = collect($inputVehicles)->pluck('id')->filter()->all();
 
-    // Xóa các xe không còn trong danh sách
-    $user->vehicles()->whereNotIn('id', $inputIds)->delete();
+        // Xóa các xe không còn trong danh sách
+        $user->vehicles()->whereNotIn('id', $inputIds)->delete();
 
-    foreach ($inputVehicles as $index => $vehicleData) {
-        if (empty($vehicleData['number'])) {
-            continue;
+        foreach ($inputVehicles as $index => $vehicleData) {
+            if (empty($vehicleData['number'])) {
+                continue;
+            }
+            $data = [
+                'license_plate' => strtoupper(trim($vehicleData['number'])),
+                'vehicle_type' => $vehicleData['type'],
+                'brand' => !empty($vehicleData['brand']) ? trim($vehicleData['brand']) : null,
+                'is_default' => $index === 0,
+            ];
+            if (!empty($vehicleData['id'])) {
+                // Cập nhật xe cũ
+                $user->vehicles()->where('id', $vehicleData['id'])->update($data);
+            } else {
+                // Thêm xe mới
+                $user->vehicles()->create($data);
+            }
         }
-        $data = [
-            'license_plate' => strtoupper(trim($vehicleData['number'])),
-            'vehicle_type' => $vehicleData['type'],
-            'brand' => !empty($vehicleData['brand']) ? trim($vehicleData['brand']) : null,
-            'is_default' => $index === 0,
-        ];
-        if (!empty($vehicleData['id'])) {
-            // Cập nhật xe cũ
-            $user->vehicles()->where('id', $vehicleData['id'])->update($data);
-        } else {
-            // Thêm xe mới
-            $user->vehicles()->create($data);
-        }
+
+        return redirect()->route('user.profile', ['tab' => 'vehicle'])->with('success', 'Cập nhật thông tin xe thành công!');
     }
-
-    return redirect()->route('user.profile', ['tab' => 'vehicle'])->with('success', 'Cập nhật thông tin xe thành công!');
-}
+    public function getVehicles(Request $request)
+    {
+        $user = Auth::user();
+        $vehicles = $user->vehicles()->get()->map(function($v) {
+            return [
+                'id' => $v->id,
+                'number' => $v->license_plate,
+                'type' => $v->vehicle_type,
+                'brand' => $v->brand,
+            ];
+        });
+        return response()->json([
+            'success' => true,
+            'vehicles' => $vehicles
+        ]);
+    }
 
 
 }
