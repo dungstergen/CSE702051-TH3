@@ -52,7 +52,7 @@
                                     <span class="text-sm font-bold leading-tight text-slate-400">{{ number_format($package['price']) }}đ</span>
                                 </td>
                                 <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                                    <span class="px-2 py-1 text-xs font-semibold text-white rounded {{ $package['status'] == 'active' ? 'bg-green-500' : 'bg-gray-500' }}">
+                                    <span class="px-2 py-1 text-xs font-semibold text-white rounded {{ $package['status'] == 'active' ? 'bg-black' : 'bg-black' }}">
                                         {{ $package['status'] == 'active' ? 'Hoạt động' : 'Tạm dừng' }}
                                     </span>
                                 </td>
