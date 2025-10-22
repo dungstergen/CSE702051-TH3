@@ -321,7 +321,7 @@
                             <h3 id="summary_total">0đ</h3>
                         </div>
 
-                        <button type="button" class="btn btn_box w-100 mt-3" onclick="processPayment()">
+                        <button type="button" class="btn btn_box w-100 mt-3 text-white" style="background: linear-gradient(90deg, #ffbe33 0%, #ff6f00 100%); border: none;" onclick="processPayment()">
                             <i class="fa fa-check"></i> Xác nhận thanh toán
                         </button>
 
@@ -443,7 +443,7 @@
             padding: 30px;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0,0,0,0.1);
-            position: sticky;
+            /* position: sticky; */
             top: 20px;
         }
 
