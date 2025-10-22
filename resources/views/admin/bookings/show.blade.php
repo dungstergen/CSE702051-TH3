@@ -296,40 +296,40 @@
             <div class="flex-auto p-6">
                 <div class="space-y-3">
                     @if($booking->status === 'pending')
-                    <form method="POST" action="{{ route('admin.bookings.update', $booking) }}" class="w-full">
+                    <form method="POST" action="{{ route('admin.bookings.update', $booking) }}" class="w-full mb-2">
                         @csrf
                         @method('PUT')
                         <input type="hidden" name="status" value="confirmed">
-                        <button type="submit" class="w-full px-4 py-2 text-sm font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer bg-gradient-to-tl from-blue-600 to-cyan-400 leading-pro ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs">
+                        <button type="submit" class="w-full px-4 py-2 text-sm font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer bg-gradient-to-tl from-red-600 to-rose-400 leading-pro ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs">
                             <i class="fas fa-check mr-2"></i>Xác nhận booking
                         </button>
                     </form>
                     @endif
 
                     @if($booking->status === 'confirmed')
-                    <form method="POST" action="{{ route('admin.bookings.update', $booking) }}" class="w-full">
+                    <form method="POST" action="{{ route('admin.bookings.update', $booking) }}" class="w-full mb-2">
                         @csrf
                         @method('PUT')
                         <input type="hidden" name="status" value="active">
-                        <button type="submit" class="w-full px-4 py-2 text-sm font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer bg-gradient-to-tl from-green-600 to-lime-400 leading-pro ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs">
+                        <button type="submit" class="w-full px-4 py-2 text-sm font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer bg-gradient-to-tl from-red-600 to-rose-400 leading-pro ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs">
                             <i class="fas fa-play mr-2"></i>Bắt đầu đỗ xe
                         </button>
                     </form>
                     @endif
 
                     @if($booking->status === 'active')
-                    <form method="POST" action="{{ route('admin.bookings.update', $booking) }}" class="w-full">
+                    <form method="POST" action="{{ route('admin.bookings.update', $booking) }}" class="w-full mb-2">
                         @csrf
                         @method('PUT')
                         <input type="hidden" name="status" value="completed">
-                        <button type="submit" class="w-full px-4 py-2 text-sm font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer bg-gradient-to-tl from-gray-600 to-gray-400 leading-pro ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs">
+                        <button type="submit" class="w-full px-4 py-2 text-sm font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer bg-gradient-to-tl from-red-600 to-rose-400 leading-pro ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs">
                             <i class="fas fa-stop mr-2"></i>Hoàn thành
                         </button>
                     </form>
                     @endif
 
                     @if(in_array($booking->status, ['pending', 'confirmed']))
-                    <form method="POST" action="{{ route('admin.bookings.update', $booking) }}" class="w-full" onsubmit="return confirm('Bạn có chắc chắn muốn hủy booking này?')">
+                    <form method="POST" action="{{ route('admin.bookings.update', $booking) }}" class="w-full mb-2" onsubmit="return confirm('Bạn có chắc chắn muốn hủy booking này?')">
                         @csrf
                         @method('PUT')
                         <input type="hidden" name="status" value="cancelled">
