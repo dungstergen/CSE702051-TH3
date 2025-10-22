@@ -65,7 +65,22 @@ class AdminParkingLotController extends Controller
         if (isset($validated['facilities']) && is_array($validated['facilities'])) {
             $validated['facilities'] = json_encode($validated['facilities']);
         }
-        ParkingLot::create($validated);
+
+        $parkingLot = ParkingLot::create($validated);
+
+        // Tạo N chỗ đỗ xe cho bãi vừa tạo
+        $totalSpots = $parkingLot->total_spots;
+        $spots = [];
+        for ($i = 1; $i <= $totalSpots; $i++) {
+            $spots[] = [
+                'parking_lot_id' => $parkingLot->id,
+                'spot_code' => 'S' . $i,
+                'status' => 'available',
+                'created_at' => now(),
+                'updated_at' => now(),
+            ];
+        }
+        \App\Models\ParkingSpot::insert($spots);
 
         return redirect()->route('admin.parking-lots.index')
                         ->with('success', 'Tạo bãi đỗ xe thành công!');
@@ -111,7 +126,30 @@ class AdminParkingLotController extends Controller
         if (isset($validated['facilities']) && is_array($validated['facilities'])) {
             $validated['facilities'] = json_encode($validated['facilities']);
         }
+
+        $oldTotalSpots = $parkingLot->total_spots;
         $parkingLot->update($validated);
+
+        $newTotalSpots = $parkingLot->total_spots;
+        if ($newTotalSpots > $oldTotalSpots) {
+            // Thêm các chỗ mới
+            $spots = [];
+            for ($i = $oldTotalSpots + 1; $i <= $newTotalSpots; $i++) {
+                $spots[] = [
+                    'parking_lot_id' => $parkingLot->id,
+                    'spot_code' => 'S' . $i,
+                    'status' => 'available',
+                    'created_at' => now(),
+                    'updated_at' => now(),
+                ];
+            }
+            \App\Models\ParkingSpot::insert($spots);
+        } elseif ($newTotalSpots < $oldTotalSpots) {
+            // Xóa các chỗ thừa
+            \App\Models\ParkingSpot::where('parking_lot_id', $parkingLot->id)
+                ->whereRaw("CAST(SUBSTRING(spot_code, 2) AS UNSIGNED) > ?", [$newTotalSpots])
+                ->delete();
+        }
 
         return redirect()->route('admin.parking-lots.index')
                         ->with('success', 'Cập nhật bãi đỗ xe thành công!');

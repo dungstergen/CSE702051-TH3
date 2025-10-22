@@ -209,29 +209,22 @@
                                 data-location="{{ strtolower($lot->address) }}"
                                 data-price="{{ $lot->hourly_rate }}"
                                 data-rating="{{ $lot->average_rating ?? 0 }}">
-
-                                <!-- Left: Image and Name -->
                                 <div class="parking_card_image">
                                     <img src="{{ asset('user/images/c' . (($loop->index % 3) + 1) . '.jpg') }}" alt="{{ $lot->name }}">
                                     <div class="parking_card_name">
                                         <strong>{{ $lot->name }}</strong>
                                     </div>
                                 </div>
-
-                                <!-- Middle: Details -->
                                 <div class="parking_card_details">
                                     <h4 class="parking_title">{{ $lot->name }}</h4>
-
                                     <div class="parking_info_row">
                                         <i class="fa fa-map-marker text-danger"></i>
                                         <span>{{ $lot->address }}</span>
                                     </div>
-
                                     <div class="parking_info_row">
                                         <i class="fa fa-car text-primary"></i>
-                                        <span>Chỗ trống: {{ $lot->available_spots }}/{{ $lot->capacity }}</span>
+                                        <span>Chỗ trống: {{ $lot->available_spots }}/{{ $lot->total_spots }}</span>
                                     </div>
-
                                     <div class="parking_meta">
                                         @if($lot->hourly_rate < 15000)
                                             <span class="badge badge-danger">
@@ -245,8 +238,6 @@
                                         </span>
                                     </div>
                                 </div>
-
-                                <!-- Right: Price and Button -->
                                 <div class="parking_card_action">
                                     <div class="parking_price_display">
                                         <h3 class="price_number">{{ number_format($lot->hourly_rate) }}₫</h3>
@@ -332,7 +323,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <label>Loại xe</label>
+                                    <label style="display: block"> Loại xe</label>
                                     <select name="vehicle_type" class="form-control">
                                         <option value="">-- Chọn loại xe --</option>
                                         <option value="car">Ô tô</option>
@@ -397,7 +388,7 @@
                                 </button>
                             </form>
                             <div class="social_box">
-        <div class="seat_modal_overlay" onclick="closeSeatModal()"></div>
+        {{-- <div class="seat_modal_overlay" onclick="closeSeatModal()"></div>
         <div class="seat_modal_content">
             <!-- Step Indicator -->
             <div class="step_indicator">
@@ -583,7 +574,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> --}}
 
     <!-- Parking Lot Card Template (Hidden) -->
     <template id="parkingLotCardTemplate">

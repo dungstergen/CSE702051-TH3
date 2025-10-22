@@ -9,6 +9,14 @@ class ParkingLot extends Model
 {
     use HasFactory;
 
+    /**
+     * Get all spots for this parking lot
+     */
+    public function spots()
+    {
+        return $this->hasMany(ParkingSpot::class, 'parking_lot_id');
+    }
+
     protected $fillable = [
         'name',
         'address',
@@ -67,10 +75,10 @@ class ParkingLot extends Model
     /**
      * Check if parking lot is available
      */
-    public function isAvailable()
-    {
-        return $this->is_active && $this->available_spots > 0;
-    }
+    // public function isAvailable()
+    // {
+    //     return $this->is_active && $this->available_spots > 0;
+    // }
 
     /**
      * Get average rating
@@ -83,16 +91,16 @@ class ParkingLot extends Model
     /**
      * Scope for active parking lots
      */
-    public function scopeActive($query)
-    {
-        return $query->where('is_active', true);
-    }
+    // public function scopeActive($query)
+    // {
+    //     return $query->where('is_active', true);
+    // }
 
     /**
      * Scope for available parking lots
      */
-    public function scopeAvailable($query)
-    {
-        return $query->active()->where('capacity', '>', 0);
-    }
+    // public function scopeAvailable($query)
+    // {
+    //     return $query->active()->where('capacity', '>', 0);
+    // }
 }

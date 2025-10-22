@@ -9,7 +9,7 @@
             <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
                 <div class="flex flex-wrap items-center justify-between mb-4">
                     <h6 class="mb-0 dark:text-gray-700">Danh sách Người dùng</h6>
-                    <a href="{{ route('admin.users.create') }}" class="inline-block px-6 py-3 font-bold text-center text-gray-700 uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer bg-gradient-to-tl from-blue-600 to-cyan-600 leading-pro text-xs ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs">
+                    <a href="{{ route('admin.users.create') }}" class="inline-block px-6 py-3 font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer bg-gradient-to-tl from-green-600 to-lime-400 leading-pro text-xs ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs">
                         <i class="fas fa-plus mr-2"></i>Thêm người dùng
                     </a>
                 </div>

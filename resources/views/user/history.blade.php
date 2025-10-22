@@ -120,91 +120,6 @@
                 <h2>Lịch sử đặt chỗ</h2>
                 <p>Xem và quản lý các lần đỗ xe của bạn</p>
             </div>
-
-            <!-- Statistics Cards -->
-            <div class="row stats_overview mb-4">
-                <div class="col-lg-3 col-md-6 mb-3">
-                    <div class="stat_card">
-                        <div class="stat_icon">
-                            <i class="fa fa-check-circle"></i>
-                        </div>
-                        <div class="stat_content">
-                            <h4 id="completedBookings">0</h4>
-                            <p>Đã hoàn thành</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-3">
-                    <div class="stat_card">
-                        <div class="stat_icon">
-                            <i class="fa fa-clock-o"></i>
-                        </div>
-                        <div class="stat_content">
-                            <h4 id="activeBookings">0</h4>
-                            <p>Đang hoạt động</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-3">
-                    <div class="stat_card">
-                        <div class="stat_icon">
-                            <i class="fa fa-times-circle"></i>
-                        </div>
-                        <div class="stat_content">
-                            <h4 id="cancelledBookings">0</h4>
-                            <p>Đã hủy</p>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-3 col-md-6 mb-3">
-                    <div class="stat_card">
-                        <div class="stat_icon">
-                            <i class="fa fa-money"></i>
-                        </div>
-                        <div class="stat_content">
-                            <h4 id="totalSpent">0đ</h4>
-                            <p>Tổng chi tiêu</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Filter & Sort Section -->
-            <div class="row mb-4">
-                <div class="col-12">
-                    <div class="filter_section">
-                        <form id="historyFilterForm">
-                            <div class="row align-items-end">
-                                <div class="col-md-3 mb-2">
-                                    <label>Trạng thái</label>
-                                    <select class="form-control" id="statusFilter" onchange="filterHistory()">
-                                        <option value="">Tất cả</option>
-                                        <option value="completed">Đã hoàn thành</option>
-                                        <option value="active">Đang hoạt động</option>
-                                        <option value="cancelled">Đã hủy</option>
-                                        <option value="pending">Chờ xác nhận</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-3 mb-2">
-                                    <label>Từ ngày</label>
-                                    <input type="date" class="form-control" id="dateFrom" onchange="filterHistory()">
-                                </div>
-                                <div class="col-md-3 mb-2">
-                                    <label>Đến ngày</label>
-                                    <input type="date" class="form-control" id="dateTo" onchange="filterHistory()">
-                                </div>
-                                <div class="col-md-3 mb-2">
-                                    <button type="button" class="btn btn-secondary w-100" onclick="resetHistoryFilters()">
-                                        <i class="fa fa-refresh"></i> Đặt lại
-                                    </button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Bookings History Table -->
             <div class="row">
                 <div class="col-12">
                     <div class="history_table_container">
@@ -218,23 +133,45 @@
                                         <th>Biển số xe</th>
                                         <th>Tổng phí</th>
                                         <th>Trạng thái</th>
-                                        <th>Hành động</th>
                                     </tr>
                                 </thead>
-                                <tbody id="historyTableBody">
-                                    <!-- Data will be loaded dynamically -->
+                                <tbody>
+                                    @forelse($bookings as $booking)
                                     <tr>
-                                        <td colspan="7" class="text-center py-5">
-                                            <i class="fa fa-spinner fa-spin fa-2x text-muted"></i>
-                                            <p class="mt-3">Đang tải dữ liệu...</p>
+                                        <td><strong>{{ $booking->booking_code }}</strong></td>
+                                        <td>
+                                            <strong>{{ $booking->parkingLot->name ?? '' }}</strong><br>
+                                            <small class="text-muted">{{ $booking->parkingLot->address ?? '' }}</small>
+                                        </td>
+                                        <td>
+                                            <div><i class="fa fa-calendar"></i> {{ $booking->start_time->format('d/m/Y H:i') }}</div>
+                                            <div><i class="fa fa-calendar"></i> {{ $booking->end_time->format('d/m/Y H:i') }}</div>
+                                        </td>
+                                        <td>{{ $booking->license_plate }}</td>
+                                        <td><strong>{{ number_format($booking->total_cost, 0, ',', '.') }}đ</strong></td>
+                                        <td>
+                                            @if($booking->status === 'completed')
+                                                <span class="status-badge status-completed">Đã hoàn thành</span>
+                                            @elseif($booking->status === 'cancelled')
+                                                <span class="status-badge status-cancelled">Đã hủy</span>
+                                            @elseif($booking->status === 'pending')
+                                                <span class="status-badge status-pending">Chờ xác nhận</span>
+                                            @else
+                                                <span class="status-badge status-active">Đang hoạt động</span>
+                                            @endif
                                         </td>
                                     </tr>
+                                    @empty
+                                    <tr>
+                                        <td colspan="6" class="text-center py-5">
+                                            <i class="fa fa-exclamation-circle fa-2x text-muted"></i>
+                                            <p class="mt-3">Không có dữ liệu</p>
+                                        </td>
+                                    </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                         </div>
-
-                        <!-- Pagination -->
-                        <div id="historyPagination" class="mt-3"></div>
                     </div>
                 </div>
             </div>

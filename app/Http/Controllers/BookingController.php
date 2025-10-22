@@ -73,7 +73,18 @@ class BookingController extends Controller
         // Tính thời gian và giá
         $startTime = Carbon::parse($validated['start_time']);
         $endTime = Carbon::parse($validated['end_time']);
-        $hours = ceil($endTime->diffInHours($startTime));
+        if ($startTime >= $endTime) {
+            return back()->withErrors(['error' => 'Giờ bắt đầu phải nhỏ hơn giờ kết thúc'])->withInput();
+        }
+        if ($startTime->isSameDay($endTime)) {
+            $hours = $endTime->hour - $startTime->hour;
+            if ($endTime->minute > $startTime->minute) {
+                $hours += 1; // Nếu có phút dư thì tính thêm 1 giờ
+            }
+        } else {
+            $hours = $startTime->diffInHours($endTime);
+        }
+        $hours = max(1, $hours); // Đảm bảo tối thiểu 1 giờ
         $totalCost = $hours * $parkingLot->hourly_rate;
 
         // Nếu có gói dịch vụ thì dùng giá gói

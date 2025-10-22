@@ -72,14 +72,30 @@ class AdminPaymentController extends Controller
      */
     public function update(Request $request, Payment $payment)
     {
+
         $validated = $request->validate([
-            // Align with payments table enum: credit_card, debit_card, bank_transfer, e_wallet, cash
-            'payment_method' => 'nullable|in:credit_card,debit_card,bank_transfer,e_wallet,cash',
-            'payment_status' => 'required|in:pending,completed,failed,refunded',
-            'notes' => 'nullable|string'
+            'payment_method' => 'required|in:credit_card,bank_transfer,e_wallet,cash',
+            'payment_status' => 'required|in:pending,completed,failed,cancelled',
+            'amount' => 'required|numeric|min:0',
+            'transaction_id' => 'nullable|string',
+            'paid_at' => 'nullable|date'
         ]);
 
+
         $payment->update($validated);
+
+        // Đồng bộ trạng thái booking
+        $booking = $payment->booking;
+        if ($booking) {
+            if ($payment->payment_status === 'completed') {
+                $booking->status = 'completed';
+            } elseif ($payment->payment_status === 'cancelled') {
+                $booking->status = 'cancelled';
+            } elseif ($payment->payment_status === 'failed') {
+                $booking->status = 'pending';
+            }
+            $booking->save();
+        }
 
         return redirect()->route('admin.payments.index')
                         ->with('success', 'Cập nhật thanh toán thành công!');
