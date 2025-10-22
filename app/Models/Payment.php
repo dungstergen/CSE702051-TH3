@@ -18,8 +18,7 @@ class Payment extends Model
         'transaction_id',
         'gateway_response',
         'paid_at',
-        'refunded_at',
-        'notes'
+        'refunded_at'
     ];
 
     protected $casts = [

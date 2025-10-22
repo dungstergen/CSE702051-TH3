@@ -13,7 +13,7 @@
                         <a href="{{ route('admin.payments.show', $payment) }}" class="inline-block px-6 py-3 font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer bg-gradient-to-tl from-blue-600 to-cyan-400 leading-pro text-xs ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs">
                             <i class="fas fa-eye mr-2"></i>Xem
                         </a>
-                        <a href="{{ route('admin.payments.index') }}" class="inline-block px-6 py-3 font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer bg-gradient-to-tl from-gray-600 to-gray-400 leading-pro text-xs ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs">
+                        <a href="{{ route('admin.payments.index') }}" class="inline-block px-6 py-3 font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer !bg-gradient-to-tl !from-gray-600 to-gray-400 leading-pro text-xs ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs">
                             <i class="fas fa-arrow-left mr-2"></i>Quay lại
                         </a>
                     </div>
@@ -67,10 +67,9 @@
                             </label>
                             <select name="payment_method" id="payment_method" class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none focus:transition-shadow" required>
                                 <option value="">Chọn phương thức</option>
-                                <option value="momo" {{ old('payment_method', $payment->payment_method) == 'momo' ? 'selected' : '' }}>Ví MoMo</option>
-                                <option value="zalopay" {{ old('payment_method', $payment->payment_method) == 'zalopay' ? 'selected' : '' }}>Vietcombank</option>
-                                <option value="vnpay" {{ old('payment_method', $payment->payment_method) == 'vnpay' ? 'selected' : '' }}>VietinBank</option>
-                                <option value="banking" {{ old('payment_method', $payment->payment_method) == 'banking' ? 'selected' : '' }}>Thẻ ATM/Internet Banking</option>
+                                <option value="credit_card" {{ old('payment_method', $payment->payment_method) == 'credit_card' ? 'selected' : '' }}>Thẻ tín dụng</option>
+                                <option value="bank_transfer" {{ old('payment_method', $payment->payment_method) == 'bank_transfer' ? 'selected' : '' }}>Chuyển khoản ngân hàng</option>
+                                <option value="e_wallet" {{ old('payment_method', $payment->payment_method) == 'e_wallet' ? 'selected' : '' }}>Ví điện tử</option>
                                 <option value="cash" {{ old('payment_method', $payment->payment_method) == 'cash' ? 'selected' : '' }}>Thanh toán tại chỗ</option>
                             </select>
                             @error('payment_method')
@@ -89,17 +88,17 @@
                         </div>
 
                         <div class="w-full max-w-full px-3 mb-6 md:w-6/12 md:flex-none">
-                            <label class="mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80" for="status">
+                            <label class="mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80" for="payment_status">
                                 Trạng thái <span class="text-red-500">*</span>
                             </label>
-                            <select name="status" id="status" class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none focus:transition-shadow" required>
+                            <select name="payment_status" id="payment_status" class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none focus:transition-shadow" required>
                                 <option value="">Chọn trạng thái</option>
-                                <option value="pending" {{ old('status', $payment->status) == 'pending' ? 'selected' : '' }}>Chờ thanh toán</option>
-                                <option value="completed" {{ old('status', $payment->status) == 'completed' ? 'selected' : '' }}>Đã thanh toán</option>
-                                <option value="failed" {{ old('status', $payment->status) == 'failed' ? 'selected' : '' }}>Thất bại</option>
-                                <option value="refunded" {{ old('status', $payment->status) == 'refunded' ? 'selected' : '' }}>Đã hoàn tiền</option>
+                                <option value="pending" {{ old('payment_status', $payment->payment_status) == 'pending' ? 'selected' : '' }}>Chờ thanh toán</option>
+                                <option value="completed" {{ old('payment_status', $payment->payment_status) == 'completed' ? 'selected' : '' }}>Đã thanh toán</option>
+                                <option value="failed" {{ old('payment_status', $payment->payment_status) == 'failed' ? 'selected' : '' }}>Thất bại</option>
+                                <option value="cancelled" {{ old('payment_status', $payment->payment_status) == 'cancelled' ? 'selected' : '' }}>Đã hoàn tiền</option>
                             </select>
-                            @error('status')
+                            @error('payment_status')
                                 <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                             @enderror
                         </div>
@@ -148,7 +147,7 @@
                     </div>
 
                     <div class="flex items-center justify-end mt-6">
-                        <a href="{{ route('admin.payments.index') }}" class="inline-block px-6 py-3 mr-3 font-bold text-center text-gray-700 uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer leading-pro text-xs ease-soft-in tracking-tight-soft hover:scale-102 active:opacity-85">
+                        <a href="{{ route('admin.payments.index') }}" class="inline-block px-6 py-3 mr-3 font-bold text-center text-gray-700 uppercase align-middle transition-all bg-gray-200 rounded-lg cursor-pointer leading-pro text-xs ease-soft-in tracking-tight-soft hover:scale-102 active:opacity-85">
                             Hủy
                         </a>
                         <button type="submit" class="inline-block px-6 py-3 font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer bg-gradient-to-tl from-green-600 to-lime-400 leading-pro text-xs ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs">
