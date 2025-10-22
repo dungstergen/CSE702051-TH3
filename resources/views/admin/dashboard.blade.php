@@ -263,9 +263,9 @@
                                 <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                     @php
                                         $statusColors = [
-                                            'pending' => 'bg-yellow-500',
-                                            'confirmed' => 'bg-green-500',
-                                            'cancelled' => 'bg-red-500',
+                                            'pending' => 'bg-blue-500',
+                                            'confirmed' => 'bg-blue-500',
+                                            'cancelled' => 'bg-blue-500',
                                             'completed' => 'bg-blue-500'
                                         ];
                                         $statusTexts = [
