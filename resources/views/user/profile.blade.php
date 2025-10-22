@@ -325,64 +325,80 @@
                                     @method('PUT')
 
                                     <div id="vehiclesList">
-                                        <!-- Vehicle items will be added here -->
-                                        @if(isset($vehicles) && count($vehicles) > 0)
-                                            @foreach($vehicles as $vehicle)
-                                                <div class="vehicle-item mb-3 p-3 border rounded" style="background-color: #f8f9fa;">
-                                                    <div class="row">
-                                                        <div class="col-md-4">
-                                                            <div class="form-group mb-2">
-                                                                <label>Biển số xe <span class="text-danger">*</span></label>
-                                                                <input type="text"
-                                                                       class="form-control"
-                                                                       name="vehicles[{{ $loop->index }}][number]"
-                                                                       value="{{ $vehicle->number }}"
-                                                                       placeholder="VD: 29A-12345"
-                                                                       required>
-                                                                <input type="hidden" name="vehicles[{{ $loop->index }}][id]" value="{{ $vehicle->id }}">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            <div class="form-group mb-2">
-                                                                <label>Loại xe <span class="text-danger">*</span></label>
-                                                                <select class="form-control" name="vehicles[{{ $loop->index }}][type]" required>
-                                                                    <option value="">-- Chọn loại --</option>
-                                                                    <option value="car" {{ $vehicle->type == 'car' ? 'selected' : '' }}>Ô tô</option>
-                                                                    <option value="motorbike" {{ $vehicle->type == 'motorbike' ? 'selected' : '' }}>Xe máy</option>
-                                                                    <option value="truck" {{ $vehicle->type == 'truck' ? 'selected' : '' }}>Xe tải</option>
-                                                                </select>
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-3">
-                                                            <div class="form-group mb-2">
-                                                                <label>Nhãn hiệu</label>
-                                                                <input type="text"
-                                                                       class="form-control"
-                                                                       name="vehicles[{{ $loop->index }}][brand]"
-                                                                       value="{{ $vehicle->brand }}"
-                                                                       placeholder="VD: Honda">
-                                                            </div>
-                                                        </div>
-                                                        <div class="col-md-2">
-                                                            <label>&nbsp;</label>
-                                                            <button type="button"
-                                                                    class="btn btn-danger btn-block"
-                                                                    onclick="removeVehicle(this)"
-                                                                    title="Xóa thông tin xe này">
-                                                                <i class="fa fa-trash"></i> Xóa
-                                                            </button>
+                                        @php
+                                            $vehicles = Auth::user()->vehicles ?? [];
+                                        @endphp
+                                        @if(count($vehicles) > 0)
+                                            @foreach($vehicles as $i => $vehicle)
+                                            <div class="vehicle-item mb-3 p-3 border rounded" style="background-color: #f8f9fa;">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="form-group mb-2">
+                                                            <label>Biển số xe <span class="text-danger">*</span></label>
+                                                            <input type="text" class="form-control" name="vehicles[{{ $i }}][number]" value="{{ $vehicle->license_plate }}" required>
+                                                            <input type="hidden" name="vehicles[{{ $i }}][id]" value="{{ $vehicle->id }}">
                                                         </div>
                                                     </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group mb-2">
+                                                            <label>Loại xe <span class="text-danger">*</span></label>
+                                                            <select class="form-control" name="vehicles[{{ $i }}][type]" required>
+                                                                <option value="">-- Chọn loại --</option>
+                                                                <option value="car" {{ $vehicle->vehicle_type == 'car' ? 'selected' : '' }}>Ô tô</option>
+                                                                <option value="motorbike" {{ $vehicle->vehicle_type == 'motorbike' ? 'selected' : '' }}>Xe máy</option>
+                                                                <option value="truck" {{ $vehicle->vehicle_type == 'truck' ? 'selected' : '' }}>Xe tải</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group mb-2">
+                                                            <label>Nhãn hiệu</label>
+                                                            <input type="text" class="form-control" name="vehicles[{{ $i }}][brand]" value="{{ $vehicle->brand }}" placeholder="VD: Honda, Toyota">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label>&nbsp;</label>
+                                                        <!-- Không có nút xóa bằng JS, có thể thêm checkbox xóa nếu muốn -->
+                                                    </div>
                                                 </div>
+                                            </div>
                                             @endforeach
+                                        @else
+                                            <div class="vehicle-item mb-3 p-3 border rounded" style="background-color: #f8f9fa;">
+                                                <div class="row">
+                                                    <div class="col-md-4">
+                                                        <div class="form-group mb-2">
+                                                            <label>Biển số xe <span class="text-danger">*</span></label>
+                                                            <input type="text" class="form-control" name="vehicles[0][number]" placeholder="VD: 29A-12345 hoặc 51B-123.45" required>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group mb-2">
+                                                            <label>Loại xe <span class="text-danger">*</span></label>
+                                                            <select class="form-control" name="vehicles[0][type]" required>
+                                                                <option value="">-- Chọn loại --</option>
+                                                                <option value="car">Ô tô</option>
+                                                                <option value="motorbike">Xe máy</option>
+                                                                <option value="truck">Xe tải</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-3">
+                                                        <div class="form-group mb-2">
+                                                            <label>Nhãn hiệu</label>
+                                                            <input type="text" class="form-control" name="vehicles[0][brand]" placeholder="VD: Honda, Toyota">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-2">
+                                                        <label>&nbsp;</label>
+                                                    </div>
+                                                </div>
+                                            </div>
                                         @endif
                                     </div>
 
                                     <div class="form-actions mt-3">
-                                        <button type="button" class="btn btn-success" onclick="addVehicle()">
-                                            <i class="fa fa-plus"></i> Thêm xe mới
-                                        </button>
-
+                                        <!-- Không còn nút thêm xe mới bằng JS, có thể thêm xe mới bằng cách submit lại form -->
                                         <button type="submit" class="btn btn_box float-right">
                                             <i class="fa fa-save"></i> Lưu thông tin xe
                                         </button>
@@ -486,6 +502,7 @@
         }
 
         .profile_card {
+            height: 370px;
             background: white;
             padding: 30px;
             border-radius: 10px;
@@ -520,25 +537,6 @@
     <!-- JavaScript for Profile Page -->
     <script>
         let vehicleCount = 0;
-
-        // Initialize on page load
-        $(document).ready(function() {
-            // Load existing vehicles if any
-            loadExistingVehicles();
-        });
-
-        function loadExistingVehicles() {
-            // TODO: Load from database via AJAX
-            // For now, this is a placeholder for future implementation
-            // Example implementation:
-            /*
-            $.get('/api/user/vehicles', function(vehicles) {
-                vehicles.forEach(vehicle => {
-                    addVehicleWithData(vehicle);
-                });
-            });
-            */
-        }
 
         function addVehicle() {
             vehicleCount++;

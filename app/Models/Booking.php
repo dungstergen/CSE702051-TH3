@@ -31,7 +31,10 @@ class Booking extends Model
         'booking_date' => 'date',
         'start_time' => 'datetime',
         'end_time' => 'datetime',
-        'total_cost' => 'decimal:2'
+        'total_cost' => 'decimal:2',
+        'duration_hours' => 'integer',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
     ];
 
     /**

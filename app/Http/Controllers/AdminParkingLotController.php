@@ -25,7 +25,7 @@ class AdminParkingLotController extends Controller
 
         // Status filter
         if ($request->filled('status')) {
-            $query->where('is_active', $request->status === 'active');
+            $query->where('status', $request->status);
         }
 
         $parkingLots = $query->withCount('bookings')
@@ -50,20 +50,21 @@ class AdminParkingLotController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'address' => 'required|string|max:500',
+            'address' => 'required|string',
             'description' => 'nullable|string',
-            'capacity' => 'required|integer|min:1',
+            'total_spots' => 'required|integer|min:1',
+            'available_spots' => 'required|integer|min:0',
             'hourly_rate' => 'required|numeric|min:0',
-            'latitude' => 'nullable|numeric|between:-90,90',
-            'longitude' => 'nullable|numeric|between:-180,180',
-            'amenities' => 'nullable|string',
-            'operating_hours' => 'nullable|string',
-            'contact_info' => 'nullable|string',
-            'is_active' => 'boolean'
+            'status' => 'required|in:active,inactive,maintenance',
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
+            'facilities' => 'nullable|array',
+            'contact_phone' => 'nullable|string|max:20',
+            'image' => 'nullable|string|max:255',
         ]);
-
-        $validated['is_active'] = $request->has('is_active');
-
+        if (isset($validated['facilities']) && is_array($validated['facilities'])) {
+            $validated['facilities'] = json_encode($validated['facilities']);
+        }
         ParkingLot::create($validated);
 
         return redirect()->route('admin.parking-lots.index')
@@ -95,20 +96,21 @@ class AdminParkingLotController extends Controller
     {
         $validated = $request->validate([
             'name' => 'required|string|max:255',
-            'address' => 'required|string|max:500',
+            'address' => 'required|string',
             'description' => 'nullable|string',
-            'capacity' => 'required|integer|min:1',
+            'total_spots' => 'required|integer|min:1',
+            'available_spots' => 'required|integer|min:0',
             'hourly_rate' => 'required|numeric|min:0',
-            'latitude' => 'nullable|numeric|between:-90,90',
-            'longitude' => 'nullable|numeric|between:-180,180',
-            'amenities' => 'nullable|string',
-            'operating_hours' => 'nullable|string',
-            'contact_info' => 'nullable|string',
-            'is_active' => 'boolean'
+            'status' => 'required|in:active,inactive,maintenance',
+            'latitude' => 'required|numeric|between:-90,90',
+            'longitude' => 'required|numeric|between:-180,180',
+            'facilities' => 'nullable|array',
+            'contact_phone' => 'nullable|string|max:20',
+            'image' => 'nullable|string|max:255',
         ]);
-
-        $validated['is_active'] = $request->has('is_active');
-
+        if (isset($validated['facilities']) && is_array($validated['facilities'])) {
+            $validated['facilities'] = json_encode($validated['facilities']);
+        }
         $parkingLot->update($validated);
 
         return redirect()->route('admin.parking-lots.index')
@@ -137,10 +139,11 @@ class AdminParkingLotController extends Controller
      */
     public function toggleStatus(ParkingLot $parkingLot)
     {
-        $parkingLot->update(['is_active' => !$parkingLot->is_active]);
-
-        $status = $parkingLot->is_active ? 'kích hoạt' : 'vô hiệu hóa';
-
+        // Không còn trường is_active, nên chuyển trạng thái qua status
+        $parkingLot->update([
+            'status' => $parkingLot->status === 'active' ? 'inactive' : 'active'
+        ]);
+        $status = $parkingLot->status === 'active' ? 'kích hoạt' : 'vô hiệu hóa';
         return redirect()->route('admin.parking-lots.index')
                         ->with('success', "Đã {$status} bãi đỗ xe thành công!");
     }

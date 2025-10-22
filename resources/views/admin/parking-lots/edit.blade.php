@@ -40,23 +40,6 @@
                             @enderror
                         </div>
 
-                        <div class="w-full max-w-full px-3 mb-6 md:w-6/12 md:flex-none">
-                            <label class="mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80" for="city">
-                                Thành phố <span class="text-red-500">*</span>
-                            </label>
-                            <select name="city" id="city" class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none focus:transition-shadow" required>
-                                <option value="">Chọn thành phố</option>
-                                <option value="Hà Nội" {{ old('city', $parkingLot->city) == 'Hà Nội' ? 'selected' : '' }}>Hà Nội</option>
-                                <option value="Hồ Chí Minh" {{ old('city', $parkingLot->city) == 'Hồ Chí Minh' ? 'selected' : '' }}>Hồ Chí Minh</option>
-                                <option value="Đà Nẵng" {{ old('city', $parkingLot->city) == 'Đà Nẵng' ? 'selected' : '' }}>Đà Nẵng</option>
-                                <option value="Hải Phòng" {{ old('city', $parkingLot->city) == 'Hải Phòng' ? 'selected' : '' }}>Hải Phòng</option>
-                                <option value="Cần Thơ" {{ old('city', $parkingLot->city) == 'Cần Thơ' ? 'selected' : '' }}>Cần Thơ</option>
-                            </select>
-                            @error('city')
-                                <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
-                            @enderror
-                        </div>
-
                         <div class="w-full max-w-full px-3 mb-6">
                             <label class="mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80" for="address">
                                 Địa chỉ chi tiết <span class="text-red-500">*</span>
