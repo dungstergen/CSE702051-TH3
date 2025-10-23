@@ -47,6 +47,7 @@ Route::prefix('user')->name('user.')->group(function () {
     // API endpoints for parking lots
     Route::get('/api/parking-lots', [App\Http\Controllers\BookingController::class, 'getParkingLots'])->name('api.parking-lots');
     Route::get('/api/parking-lot/{id}', [App\Http\Controllers\BookingController::class, 'getParkingLotDetails'])->name('api.parking-lot.details');
+    Route::get('/api/parking-lot/{parkingLotId}/spots', [App\Http\Controllers\BookingController::class, 'getParkingSpots'])->name('api.parking-spots');
 });
 
 // Protected User Routes (Require Authentication + Role User)

@@ -243,7 +243,7 @@
                                         <h3 class="price_number">{{ number_format($lot->hourly_rate) }}₫</h3>
                                         <span class="price_unit">/giờ</span>
                                     </div>
-                                    <button class="btn_book_now" onclick="openBookingModal({{ $lot->id }}, '{{ $lot->name }}', {{ $lot->hourly_rate }})">
+                                    <button class="btn_book_now" onclick="openSpotSelectionModal({{ $lot->id }}, '{{ $lot->name }}', '{{ $lot->address }}', {{ $lot->hourly_rate }})">
                                         Đặt chỗ
                                     </button>
                                 </div>
@@ -263,6 +263,58 @@
     </section>
     <!-- End Booking Section -->
 
+    <!-- Spot Selection Modal -->
+    <div class="modal fade" id="spotSelectionModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <div>
+                        <h5 class="modal-title">Chọn vị trí đỗ xe</h5>
+                        <p class="text-muted mb-0">
+                            <strong id="spot_modal_parking_name"></strong> -
+                            <small id="spot_modal_parking_address"></small>
+                        </p>
+                    </div>
+                    <button type="button" class="close" data-dismiss="modal">
+                        <span>&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <input type="hidden" id="spot_modal_parking_lot_id">
+                    <input type="hidden" id="spot_modal_hourly_rate">
+
+                    <div class="alert alert-info mb-3">
+                        <i class="fa fa-info-circle"></i>
+                        <strong>Chú thích:</strong>
+                        <span class="ml-3"><span class="spot-legend available"></span> Trống</span>
+                        <span class="ml-3"><span class="spot-legend occupied"></span> Đã đặt</span>
+                        <span class="ml-3"><span class="spot-legend selected"></span> Đang chọn</span>
+                    </div>
+
+                    <!-- Parking Spots Grid -->
+                    <div id="parking_spots_container" class="parking-spots-grid">
+                        <div class="text-center py-5">
+                            <i class="fa fa-spinner fa-spin fa-3x text-muted"></i>
+                            <p class="mt-3">Đang tải sơ đồ vị trí...</p>
+                        </div>
+                    </div>
+
+                    <!-- Selected Spot Info -->
+                    <div class="selected-spot-info mt-3">
+                        <strong>Vị trí đã chọn:</strong>
+                        <span id="selected_spot_display" class="text-muted">Chưa chọn vị trí nào</span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" onclick="proceedToBooking()">
+                        <i class="fa fa-arrow-right"></i> Tiếp tục đặt chỗ
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Booking Modal -->
     <div class="modal fade" id="bookingModal" tabindex="-1" role="dialog">
         <div class="modal-dialog modal-lg" role="document">
@@ -277,9 +329,11 @@
                     @csrf
                     <div class="modal-body">
                         <input type="hidden" name="parking_lot_id" id="modal_parking_lot_id">
+                        <input type="hidden" name="parking_spot_id" id="modal_parking_spot_id">
 
                         <div class="alert alert-info">
                             <strong>Bãi đỗ:</strong> <span id="modal_parking_name"></span><br>
+                            <strong>Vị trí:</strong> <span id="modal_parking_spot_code"></span><br>
                             <strong>Giá:</strong> <span id="modal_parking_price"></span>₫/giờ
                         </div>
 
@@ -360,7 +414,9 @@
                         </div>
                     </div>
                     <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                        <button type="button" class="btn btn-secondary" onclick="backToSpotSelection()">
+                            <i class="fa fa-arrow-left"></i> Quay lại
+                        </button>
                         <button type="submit" class="btn btn-primary">
                             <i class="fa fa-check"></i> Xác nhận đặt chỗ
                         </button>
@@ -369,212 +425,6 @@
             </div>
         </div>
     </div>
-
-    <!-- info section -->
-    <section class="info_section ">
-
-        <div class="container">
-            <div class="info_top ">
-                <div class="row ">
-                    <div class="col-md-6 col-lg-3 info_col">
-                        <div class="info_form">
-                            <h4>
-                                Kết Nối Với Chúng Tôi
-                            </h4>
-                            <form action="">
-                                <input type="text" placeholder="Nhập Email Của Bạn" />
-                                <button type="submit">
-                                    Đăng Ký
-                                </button>
-                            </form>
-                            <div class="social_box">
-        {{-- <div class="seat_modal_overlay" onclick="closeSeatModal()"></div>
-        <div class="seat_modal_content">
-            <!-- Step Indicator -->
-            <div class="step_indicator">
-                <div class="step active" id="step1Indicator">
-                    <span class="step_number">1</span>
-                    <span class="step_label">Chọn vị trí</span>
-                </div>
-                <div class="step_line"></div>
-                <div class="step" id="step2Indicator">
-                    <span class="step_number">2</span>
-                    <span class="step_label">Thanh toán</span>
-                </div>
-            </div>
-
-            <div class="seat_modal_header">
-                <h3 id="modalTitle">Chọn vị trí đỗ xe</h3>
-                <button class="btn_close_modal" onclick="closeSeatModal()">
-                    <i class="fa fa-times"></i>
-                </button>
-            </div>
-
-            <div class="seat_modal_body">
-                <!-- STEP 1: Select Parking Spot -->
-                <div id="step1Content" class="step_content active">
-                    <!-- Parking Info -->
-                    <div class="selected_parking_info">
-                        <h4 id="modalParkingName">Bãi Đỗ Xe Vincom - Đồng Khởi</h4>
-                        <p><i class="fa fa-map-marker"></i> <span id="modalParkingAddress">72 Lê Thánh Tôn, Quận 1, TP.HCM</span></p>
-                        <div class="parking_legend">
-                            <span class="legend_item">
-                                <span class="legend_box available"></span> Trống
-                            </span>
-                            <span class="legend_item">
-                                <span class="legend_box selected"></span> Đang chọn
-                            </span>
-                            <span class="legend_item">
-                                <span class="legend_box occupied"></span> Đã đặt
-                            </span>
-                        </div>
-                    </div>
-
-                    <!-- Parking Grid -->
-                    <div class="parking_grid_container">
-                        <div class="parking_grid">
-                            <!-- Row 1 -->
-                            <div class="parking_row">
-                                <span class="row_label">Tầng 1</span>
-                                <div class="parking_spot available" data-spot="A-01">A01</div>
-                                <div class="parking_spot available" data-spot="A-02">A02</div>
-                                <div class="parking_spot available" data-spot="A-03">A03</div>
-                                <div class="parking_spot occupied" data-spot="A-04">A04</div>
-                                <div class="parking_spot available" data-spot="A-05">A05</div>
-                                <div class="parking_spot available" data-spot="A-06">A06</div>
-                            </div>
-
-                            <!-- Row 2 -->
-                            <div class="parking_row">
-                                <span class="row_label">Tầng 1</span>
-                                <div class="parking_spot available" data-spot="B-01">B01</div>
-                                <div class="parking_spot occupied" data-spot="B-02">B02</div>
-                                <div class="parking_spot available" data-spot="B-03">B03</div>
-                                <div class="parking_spot available" data-spot="B-04">B04</div>
-                                <div class="parking_spot available" data-spot="B-05">B05</div>
-                                <div class="parking_spot occupied" data-spot="B-06">B06</div>
-                            </div>
-
-                            <!-- Separator -->
-                            <div class="parking_separator">
-                                <span>── Lối đi ──</span>
-                            </div>
-
-                            <!-- Row 3 -->
-                            <div class="parking_row">
-                                <span class="row_label">Tầng 2</span>
-                                <div class="parking_spot available" data-spot="C-01">C01</div>
-                                <div class="parking_spot available" data-spot="C-02">C02</div>
-                                <div class="parking_spot occupied" data-spot="C-03">C03</div>
-                                <div class="parking_spot available" data-spot="C-04">C04</div>
-                                <div class="parking_spot available" data-spot="C-05">C05</div>
-                                <div class="parking_spot available" data-spot="C-06">C06</div>
-                            </div>
-
-                            <!-- Row 4 -->
-                            <div class="parking_row">
-                                <span class="row_label">Tầng 2</span>
-                                <div class="parking_spot available" data-spot="D-01">D01</div>
-                                <div class="parking_spot available" data-spot="D-02">D02</div>
-                                <div class="parking_spot available" data-spot="D-03">D03</div>
-                                <div class="parking_spot occupied" data-spot="D-04">D04</div>
-                                <div class="parking_spot occupied" data-spot="D-05">D05</div>
-                                <div class="parking_spot available" data-spot="D-06">D06</div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Selected Spot Info -->
-                    <div class="selected_spot_info">
-                        <div class="spot_details">
-                            <p>Vị trí đã chọn: <strong id="selectedSpotName">Chưa chọn</strong></p>
-                            <p>Giá: <strong id="selectedSpotPrice">15.000₫/giờ</strong></p>
-                        </div>
-                        <button class="btn_next_step" onclick="goToPaymentStep()">
-                            <i class="fa fa-arrow-right"></i> Tiếp tục thanh toán
-                        </button>
-                    </div>
-                </div>
-
-                <!-- STEP 2: Payment -->
-                <div id="step2Content" class="step_content" style="display: none;">
-                    <!-- Order Summary -->
-                    <div class="order_summary">
-                        <h4><i class="fa fa-file-text-o"></i> Thông tin đặt chỗ</h4>
-                        <div class="summary_item">
-                            <span>Bãi đỗ xe:</span>
-                            <strong id="summaryParkingName">-</strong>
-                        </div>
-                        <div class="summary_item">
-                            <span>Vị trí:</span>
-                            <strong id="summarySpotName">-</strong>
-                        </div>
-                        <div class="summary_item">
-                            <span>Thời gian:</span>
-                            <strong>2 giờ</strong>
-                        </div>
-                        <div class="summary_item total">
-                            <span>Tổng tiền:</span>
-                            <strong id="summaryTotalPrice">30.000₫</strong>
-                        </div>
-                    </div>
-
-                    <!-- Payment Methods -->
-                    <div class="payment_methods_container">
-                        <h4><i class="fa fa-credit-card"></i> Phương thức thanh toán</h4>
-
-                        <div class="payment_methods_grid">
-                            <!-- Card -->
-                            <div class="payment_method_card" onclick="selectPaymentInModal('card')">
-                                <input type="radio" name="payment_method" id="modal_card" value="card">
-                                <label for="modal_card">
-                                    <i class="fa fa-credit-card"></i>
-                                    <span>Thẻ tín dụng</span>
-                                </label>
-                            </div>
-
-                            <!-- MoMo -->
-                            <div class="payment_method_card" onclick="selectPaymentInModal('momo')">
-                                <input type="radio" name="payment_method" id="modal_momo" value="momo">
-                                <label for="modal_momo">
-                                    <img src="{{ asset('user/images/momo.jpg') }}" alt="MoMo" style="height: 30px;">
-                                    <span>MoMo</span>
-                                </label>
-                            </div>
-
-                            <!-- Bank Transfer -->
-                            <div class="payment_method_card" onclick="selectPaymentInModal('bank')">
-                                <input type="radio" name="payment_method" id="modal_bank" value="bank">
-                                <label for="modal_bank">
-                                    <i class="fa fa-university"></i>
-                                    <span>Chuyển khoản</span>
-                                </label>
-                            </div>
-
-                            <!-- Cash -->
-                            <div class="payment_method_card" onclick="selectPaymentInModal('cash')">
-                                <input type="radio" name="payment_method" id="modal_cash" value="cash" checked>
-                                <label for="modal_cash">
-                                    <i class="fa fa-money"></i>
-                                    <span>Tiền mặt</span>
-                                </label>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Action Buttons -->
-                    <div class="payment_actions">
-                        <button class="btn_back" onclick="backToSpotSelection()">
-                            <i class="fa fa-arrow-left"></i> Quay lại
-                        </button>
-                        <button class="btn_confirm_payment" onclick="confirmPayment()">
-                            <i class="fa fa-check-circle"></i> Xác nhận thanh toán
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div> --}}
 
     <!-- Parking Lot Card Template (Hidden) -->
     <template id="parkingLotCardTemplate">
@@ -837,6 +687,193 @@
             color: #ffbe33;
             font-weight: 700;
         }
+
+        /* Parking Level Container */
+        .parking-level-container {
+            background: white;
+            padding: 20px;
+            border-radius: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .parking-level-title {
+            background: linear-gradient(135deg, #6c5b7b 0%, #8b7a9e 100%);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-size: 18px;
+            font-weight: 600;
+            display: inline-block;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 10px rgba(108, 91, 123, 0.3);
+        }
+
+        /* Sections Grid - Horizontal layout */
+        .parking-sections-grid {
+            display: flex;
+            gap: 30px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .parking-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .parking-section-spots {
+            display: flex;
+            flex-direction: row;
+            flex-wrap: wrap;
+            gap: 10px;
+            max-width: 800px;
+        }
+
+        /* Parking Spot Style */
+        .parking-spot {
+            width: 100px;
+            height: 50px;
+            border: 2px solid #ddd;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background: #b3d4f5;
+            position: relative;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .parking-spot:hover:not(.occupied) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .parking-spot.available {
+            background: #b3d4f5;
+            border-color: #7cb3e6;
+        }
+
+        .parking-spot.available:hover {
+            background: #9ec8f0;
+        }
+
+        .parking-spot.occupied {
+            background: #f5b3c4;
+            border-color: #e67c98;
+            cursor: not-allowed;
+        }
+
+        .parking-spot.selected {
+            background: #b8e6b8;
+            border-color: #5cb85c;
+            border-width: 3px;
+            box-shadow: 0 0 0 3px rgba(92, 184, 92, 0.3);
+        }
+
+        .parking-spot .spot-code {
+            font-weight: 600;
+            font-size: 15px;
+            color: #333;
+            text-align: center;
+        }
+
+        .spot-legend {
+            display: inline-block;
+            width: 30px;
+            height: 20px;
+            border-radius: 10px;
+            border: 2px solid;
+            vertical-align: middle;
+        }
+
+        .spot-legend.available {
+            background: #b3d4f5;
+            border-color: #7cb3e6;
+        }
+
+        .spot-legend.occupied {
+            background: #f5b3c4;
+            border-color: #e67c98;
+        }
+
+        .spot-legend.selected {
+            background: #b8e6b8;
+            border-color: #5cb85c;
+        }
+
+        .selected-spot-info {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            border-left: 4px solid #ffc107;
+        }
+
+        .selected-spot-info strong {
+            color: #333;
+        }
+
+        #selected_spot_display {
+            font-size: 16px;
+            font-weight: 600;
+            color: #ffc107 !important;
+        }
+
+        /* Modal XL for spot selection */
+        .modal-xl {
+            max-width: 1200px;
+        }
+
+        /* Parking spots container wrapper */
+        #parking_spots_container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            min-height: 400px;
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        /* Responsive for parking layout */
+        @media (max-width: 992px) {
+            .parking-sections-grid {
+                gap: 20px;
+            }
+
+            .parking-spot {
+                width: 90px;
+                height: 45px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .parking-sections-grid {
+                flex-direction: column;
+                align-items: center;
+                gap: 20px;
+            }
+
+            .parking-spot {
+                width: 80px;
+                height: 40px;
+                font-size: 13px;
+            }
+
+            .parking-level-title {
+                font-size: 16px;
+                padding: 10px 25px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .parking-spot {
+                width: 70px;
+                height: 35px;
+                font-size: 12px;
+            }
+        }
     </style>
 
     <!-- JavaScript for Booking Functionality -->
@@ -1060,9 +1097,10 @@
 
             // TODO: Send booking + payment to backend
         }
-    </script>    <!-- info section -->
-    <section class="info_section ">
+    </script>
 
+    <!-- info section -->
+    <section class="info_section ">
         <div class="container">
             <div class="info_top ">
                 <div class="row ">
@@ -1182,7 +1220,211 @@
 
     <!-- Booking Page JavaScript -->
     <script>
-        // Open booking modal
+        let selectedSpotId = null;
+        let selectedSpotCode = null;
+        let currentParkingLotId = null;
+        let currentHourlyRate = null;
+
+        // Open spot selection modal
+        function openSpotSelectionModal(lotId, lotName, lotAddress, hourlyRate) {
+            @guest
+                alert('Vui lòng đăng nhập để đặt chỗ!');
+                window.location.href = '{{ route("login") }}';
+                return;
+            @endguest
+
+            currentParkingLotId = lotId;
+            currentHourlyRate = hourlyRate;
+
+            document.getElementById('spot_modal_parking_lot_id').value = lotId;
+            document.getElementById('spot_modal_parking_name').textContent = lotName;
+            document.getElementById('spot_modal_parking_address').textContent = lotAddress;
+            document.getElementById('spot_modal_hourly_rate').value = hourlyRate;
+
+            // Reset selection
+            selectedSpotId = null;
+            selectedSpotCode = null;
+            document.getElementById('selected_spot_display').textContent = 'Chưa chọn vị trí nào';
+            document.getElementById('selected_spot_display').className = 'text-muted';
+
+            $('#spotSelectionModal').modal('show');
+
+            // Load parking spots
+            loadParkingSpots();
+        }
+
+        // Load parking spots from API
+        async function loadParkingSpots() {
+            const lotId = document.getElementById('spot_modal_parking_lot_id').value;
+
+            const container = document.getElementById('parking_spots_container');
+            container.innerHTML = '<div class="text-center py-5"><i class="fa fa-spinner fa-spin fa-3x text-muted"></i><p class="mt-3">Đang tải sơ đồ vị trí...</p></div>';
+
+            try {
+                const response = await fetch(`/user/api/parking-lot/${lotId}/spots`);
+
+                if (!response.ok) {
+                    throw new Error('Failed to load parking spots');
+                }
+
+                const data = await response.json();
+                displayParkingSpots(data.spots);
+            } catch (error) {
+                console.error('Error loading parking spots:', error);
+                container.innerHTML = '<div class="text-center py-5 text-danger"><i class="fa fa-exclamation-triangle fa-3x"></i><p class="mt-3">Không thể tải sơ đồ vị trí. Vui lòng thử lại!</p></div>';
+            }
+        }
+
+        // Display parking spots grid
+        function displayParkingSpots(spots) {
+            const container = document.getElementById('parking_spots_container');
+
+            if (!spots || spots.length === 0) {
+                container.innerHTML = '<div class="text-center py-5"><i class="fa fa-info-circle fa-3x text-muted"></i><p class="mt-3">Không có vị trí đỗ xe nào</p></div>';
+                return;
+            }
+
+            container.innerHTML = '';
+
+            // Group by level first
+            const spotsByLevel = {};
+            spots.forEach(spot => {
+                const level = spot.level || 'Tầng 1';
+                if (!spotsByLevel[level]) {
+                    spotsByLevel[level] = [];
+                }
+                spotsByLevel[level].push(spot);
+            });
+
+            // Display each level
+            Object.keys(spotsByLevel).sort().forEach(levelName => {
+                // Level container
+                const levelContainer = document.createElement('div');
+                levelContainer.className = 'parking-level-container mb-4';
+
+                // Level title
+                const levelTitle = document.createElement('div');
+                levelTitle.className = 'parking-level-title';
+                levelTitle.textContent = levelName;
+                levelContainer.appendChild(levelTitle);
+
+                // Group spots by section (first letter of spot_code)
+                const spotsBySection = {};
+                spotsByLevel[levelName].forEach(spot => {
+                    const section = spot.spot_code.charAt(0); // Get first letter (A, B, C, etc)
+                    if (!spotsBySection[section]) {
+                        spotsBySection[section] = [];
+                    }
+                    spotsBySection[section].push(spot);
+                });
+
+                // Sections grid
+                const sectionsGrid = document.createElement('div');
+                sectionsGrid.className = 'parking-sections-grid';
+
+                // Display each section
+                Object.keys(spotsBySection).sort().forEach(sectionName => {
+                    const sectionContainer = document.createElement('div');
+                    sectionContainer.className = 'parking-section';
+
+                    // Section spots grid
+                    const sectionSpots = document.createElement('div');
+                    sectionSpots.className = 'parking-section-spots';
+
+                    // Sort spots by number
+                    spotsBySection[sectionName].sort((a, b) => {
+                        const numA = parseInt(a.spot_code.substring(1));
+                        const numB = parseInt(b.spot_code.substring(1));
+                        return numA - numB;
+                    });
+
+                    spotsBySection[sectionName].forEach(spot => {
+                        const spotDiv = document.createElement('div');
+                        spotDiv.className = `parking-spot ${spot.is_available ? 'available' : 'occupied'}`;
+                        spotDiv.dataset.spotId = spot.id;
+                        spotDiv.dataset.spotCode = spot.spot_code;
+
+                        spotDiv.innerHTML = `
+                            <div class="spot-code">${spot.spot_code}</div>
+                        `;
+
+                        if (spot.is_available) {
+                            spotDiv.onclick = function() {
+                                selectSpot(spot.id, spot.spot_code, this);
+                            };
+                        } else {
+                            spotDiv.title = 'Vị trí này đã được đặt';
+                        }
+
+                        sectionSpots.appendChild(spotDiv);
+                    });
+
+                    sectionContainer.appendChild(sectionSpots);
+                    sectionsGrid.appendChild(sectionContainer);
+                });
+
+                levelContainer.appendChild(sectionsGrid);
+                container.appendChild(levelContainer);
+            });
+        }
+
+        // Select a parking spot
+        function selectSpot(spotId, spotCode, element) {
+            // Remove previous selection
+            document.querySelectorAll('.parking-spot.selected').forEach(spot => {
+                spot.classList.remove('selected');
+            });
+
+            // Select new spot
+            element.classList.add('selected');
+            selectedSpotId = spotId;
+            selectedSpotCode = spotCode;
+
+            document.getElementById('selected_spot_display').textContent = spotCode;
+            document.getElementById('selected_spot_display').className = 'text-success font-weight-bold';
+        }
+
+        // Proceed to booking modal
+        function proceedToBooking() {
+            if (!selectedSpotId) {
+                alert('Vui lòng chọn vị trí đỗ xe!');
+                return;
+            }
+
+            const lotId = document.getElementById('spot_modal_parking_lot_id').value;
+            const lotName = document.getElementById('spot_modal_parking_name').textContent;
+            const hourlyRate = document.getElementById('spot_modal_hourly_rate').value;
+
+            // Close spot selection modal
+            $('#spotSelectionModal').modal('hide');
+
+            // Open booking modal with pre-filled data
+            openBookingModalWithSpot(lotId, lotName, hourlyRate, selectedSpotId, selectedSpotCode);
+        }
+
+        // Open booking modal with selected spot
+        function openBookingModalWithSpot(lotId, lotName, hourlyRate, spotId, spotCode) {
+            document.getElementById('modal_parking_lot_id').value = lotId;
+            document.getElementById('modal_parking_spot_id').value = spotId;
+            document.getElementById('modal_parking_name').textContent = lotName;
+            document.getElementById('modal_parking_spot_code').textContent = spotCode;
+            document.getElementById('modal_parking_price').textContent = parseInt(hourlyRate).toLocaleString('vi-VN');
+
+            $('#bookingModal').modal('show');
+        }
+
+        // Back to spot selection from booking modal
+        function backToSpotSelection() {
+            // Close booking modal
+            $('#bookingModal').modal('hide');
+
+            // Wait for modal to close, then reopen spot selection modal
+            setTimeout(function() {
+                $('#spotSelectionModal').modal('show');
+            }, 300);
+        }
+
+        // Open booking modal (old function - kept for compatibility)
         function openBookingModal(lotId, lotName, hourlyRate) {
             @guest
                 alert('Vui lòng đăng nhập để đặt chỗ!');

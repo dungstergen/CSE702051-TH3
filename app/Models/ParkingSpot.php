@@ -19,4 +19,9 @@ class ParkingSpot extends Model
     {
         return $this->belongsTo(ParkingLot::class, 'parking_lot_id');
     }
+
+    public function bookings()
+    {
+        return $this->hasMany(Booking::class);
+    }
 }
