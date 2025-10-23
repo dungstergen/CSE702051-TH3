@@ -12,6 +12,7 @@ class Booking extends Model
     protected $fillable = [
         'user_id',
         'parking_lot_id',
+        'parking_spot_id',
         'service_package_id',
         'booking_code',
         'booking_date',
@@ -51,6 +52,14 @@ class Booking extends Model
     public function parkingLot()
     {
         return $this->belongsTo(ParkingLot::class);
+    }
+
+    /**
+     * Get the parking spot for this booking
+     */
+    public function parkingSpot()
+    {
+        return $this->belongsTo(ParkingSpot::class);
     }
 
     /**

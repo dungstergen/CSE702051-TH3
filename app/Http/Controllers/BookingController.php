@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Booking;
 use App\Models\ParkingLot;
+use App\Models\ParkingSpot;
 use App\Models\ServicePackage;
 use App\Models\Payment;
 use Illuminate\Support\Facades\Auth;
@@ -52,6 +53,7 @@ class BookingController extends Controller
         // Validate dữ liệu
         $validated = $request->validate([
             'parking_lot_id' => 'required|exists:parking_lots,id',
+            'parking_spot_id' => 'required|exists:parking_spots,id',
             'booking_date' => 'required|date',
             'start_time' => 'required|date',
             'end_time' => 'required|date|after:start_time',
@@ -68,6 +70,29 @@ class BookingController extends Controller
         // Kiểm tra bãi có khả dụng không
         if ($parkingLot->status !== 'active' || $parkingLot->available_spots <= 0) {
             return back()->withErrors(['error' => 'Bãi đỗ xe không khả dụng'])->withInput();
+        }
+
+        // Kiểm tra vị trí đỗ có khả dụng không
+        $parkingSpot = ParkingSpot::findOrFail($validated['parking_spot_id']);
+        if ($parkingSpot->status !== 'available') {
+            return back()->withErrors(['error' => 'Vị trí đỗ xe không khả dụng'])->withInput();
+        }
+
+        // Kiểm tra vị trí đã được đặt trong khung giờ này chưa
+        $conflictBooking = Booking::where('parking_spot_id', $validated['parking_spot_id'])
+            ->where('status', '!=', 'cancelled')
+            ->where(function($query) use ($validated) {
+                $query->whereBetween('start_time', [$validated['start_time'], $validated['end_time']])
+                      ->orWhereBetween('end_time', [$validated['start_time'], $validated['end_time']])
+                      ->orWhere(function($q) use ($validated) {
+                          $q->where('start_time', '<=', $validated['start_time'])
+                            ->where('end_time', '>=', $validated['end_time']);
+                      });
+            })
+            ->exists();
+
+        if ($conflictBooking) {
+            return back()->withErrors(['error' => 'Vị trí này đã được đặt trong khung giờ bạn chọn'])->withInput();
         }
 
         // Tính thời gian và giá
@@ -102,6 +127,7 @@ class BookingController extends Controller
         $booking = Booking::create([
             'user_id' => Auth::id(),
             'parking_lot_id' => $validated['parking_lot_id'],
+            'parking_spot_id' => $validated['parking_spot_id'],
             'service_package_id' => $validated['service_package_id'] ?? null,
             'booking_code' => $bookingCode,
             'booking_date' => $validated['booking_date'],
@@ -199,6 +225,58 @@ class BookingController extends Controller
             ->get();
 
         return response()->json($parkingLots);
+    }
+
+    // API: Lấy danh sách vị trí đỗ xe của bãi đỗ
+    public function getParkingSpots($parkingLotId, Request $request)
+    {
+        $parkingLot = ParkingLot::findOrFail($parkingLotId);
+
+        // Lấy thời gian đặt từ request (nếu có)
+        $startTime = $request->input('start_time');
+        $endTime = $request->input('end_time');
+
+        // Lấy tất cả vị trí của bãi đỗ
+        $spots = ParkingSpot::where('parking_lot_id', $parkingLotId)
+            ->orderBy('level')
+            ->orderBy('spot_code')
+            ->get();
+
+        // Nếu có thời gian, kiểm tra vị trí nào đã được đặt
+        if ($startTime && $endTime) {
+            $bookedSpots = Booking::where('parking_lot_id', $parkingLotId)
+                ->where('status', '!=', 'cancelled')
+                ->where(function($query) use ($startTime, $endTime) {
+                    $query->whereBetween('start_time', [$startTime, $endTime])
+                          ->orWhereBetween('end_time', [$startTime, $endTime])
+                          ->orWhere(function($q) use ($startTime, $endTime) {
+                              $q->where('start_time', '<=', $startTime)
+                                ->where('end_time', '>=', $endTime);
+                          });
+                })
+                ->pluck('parking_spot_id')
+                ->toArray();
+
+            // Đánh dấu các vị trí đã được đặt
+            $spots->each(function($spot) use ($bookedSpots) {
+                $spot->is_available = !in_array($spot->id, $bookedSpots) && $spot->status === 'available';
+            });
+        } else {
+            // Nếu không có thời gian, chỉ dựa vào status
+            $spots->each(function($spot) {
+                $spot->is_available = $spot->status === 'available';
+            });
+        }
+
+        return response()->json([
+            'parking_lot' => [
+                'id' => $parkingLot->id,
+                'name' => $parkingLot->name,
+                'address' => $parkingLot->address,
+                'total_spots' => $parkingLot->total_spots,
+            ],
+            'spots' => $spots
+        ]);
     }
 
     // API: Lịch sử booking của user
