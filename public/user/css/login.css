@@ -158,6 +158,13 @@
 .checkbox_container input[type="checkbox"] {
     margin-right: 10px;
     transform: scale(1.2);
+    cursor: pointer;
+}
+
+.checkbox_container label {
+    margin-bottom: 0;
+    cursor: pointer;
+    user-select: none;
 }
 
 @media (max-width: 768px) {

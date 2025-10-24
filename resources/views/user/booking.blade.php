@@ -379,7 +379,7 @@
                                 <div class="form-group">
                                     <label style="display: block"> Loại xe</label>
                                     <select name="vehicle_type" class="form-control">
-                                        <option value="">-- Chọn loại xe --</option>
+                                        <option value="">Chọn loại xe</option>
                                         <option value="car">Ô tô</option>
                                         <option value="motorbike">Xe máy</option>
                                         <option value="truck">Xe tải</option>
@@ -675,6 +675,18 @@
 
         .filter_sidebar .nice-select .current {
             line-height: 38px !important;
+        }
+
+        /* Căn giữa text trong nice-select của booking modal */
+        #bookingModal .nice-select {
+            height: 38px !important;
+            line-height: 38px !important;
+            padding: 0px 22px 0px 12px !important;
+        }
+
+        #bookingModal .nice-select .current {
+            line-height: 38px !important;
+            text-align: center !important;
         }
 
         .search_filter_card {

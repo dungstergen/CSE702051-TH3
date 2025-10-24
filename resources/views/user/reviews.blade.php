@@ -380,7 +380,7 @@
                                 <small class="text-muted">Tối thiểu 20 ký tự</small>
                             </div>
 
-                            <button type="submit" class="btn btn_box w-100">
+                            <button type="submit" class="btn btn-warning btn_box w-100">
                                 <i class="fa fa-paper-plane"></i> Gửi đánh giá
                             </button>
                         </form>

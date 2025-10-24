@@ -81,6 +81,11 @@
                                 <a class="nav-link" href="{{ route('user.history') }}">Lịch sử</a>
                             </li>
                             @endauth
+                            @auth
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ route('user.history') }}">Đánh giá</a>
+                            </li>
+                            @endauth
                         </ul>
                         <div class="navbar-nav ml-auto">
                             @auth
