@@ -502,7 +502,7 @@
         }
 
         .profile_card {
-            height: 370px;
+            min-height: 370px;
             background: white;
             padding: 30px;
             border-radius: 10px;
@@ -531,6 +531,37 @@
         .form-control:focus {
             border-color: #ffbe33;
             box-shadow: 0 0 0 0.2rem rgba(255, 190, 51, 0.25);
+        }
+
+        .vehicle-item .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .vehicle-item .form-group label {
+            margin-bottom: 8px;
+        }
+
+        .vehicle-item .form-group .form-control,
+        .vehicle-item .form-group select.form-control {
+            width: 100%;
+        }
+
+        .vehicle-item select.form-control {
+            height: 38px !important;
+            padding: 6px 15px !important;
+            line-height: normal;
+        }
+
+        /* Override nice-select if active */
+        .vehicle-item .nice-select {
+            height: 38px !important;
+            line-height: 38px !important;
+            padding: 0 15px !important;
+        }
+
+        .vehicle-item .nice-select .current {
+            line-height: 38px !important;
         }
     </style>
 
