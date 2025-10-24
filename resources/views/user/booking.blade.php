@@ -210,7 +210,7 @@
                                 data-price="{{ $lot->hourly_rate }}"
                                 data-rating="{{ $lot->average_rating ?? 0 }}">
                                 <div class="parking_card_image">
-                                    <img src="{{ asset('user/images/c' . (($loop->index % 3) + 1) . '.jpg') }}" alt="{{ $lot->name }}">
+                                    <img src="{{ $lot->image ? asset('storage/' . $lot->image) : asset('user/images/c' . (($loop->index % 2) + 1) . '.jpg') }}" alt="{{ $lot->name }}">
                                     <div class="parking_card_name">
                                         <strong>{{ $lot->name }}</strong>
                                     </div>
@@ -654,6 +654,29 @@
         }
 
         /* Filter Section Styles */
+        .filter_sidebar select.filter_input {
+            height: 38px !important;
+            padding: 6px 15px !important;
+        }
+
+        /* Căn giữa text trong select và option */
+        .filter_sidebar select.filter_input,
+        .filter_sidebar select.filter_input option {
+            text-align: center;
+            text-align-last: center;
+        }
+
+        /* Override nice-select if active */
+        .filter_sidebar .nice-select {
+            height: 38px !important;
+            line-height: 38px !important;
+            padding: 0 15px !important;
+        }
+
+        .filter_sidebar .nice-select .current {
+            line-height: 38px !important;
+        }
+
         .search_filter_card {
             background: white;
             padding: 30px;
