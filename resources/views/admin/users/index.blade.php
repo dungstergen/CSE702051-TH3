@@ -28,10 +28,10 @@
                             </select>
                         </div>
                         <div class="w-full md:w-1/4 px-2 mb-3">
-                            <button type="submit" class="inline-block px-6 py-2 font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer bg-gradient-to-tl from-purple-700 to-pink-500 leading-pro text-xs ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs">
+                            <button type="submit" class="inline-block px-6 py-2 font-bold text-center text-white uppercase align-middle transition-all rounded-lg cursor-pointer leading-pro text-xs ease-soft-in tracking-tight-soft shadow-soft-md hover:scale-102 active:opacity-85 hover:shadow-soft-xs" style="background: linear-gradient(135deg, #7c3aed 0%, #ec4899 100%);">
                                 <i class="fas fa-search mr-1"></i>Tìm kiếm
                             </button>
-                            <a href="{{ route('admin.users.index') }}" class="inline-block px-4 py-2 ml-2 font-bold text-center text-gray-700 uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer leading-pro text-xs ease-soft-in tracking-tight-soft hover:scale-102 active:opacity-85">
+                            <a href="{{ route('admin.users.index') }}" class="inline-block px-4 py-2 ml-2 font-bold text-center text-white uppercase align-middle transition-all rounded-lg cursor-pointer leading-pro text-xs ease-soft-in tracking-tight-soft shadow-soft-md hover:scale-102 active:opacity-85 hover:shadow-soft-xs" style="background: linear-gradient(135deg, #6b7280 0%, #9ca3af 100%);">
                                 Xóa lọc
                             </a>
                         </div>
