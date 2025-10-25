@@ -19,7 +19,6 @@
                     <div class="flex items-center space-x-4">
                         <div class="relative">
                             <input type="text" id="searchInput" placeholder="Tìm kiếm thanh toán..." class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-80 appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none focus:transition-shadow">
-                            <i class="fas fa-search absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
                         </div>
 
                         <select id="statusFilter" class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none focus:transition-shadow">
@@ -122,28 +121,28 @@
                                 </td>
                                 <td class="p-2 text-sm leading-normal text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
                                     @if($payment->payment_status === 'pending')
-                                        <span class="bg-gradient-to-tl px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none">
+                                        <span class="px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white" style="background: linear-gradient(135deg, #f59e0b 0%, #fb923c 100%);">
                                             Chờ TT
                                         </span>
                                     @elseif($payment->payment_status === 'completed')
-                                        <span class="bg-gradient-to-tl px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none">
+                                        <span class="px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white" style="background: linear-gradient(135deg, #16a34a 0%, #84cc16 100%);">
                                             Đã TT
                                         </span>
                                     @elseif($payment->payment_status === 'failed')
-                                        <span class="bg-gradient-to-tl px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none">
+                                        <span class="px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white" style="background: linear-gradient(135deg, #dc2626 0%, #f87171 100%);">
                                             Thất bại
                                         </span>
                                     @elseif($payment->payment_status === 'cancelled')
-                                        <span class="bg-gradient-to-tl px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none ">
+                                        <span class="px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white" style="background: linear-gradient(135deg, #6b7280 0%, #9ca3af 100%);">
                                             Hoàn tiền
                                         </span>
                                     @else
-                                        <span class="bg-gradient-to-tl px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none">
+                                        <span class="px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white" style="background: linear-gradient(135deg, #64748b 0%, #94a3b8 100%);">
                                             Không xác định
                                         </span>
                                     @endif
                                 </td>
-                                {{-- <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
+                                <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
                                     <div class="flex flex-col items-center">
                                         @if($payment->paid_at)
                                             <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80">
@@ -156,7 +155,7 @@
                                             <span class="text-xs text-gray-400">Chưa TT</span>
                                         @endif
                                     </div>
-                                </td> --}}
+                                </td>
                                 <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
                                     <div class="flex items-center justify-center space-x-2">
                                         <a href="{{ route('admin.payments.show', $payment) }}" class="text-blue-600 hover:text-blue-800 transition-colors" title="Xem chi tiết">
