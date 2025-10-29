@@ -135,16 +135,16 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::resource('payments', App\Http\Controllers\AdminPaymentController::class);
     Route::patch('/payments/{payment}/update-status', [App\Http\Controllers\AdminPaymentController::class, 'updateStatus'])->name('payments.update-status');
 
-    // Review Management
-    Route::resource('reviews', App\Http\Controllers\AdminReviewController::class);
+    // Review Management (no create/store from admin)
+    Route::resource('reviews', App\Http\Controllers\AdminReviewController::class)
+        ->only(['index', 'show', 'edit', 'update', 'destroy']);
     Route::patch('/reviews/{review}/toggle-visibility', [App\Http\Controllers\AdminReviewController::class, 'toggleVisibility'])->name('reviews.toggle-visibility');
+    Route::post('/reviews/bulk-action', [App\Http\Controllers\AdminReviewController::class, 'bulkAction'])->name('reviews.bulk-action');
 
     // Service Package Management
     Route::resource('service-packages', App\Http\Controllers\Admin\AdminServicePackageController::class);
     Route::patch('/service-packages/{servicePackage}/toggle-status', [App\Http\Controllers\Admin\AdminServicePackageController::class, 'toggleStatus'])->name('service-packages.toggle-status');
     Route::patch('/service-packages/{servicePackage}/toggle-featured', [App\Http\Controllers\Admin\AdminServicePackageController::class, 'toggleFeatured'])->name('service-packages.toggle-featured');
-
-    // Testimonials removed
 
     // Reports
     Route::get('/reports', [App\Http\Controllers\AdminReportController::class, 'index'])->name('reports.index');
