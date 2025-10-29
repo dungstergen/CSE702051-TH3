@@ -56,12 +56,7 @@
                         </div>
                     </div>
 
-                    <div class="w-full max-w-full px-3 mb-6 md:w-6/12 md:flex-none">
-                        <div class="mb-4">
-                            <label class="mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Thành phố:</label>
-                            <p class="text-sm text-gray-600 dark:text-white/60">{{ $parkingLot->city }}</p>
-                        </div>
-                    </div>
+
 
                     <div class="w-full max-w-full px-3 mb-6">
                         <div class="mb-4">
@@ -151,8 +146,8 @@
 
                 <div class="mb-4">
                     <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm font-semibold text-slate-700 dark:text-white/80">Booking hoạt động:</span>
-                        <span class="text-lg font-bold text-green-600">{{ $parkingLot->bookings->where('status', 'active')->count() }}</span>
+                        <span class="text-sm font-semibold text-slate-700 dark:text-white/80">Booking đang xử lý:</span>
+                        <span class="text-lg font-bold text-green-600">{{ $parkingLot->bookings->whereIn('status', ['pending','confirmed'])->count() }}</span>
                     </div>
                 </div>
 
@@ -166,7 +161,7 @@
                 <div class="mb-4">
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-sm font-semibold text-slate-700 dark:text-white/80">Tổng doanh thu:</span>
-                        <span class="text-lg font-bold text-purple-600">{{ number_format($parkingLot->bookings->sum('total_amount'), 0, ',', '.') }}đ</span>
+                        <span class="text-lg font-bold text-purple-600">{{ number_format($parkingLot->bookings->sum('total_cost'), 0, ',', '.') }}đ</span>
                     </div>
                 </div>
 
@@ -282,7 +277,7 @@
                                 </td>
                                 <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
                                     <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80">
-                                        {{ number_format($booking->total_amount, 0, ',', '.') }}đ
+                                        {{ number_format($booking->total_cost, 0, ',', '.') }}đ
                                     </span>
                                 </td>
                             </tr>

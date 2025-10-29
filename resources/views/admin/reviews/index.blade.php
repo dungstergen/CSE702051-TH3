@@ -75,7 +75,6 @@
                                 <td class="p-2 align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
                                     <div class="flex flex-col justify-center">
                                         <p class="mb-0 text-xs font-semibold leading-tight dark:text-white dark:opacity-80 max-w-xs truncate">{{ $review->parkingLot->name }}</p>
-                                        <p class="mb-0 text-xs leading-tight text-slate-400">{{ $review->parkingLot->city }}</p>
                                     </div>
                                 </td>
                                 <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">

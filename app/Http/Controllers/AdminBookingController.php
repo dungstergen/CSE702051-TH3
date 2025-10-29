@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Booking;
 use App\Models\ParkingLot;
 use App\Models\User;
+use Carbon\Carbon;
 
 class AdminBookingController extends Controller
 {
@@ -14,7 +15,7 @@ class AdminBookingController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Booking::with(['user', 'parkingLot']);
+    $query = Booking::with(['user', 'parkingLot', 'payment']);
 
         // Filter by status
         if ($request->filled('status')) {
@@ -54,7 +55,8 @@ class AdminBookingController extends Controller
     public function create()
     {
         $users = User::where('is_active', true)->get();
-        $parkingLots = ParkingLot::where('is_active', true)->get();
+        // ParkingLot doesn't have is_active column; use status='active' instead
+        $parkingLots = ParkingLot::where('status', 'active')->get();
 
         return view('admin.bookings.create', compact('users', 'parkingLots'));
     }
@@ -67,30 +69,47 @@ class AdminBookingController extends Controller
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
             'parking_lot_id' => 'required|exists:parking_lots,id',
-            'booking_date' => 'required|date|after_or_equal:today',
-            'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i|after:start_time',
+            'start_time' => 'required|date',
+            'end_time' => 'required|date|after:start_time',
             'vehicle_type' => 'nullable|string|max:50',
-            'license_plate' => 'nullable|string|max:20',
-            'phone_number' => 'nullable|string|max:20',
+            'license_plate' => 'required|string|max:20',
+            'phone_number' => 'required|string|max:20',
             'special_requests' => 'nullable|string',
+            // status enum matches DB: pending, confirmed, cancelled, completed
             'status' => 'required|in:pending,confirmed,cancelled,completed'
         ]);
 
-        // Calculate duration and total amount
-        $startTime = strtotime($validated['start_time']);
-        $endTime = strtotime($validated['end_time']);
-        $durationHours = ceil(($endTime - $startTime) / 3600);
+        // Parse times and derive booking_date
+        $startTime = Carbon::parse($validated['start_time']);
+        $endTime = Carbon::parse($validated['end_time']);
 
-        $parkingLot = ParkingLot::find($validated['parking_lot_id']);
-    $totalAmount = $durationHours * $parkingLot->hourly_rate;
+        // Calculate duration hours (ceil, min 1)
+        $diffHours = $startTime->diffInMinutes($endTime, false) / 60;
+        $durationHours = max(1, (int) ceil($diffHours));
 
-    $validated['duration_hours'] = $durationHours;
-    $validated['total_cost'] = $totalAmount;
-    $validated['start_time'] = $validated['booking_date'] . ' ' . $validated['start_time'];
-    $validated['end_time'] = $validated['booking_date'] . ' ' . $validated['end_time'];
+        // Calculate total cost
+        $parkingLot = ParkingLot::findOrFail($validated['parking_lot_id']);
+        $totalCost = $durationHours * (float) $parkingLot->hourly_rate;
 
-        Booking::create($validated);
+        // Generate booking code
+        $bookingCode = 'BK' . now()->format('YmdHis') . strtoupper(substr(md5(uniqid('', true)), 0, 4));
+
+        Booking::create([
+            'user_id' => $validated['user_id'],
+            'parking_lot_id' => $validated['parking_lot_id'],
+            'booking_code' => $bookingCode,
+            'booking_date' => $startTime->toDateString(),
+            'start_time' => $startTime,
+            'end_time' => $endTime,
+            'duration_hours' => $durationHours,
+            'vehicle_type' => $validated['vehicle_type'] ?? null,
+            'license_plate' => $validated['license_plate'],
+            'phone_number' => $validated['phone_number'],
+            'special_requests' => $validated['special_requests'] ?? null,
+            'total_cost' => $totalCost,
+            'status' => $validated['status'],
+            // payment_status will use DB default 'pending'
+        ]);
 
         return redirect()->route('admin.bookings.index')
                         ->with('success', 'Tạo đặt chỗ thành công!');
@@ -111,7 +130,7 @@ class AdminBookingController extends Controller
     public function edit(Booking $booking)
     {
         $users = User::where('is_active', true)->get();
-        $parkingLots = ParkingLot::where('is_active', true)->get();
+        $parkingLots = ParkingLot::where('status', 'active')->get();
 
         return view('admin.bookings.edit', compact('booking', 'users', 'parkingLots'));
     }
@@ -122,32 +141,43 @@ class AdminBookingController extends Controller
     public function update(Request $request, Booking $booking)
     {
         $validated = $request->validate([
-            'user_id' => 'required|exists:users,id',
-            'parking_lot_id' => 'required|exists:parking_lots,id',
-            'booking_date' => 'required|date',
-            'start_time' => 'required|date_format:H:i',
-            'end_time' => 'required|date_format:H:i|after:start_time',
+            'user_id' => 'sometimes|exists:users,id',
+            'parking_lot_id' => 'sometimes|exists:parking_lots,id',
+            'start_time' => 'required|date',
+            'end_time' => 'required|date|after:start_time',
             'vehicle_type' => 'nullable|string|max:50',
-            'license_plate' => 'nullable|string|max:20',
-            'phone_number' => 'nullable|string|max:20',
+            'license_plate' => 'required|string|max:20',
+            'phone_number' => 'sometimes|string|max:20',
             'special_requests' => 'nullable|string',
             'status' => 'required|in:pending,confirmed,cancelled,completed'
         ]);
 
-        // Calculate duration and total amount
-        $startTime = strtotime($validated['start_time']);
-        $endTime = strtotime($validated['end_time']);
-        $durationHours = ceil(($endTime - $startTime) / 3600);
+        // Parse times and derive booking_date
+        $startTime = Carbon::parse($validated['start_time']);
+        $endTime = Carbon::parse($validated['end_time']);
 
-        $parkingLot = ParkingLot::find($validated['parking_lot_id']);
-    $totalAmount = $durationHours * $parkingLot->hourly_rate;
+        // Calculate duration hours (ceil, min 1)
+        $diffHours = $startTime->diffInMinutes($endTime, false) / 60;
+        $durationHours = max(1, (int) ceil($diffHours));
 
-    $validated['duration_hours'] = $durationHours;
-    $validated['total_cost'] = $totalAmount;
-    $validated['start_time'] = $validated['booking_date'] . ' ' . $validated['start_time'];
-    $validated['end_time'] = $validated['booking_date'] . ' ' . $validated['end_time'];
+        // Calculate total cost
+    $parkingLot = ParkingLot::findOrFail($validated['parking_lot_id'] ?? $booking->parking_lot_id);
+        $totalCost = $durationHours * (float) $parkingLot->hourly_rate;
 
-        $booking->update($validated);
+        $booking->update([
+            'user_id' => $validated['user_id'] ?? $booking->user_id,
+            'parking_lot_id' => $validated['parking_lot_id'] ?? $booking->parking_lot_id,
+            'booking_date' => $startTime->toDateString(),
+            'start_time' => $startTime,
+            'end_time' => $endTime,
+            'duration_hours' => $durationHours,
+            'vehicle_type' => $validated['vehicle_type'] ?? null,
+            'license_plate' => $validated['license_plate'],
+            'phone_number' => $validated['phone_number'] ?? $booking->phone_number,
+            'special_requests' => $validated['special_requests'] ?? null,
+            'total_cost' => $totalCost,
+            'status' => $validated['status'],
+        ]);
 
         return redirect()->route('admin.bookings.index')
                         ->with('success', 'Cập nhật đặt chỗ thành công!');

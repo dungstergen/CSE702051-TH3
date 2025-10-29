@@ -11,7 +11,7 @@
                 <div class="flex items-center justify-between mb-4">
                     <h6 class="mb-0 dark:text-white">Chi tiết thanh toán</h6>
                     <div class="space-x-2">
-                        @if($payment->status !== 'completed' && $payment->status !== 'refunded')
+                        @if($payment->payment_status !== 'completed' && $payment->payment_status !== 'refunded')
                         <a href="{{ route('admin.payments.edit', $payment) }}" class="inline-block px-6 py-3 font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer bg-gradient-to-tl from-orange-500 to-yellow-500 leading-pro text-xs ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs">
                             <i class="fas fa-edit mr-2"></i>Chỉnh sửa
                         </a>
@@ -35,15 +35,15 @@
                     <div class="w-full max-w-full px-3 mb-6 md:w-6/12 md:flex-none">
                         <div class="mb-4">
                             <label class="mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Trạng thái:</label>
-                            @if($payment->status === 'pending')
+                            @if($payment->payment_status === 'pending')
                                 <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
                                     Chờ thanh toán
                                 </span>
-                            @elseif($payment->status === 'completed')
+                            @elseif($payment->payment_status === 'completed')
                                 <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
                                     Đã thanh toán
                                 </span>
-                            @elseif($payment->status === 'failed')
+                            @elseif($payment->payment_status === 'failed')
                                 <span class="inline-block px-3 py-1 text-xs font-semibold rounded-full bg-red-100 text-red-800">
                                     Thất bại
                                 </span>
@@ -71,21 +71,18 @@
                         <div class="mb-4">
                             <label class="mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Phương thức:</label>
                             <p class="text-sm text-gray-600 dark:text-white/60">
-                                @if($payment->payment_method === 'vnpay')
-                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-800">
-                                        <i class="fab fa-cc-visa mr-1"></i> VNPay
-                                    </span>
-                                @elseif($payment->payment_method === 'momo')
-                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-pink-100 text-pink-800">
-                                        <i class="fas fa-mobile-alt mr-1"></i> MoMo
-                                    </span>
-                                @elseif($payment->payment_method === 'cash')
-                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-green-100 text-green-800">
-                                        <i class="fas fa-money-bill mr-1"></i> Tiền mặt
-                                    </span>
-                                @elseif($payment->payment_method === 'bank_transfer')
-                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
-                                        <i class="fas fa-university mr-1"></i> Chuyển khoản
+                                @php
+                                    $methodBadges = [
+                                        'credit_card' => ['class' => 'bg-purple-100 text-purple-800', 'icon' => 'fas fa-credit-card', 'text' => 'Thẻ tín dụng'],
+                                        'bank_transfer' => ['class' => 'bg-blue-100 text-blue-800', 'icon' => 'fas fa-university', 'text' => 'Chuyển khoản'],
+                                        'e_wallet' => ['class' => 'bg-pink-100 text-pink-800', 'icon' => 'fas fa-wallet', 'text' => 'Ví điện tử'],
+                                        'cash' => ['class' => 'bg-green-100 text-green-800', 'icon' => 'fas fa-money-bill', 'text' => 'Tiền mặt']
+                                    ];
+                                    $mb = $methodBadges[$payment->payment_method] ?? null;
+                                @endphp
+                                @if($mb)
+                                    <span class="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium {{ $mb['class'] }}">
+                                        <i class="{{ $mb['icon'] }} mr-1"></i> {{ $mb['text'] }}
                                     </span>
                                 @else
                                     {{ ucfirst($payment->payment_method) }}
@@ -161,13 +158,14 @@
                                 </div>
                                 <div class="w-full md:w-1/2 px-2 mb-4">
                                     <label class="mb-1 font-bold text-xs text-slate-700">Tổng tiền booking:</label>
-                                    <p class="text-sm font-semibold">{{ number_format($payment->booking->total_amount, 0, ',', '.') }}đ</p>
+                                    <p class="text-sm font-semibold">{{ number_format($payment->booking->total_cost, 0, ',', '.') }}đ</p>
                                 </div>
                                 <div class="w-full md:w-1/2 px-2 mb-4">
                                     <label class="mb-1 font-bold text-xs text-slate-700">Trạng thái booking:</label>
                                     <span class="inline-block px-2 py-1 text-xs font-semibold rounded-full
                                         {{ $payment->booking->status === 'completed' ? 'bg-gray-100 text-gray-800' :
-                                           ($payment->booking->status === 'active' ? 'bg-green-100 text-green-800' :
+                                           ($payment->booking->status === 'confirmed' ? 'bg-blue-100 text-blue-800' :
+                                           ($payment->booking->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'))) }}">
                                            ($payment->booking->status === 'confirmed' ? 'bg-blue-100 text-blue-800' :
                                            ($payment->booking->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'))) }}">
                                         {{ ucfirst($payment->booking->status) }}
@@ -190,7 +188,7 @@
 
     <!-- Quick Actions -->
     <div class="w-full max-w-full px-3 lg:w-4/12 lg:flex-none">
-        @if($payment->status !== 'completed' && $payment->status !== 'refunded')
+    @if($payment->payment_status !== 'completed' && $payment->payment_status !== 'refunded')
         <div class="relative flex flex-col min-w-0 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border mb-6">
             <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
                 <h6 class="mb-0 dark:text-white">Thao tác nhanh</h6>
@@ -198,32 +196,31 @@
 
             <div class="flex-auto p-6">
                 <div class="space-y-3">
-                    @if($payment->status === 'pending')
-                    <form method="POST" action="{{ route('admin.payments.update', $payment) }}" class="w-full">
+                    @if($payment->payment_status === 'pending')
+                    <form method="POST" action="{{ route('admin.payments.update-status', $payment) }}" class="w-full">
                         @csrf
-                        @method('PUT')
-                        <input type="hidden" name="status" value="completed">
-                        <input type="hidden" name="paid_at" value="{{ now()->format('Y-m-d\TH:i') }}">
+                        @method('PATCH')
+                        <input type="hidden" name="payment_status" value="completed">
                         <button type="submit" class="w-full px-4 py-2 text-sm font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer bg-gradient-to-tl from-green-600 to-lime-400 leading-pro ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs">
                             <i class="fas fa-check mr-2"></i>Xác nhận thanh toán
                         </button>
                     </form>
 
-                    <form method="POST" action="{{ route('admin.payments.update', $payment) }}" class="w-full" onsubmit="return confirm('Bạn có chắc chắn thanh toán này thất bại?')">
+                    <form method="POST" action="{{ route('admin.payments.update-status', $payment) }}" class="w-full" onsubmit="return confirm('Bạn có chắc chắn thanh toán này thất bại?')">
                         @csrf
-                        @method('PUT')
-                        <input type="hidden" name="status" value="failed">
+                        @method('PATCH')
+                        <input type="hidden" name="payment_status" value="failed">
                         <button type="submit" class="w-full px-4 py-2 text-sm font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer bg-gradient-to-tl from-red-600 to-rose-400 leading-pro ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs">
                             <i class="fas fa-times mr-2"></i>Đánh dấu thất bại
                         </button>
                     </form>
                     @endif
 
-                    @if($payment->status === 'completed')
-                    <form method="POST" action="{{ route('admin.payments.update', $payment) }}" class="w-full" onsubmit="return confirm('Bạn có chắc chắn muốn hoàn tiền?')">
+                    @if($payment->payment_status === 'completed')
+                    <form method="POST" action="{{ route('admin.payments.update-status', $payment) }}" class="w-full" onsubmit="return confirm('Bạn có chắc chắn muốn hoàn tiền?')">
                         @csrf
-                        @method('PUT')
-                        <input type="hidden" name="status" value="refunded">
+                        @method('PATCH')
+                        <input type="hidden" name="payment_status" value="refunded">
                         <button type="submit" class="w-full px-4 py-2 text-sm font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer bg-gradient-to-tl from-blue-600 to-cyan-400 leading-pro ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs">
                             <i class="fas fa-undo mr-2"></i>Hoàn tiền
                         </button>
@@ -258,7 +255,7 @@
                 <div class="mb-4">
                     <div class="flex items-center justify-between mb-2">
                         <span class="text-sm font-semibold text-slate-700 dark:text-white/80">TT thành công:</span>
-                        <span class="text-lg font-bold text-purple-600">{{ $payment->booking->user->payments->where('status', 'completed')->count() }}</span>
+                        <span class="text-lg font-bold text-purple-600">{{ $payment->booking->user->payments->where('payment_status', 'completed')->count() }}</span>
                     </div>
                 </div>
 

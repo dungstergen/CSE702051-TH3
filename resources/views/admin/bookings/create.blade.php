@@ -49,7 +49,7 @@
                                 <option value="">Chọn bãi đỗ xe</option>
                                 @foreach($parkingLots as $lot)
                                     <option value="{{ $lot->id }}" data-rate="{{ $lot->hourly_rate }}" {{ old('parking_lot_id') == $lot->id ? 'selected' : '' }}>
-                                        {{ $lot->name }} - {{ $lot->city }} ({{ number_format($lot->hourly_rate, 0, ',', '.') }}đ/giờ)
+                                        {{ $lot->name }} - {{ $lot->address }} ({{ number_format($lot->hourly_rate, 0, ',', '.') }}đ/giờ)
                                     </option>
                                 @endforeach
                             </select>
@@ -114,6 +114,16 @@
                         </div>
 
                         <div class="w-full max-w-full px-3 mb-6 md:w-4/12 md:flex-none">
+                            <label class="mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80" for="phone_number">
+                                Số điện thoại
+                            </label>
+                            <input type="text" name="phone_number" id="phone_number" value="{{ old('phone_number') }}" class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none focus:transition-shadow" placeholder="Vd: 0901234567" required>
+                            @error('phone_number')
+                                <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="w-full max-w-full px-3 mb-6 md:w-4/12 md:flex-none">
                             <label class="mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80" for="status">
                                 Trạng thái <span class="text-red-500">*</span>
                             </label>
@@ -121,7 +131,6 @@
                                 <option value="">Chọn trạng thái</option>
                                 <option value="pending" {{ old('status', 'pending') == 'pending' ? 'selected' : '' }}>Chờ xác nhận</option>
                                 <option value="confirmed" {{ old('status') == 'confirmed' ? 'selected' : '' }}>Đã xác nhận</option>
-                                <option value="active" {{ old('status') == 'active' ? 'selected' : '' }}>Đang hoạt động</option>
                                 <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}>Hoàn thành</option>
                                 <option value="cancelled" {{ old('status') == 'cancelled' ? 'selected' : '' }}>Đã hủy</option>
                             </select>

@@ -258,7 +258,7 @@
                                     <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80 text-slate-400">{{ $booking->booking_date ?? 'N/A' }}</span>
                                 </td>
                                 <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                    <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80">{{ number_format($booking->total_amount ?? 0) }}đ</span>
+                                    <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80">{{ number_format($booking->total_cost ?? 0) }}đ</span>
                                 </td>
                                 <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                     @php
