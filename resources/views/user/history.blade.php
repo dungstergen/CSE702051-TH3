@@ -123,6 +123,22 @@
             <div class="row">
                 <div class="col-12">
                     <div class="history_table_container">
+                        @if(session('success'))
+                            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                                <i class="fa fa-check-circle mr-2"></i>{{ session('success') }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        @endif
+                        @if(session('error'))
+                            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                <i class="fa fa-exclamation-triangle mr-2"></i>{{ session('error') }}
+                                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                            </div>
+                        @endif
                         <div class="table-responsive">
                             <table class="table table-hover" id="historyTable">
                                 <thead>
@@ -133,9 +149,10 @@
                                         <th>Biển số xe</th>
                                         <th>Tổng phí</th>
                                         <th>Trạng thái</th>
+                                        <th>Hành động</th>
                                     </tr>
                                 </thead>
-                                <tbody>
+                                <tbody id="historyTableBody">
                                     @forelse($bookings as $booking)
                                     <tr>
                                         <td><strong>{{ $booking->booking_code }}</strong></td>
@@ -151,19 +168,48 @@
                                         <td><strong>{{ number_format($booking->total_cost, 0, ',', '.') }}đ</strong></td>
                                         <td>
                                             @if($booking->status === 'completed')
-                                                <span class="status-badge status-completed">Đã hoàn thành</span>
+                                                <span class="status-badge status-completed"><i class="fa fa-check-circle"></i>Đã hoàn thành</span>
                                             @elseif($booking->status === 'cancelled')
-                                                <span class="status-badge status-cancelled">Đã hủy</span>
+                                                <span class="status-badge status-cancelled"><i class="fa fa-times-circle"></i>Đã hủy</span>
                                             @elseif($booking->status === 'pending')
-                                                <span class="status-badge status-pending">Chờ xác nhận</span>
+                                                <span class="status-badge status-pending"><i class="fa fa-clock-o"></i>Chờ xác nhận</span>
                                             @else
-                                                <span class="status-badge status-active">Đang hoạt động</span>
+                                                <span class="status-badge status-active"><i class="fa fa-play-circle"></i>Đang hoạt động</span>
                                             @endif
+                                        </td>
+                                        <td>
+                                            <div class="action-buttons">
+                                                <a href="{{ route('user.booking.show', $booking->id) }}" class="btn btn-sm btn-info">
+                                                    <i class="fa fa-eye"></i> Chi tiết
+                                                </a>
+
+                                                @if($booking->status !== 'cancelled' && $booking->payment_status !== 'completed')
+                                                    <a href="{{ route('user.payment', ['booking_id' => $booking->id]) }}" class="btn btn-sm btn-success">
+                                                        <i class="fa fa-credit-card"></i> Thanh toán
+                                                    </a>
+                                                @endif
+
+                                                @if(method_exists($booking, 'canBeCancelled') ? $booking->canBeCancelled() : in_array($booking->status, ['pending','confirmed']))
+                                                    <form action="{{ route('user.booking.cancel', $booking->id) }}" method="POST" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn hủy đặt chỗ này?');">
+                                                        @csrf
+                                                        @method('PATCH')
+                                                        <button type="submit" class="btn btn-sm btn-danger">
+                                                            <i class="fa fa-times"></i> Hủy
+                                                        </button>
+                                                    </form>
+                                                @endif
+
+                                                @if($booking->status === 'completed' && empty($booking->review))
+                                                    <a href="{{ route('user.reviews') }}" class="btn btn-sm btn-warning">
+                                                        <i class="fa fa-star"></i> Đánh giá
+                                                    </a>
+                                                @endif
+                                            </div>
                                         </td>
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="6" class="text-center py-5">
+                                        <td colspan="7" class="text-center py-5">
                                             <i class="fa fa-exclamation-circle fa-2x text-muted"></i>
                                             <p class="mt-3">Không có dữ liệu</p>
                                         </td>
@@ -171,6 +217,11 @@
                                     @endforelse
                                 </tbody>
                             </table>
+                            @if(method_exists($bookings, 'links'))
+                                <div class="d-flex justify-content-center mt-3">
+                                    {{ $bookings->onEachSide(1)->links('pagination::bootstrap-4') }}
+                                </div>
+                            @endif
                         </div>
                     </div>
                 </div>
@@ -270,31 +321,47 @@
         }
 
         .status-badge {
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            border-radius: 999px;
+            font-size: 12.5px;
             font-weight: 600;
-            text-transform: uppercase;
+            letter-spacing: .2px;
+            border: 1px solid transparent;
+            background: #f8f9fa;
+            color: #333;
+            box-shadow: 0 1px 2px rgba(0,0,0,0.04);
+        }
+
+        .status-badge i {
+            font-size: 14px;
+            line-height: 1;
         }
 
         .status-completed {
-            background: #28a745;
-            color: white;
+            color: #1e7e34;
+            background: rgba(40, 167, 69, 0.12);
+            border-color: rgba(40, 167, 69, 0.28);
         }
 
         .status-active {
-            background: #007bff;
-            color: white;
+            color: #0b5ed7;
+            background: rgba(13, 110, 253, 0.12);
+            border-color: rgba(13, 110, 253, 0.28);
         }
 
         .status-cancelled {
-            background: #dc3545;
-            color: white;
+            color: #a52834;
+            background: rgba(220, 53, 69, 0.12);
+            border-color: rgba(220, 53, 69, 0.28);
         }
 
         .status-pending {
-            background: #ffc107;
-            color: #333;
+            color: #946200;
+            background: rgba(255, 193, 7, 0.16);
+            border-color: rgba(255, 193, 7, 0.32);
         }
 
         .action-buttons {
@@ -308,280 +375,7 @@
         }
     </style>
 
-    <!-- JavaScript for History Functionality -->
-    <script>
-        let bookingsHistory = [];
-        let filteredBookings = [];
-        let currentHistoryPage = 1;
-        const historyItemsPerPage = 10;
-
-        // Load bookings history on page load
-        document.addEventListener('DOMContentLoaded', function() {
-            loadBookingsHistory();
-        });
-
-        async function loadBookingsHistory() {
-            try {
-                // Gọi API để lấy dữ liệu thực từ database
-                const response = await fetch('/user/api/bookings');
-
-                if (!response.ok) {
-                    throw new Error('Failed to load bookings history');
-                }
-
-                bookingsHistory = await response.json();
-                filteredBookings = [...bookingsHistory];
-                updateStatistics();
-                displayBookingsHistory();
-            } catch (error) {
-                console.error('Error loading bookings:', error);
-                // Hiển thị thông báo lỗi
-                const tbody = document.getElementById('historyTableBody');
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="7" class="text-center py-5">
-                            <i class="fa fa-exclamation-triangle fa-2x text-danger"></i>
-                            <p class="mt-3 text-danger">Không thể tải lịch sử đặt chỗ. Vui lòng thử lại sau!</p>
-                            <button class="btn btn-primary mt-2" onclick="loadBookingsHistory()">Thử lại</button>
-                        </td>
-                    </tr>
-                `;
-            }
-        }
-
-        function updateStatistics() {
-            const completed = bookingsHistory.filter(b => b.status === 'completed').length;
-            const active = bookingsHistory.filter(b => b.status === 'active').length;
-            const cancelled = bookingsHistory.filter(b => b.status === 'cancelled').length;
-            const totalSpent = bookingsHistory
-                .filter(b => b.payment_status === 'paid')
-                .reduce((sum, b) => sum + b.total_fee, 0);
-
-            document.getElementById('completedBookings').textContent = completed;
-            document.getElementById('activeBookings').textContent = active;
-            document.getElementById('cancelledBookings').textContent = cancelled;
-            document.getElementById('totalSpent').textContent = totalSpent.toLocaleString('vi-VN') + 'đ';
-        }
-
-        function displayBookingsHistory() {
-            const tbody = document.getElementById('historyTableBody');
-            tbody.innerHTML = '';
-
-            if (filteredBookings.length === 0) {
-                tbody.innerHTML = `
-                    <tr>
-                        <td colspan="7" class="text-center py-5">
-                            <i class="fa fa-exclamation-circle fa-2x text-muted"></i>
-                            <p class="mt-3">Không có dữ liệu</p>
-                        </td>
-                    </tr>
-                `;
-                return;
-            }
-
-            const start = (currentHistoryPage - 1) * historyItemsPerPage;
-            const end = start + historyItemsPerPage;
-            const pageBookings = filteredBookings.slice(start, end);
-
-            pageBookings.forEach(booking => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                    <td><strong>${booking.id}</strong></td>
-                    <td>
-                        <strong>${booking.parking_lot}</strong><br>
-                        <small class="text-muted">${booking.address}</small>
-                    </td>
-                    <td>
-                        <div><i class="fa fa-calendar"></i> ${formatDateTime(booking.start_time)}</div>
-                        <div><i class="fa fa-calendar"></i> ${formatDateTime(booking.end_time)}</div>
-                    </td>
-                    <td>${booking.vehicle_number}</td>
-                    <td><strong>${booking.total_fee.toLocaleString('vi-VN')}đ</strong></td>
-                    <td>${getStatusBadge(booking.status)}</td>
-                    <td>
-                        <div class="action-buttons">
-                            <button class="btn btn-sm btn-info" onclick="viewBookingDetail('${booking.id}')">
-                                <i class="fa fa-eye"></i> Chi tiết
-                            </button>
-                            ${booking.status === 'active' || booking.status === 'pending' ?
-                                `<button class="btn btn-sm btn-danger" onclick="cancelBooking('${booking.id}')">
-                                    <i class="fa fa-times"></i> Hủy
-                                </button>` : ''}
-                        </div>
-                    </td>
-                `;
-                tbody.appendChild(tr);
-            });
-
-            renderHistoryPagination();
-        }
-
-        function getStatusBadge(status) {
-            const statusMap = {
-                'completed': { text: 'Đã hoàn thành', class: 'status-completed' },
-                'active': { text: 'Đang hoạt động', class: 'status-active' },
-                'cancelled': { text: 'Đã hủy', class: 'status-cancelled' },
-                'pending': { text: 'Chờ xác nhận', class: 'status-pending' }
-            };
-
-            const statusInfo = statusMap[status] || { text: status, class: '' };
-            return `<span class="status-badge ${statusInfo.class}">${statusInfo.text}</span>`;
-        }
-
-        function formatDateTime(dateTimeString) {
-            const date = new Date(dateTimeString);
-            const day = String(date.getDate()).padStart(2, '0');
-            const month = String(date.getMonth() + 1).padStart(2, '0');
-            const year = date.getFullYear();
-            const hours = String(date.getHours()).padStart(2, '0');
-            const minutes = String(date.getMinutes()).padStart(2, '0');
-            return `${day}/${month}/${year} ${hours}:${minutes}`;
-        }
-
-        function filterHistory() {
-            const statusFilter = document.getElementById('statusFilter').value;
-            const dateFrom = document.getElementById('dateFrom').value;
-            const dateTo = document.getElementById('dateTo').value;
-
-            filteredBookings = bookingsHistory.filter(booking => {
-                let matches = true;
-
-                if (statusFilter && booking.status !== statusFilter) {
-                    matches = false;
-                }
-
-                if (dateFrom) {
-                    const bookingDate = new Date(booking.start_time);
-                    const filterDate = new Date(dateFrom);
-                    if (bookingDate < filterDate) {
-                        matches = false;
-                    }
-                }
-
-                if (dateTo) {
-                    const bookingDate = new Date(booking.start_time);
-                    const filterDate = new Date(dateTo);
-                    if (bookingDate > filterDate) {
-                        matches = false;
-                    }
-                }
-
-                return matches;
-            });
-
-            currentHistoryPage = 1;
-            displayBookingsHistory();
-        }
-
-        function resetHistoryFilters() {
-            document.getElementById('historyFilterForm').reset();
-            filteredBookings = [...bookingsHistory];
-            currentHistoryPage = 1;
-            displayBookingsHistory();
-        }
-
-        function viewBookingDetail(bookingId) {
-            const booking = bookingsHistory.find(b => b.id === bookingId);
-            if (!booking) return;
-
-            const content = `
-                <div class="booking-detail">
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <h6>Mã đặt chỗ</h6>
-                            <p><strong>${booking.id}</strong></p>
-                        </div>
-                        <div class="col-md-6">
-                            <h6>Trạng thái</h6>
-                            <p>${getStatusBadge(booking.status)}</p>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-12">
-                            <h6>Bãi đỗ xe</h6>
-                            <p><strong>${booking.parking_lot}</strong><br>${booking.address}</p>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <h6>Thời gian bắt đầu</h6>
-                            <p>${formatDateTime(booking.start_time)}</p>
-                        </div>
-                        <div class="col-md-6">
-                            <h6>Thời gian kết thúc</h6>
-                            <p>${formatDateTime(booking.end_time)}</p>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <h6>Biển số xe</h6>
-                            <p>${booking.vehicle_number}</p>
-                        </div>
-                        <div class="col-md-6">
-                            <h6>Loại xe</h6>
-                            <p>${booking.vehicle_type === 'car' ? 'Ô tô' : 'Xe máy'}</p>
-                        </div>
-                    </div>
-                    <div class="row mb-3">
-                        <div class="col-md-6">
-                            <h6>Tổng phí</h6>
-                            <p><strong style="color: #ffbe33; font-size: 20px;">${booking.total_fee.toLocaleString('vi-VN')}đ</strong></p>
-                        </div>
-                        <div class="col-md-6">
-                            <h6>Trạng thái thanh toán</h6>
-                            <p>${booking.payment_status === 'paid' ? '<span class="badge badge-success">Đã thanh toán</span>' : '<span class="badge badge-warning">Chưa thanh toán</span>'}</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('bookingDetailContent').innerHTML = content;
-
-            const cancelBtn = document.getElementById('cancelBookingBtn');
-            if (booking.status === 'active' || booking.status === 'pending') {
-                cancelBtn.style.display = 'inline-block';
-                cancelBtn.onclick = () => cancelBooking(bookingId);
-            } else {
-                cancelBtn.style.display = 'none';
-            }
-
-            $('#bookingDetailModal').modal('show');
-        }
-
-        function cancelBooking(bookingId) {
-            if (confirm('Bạn có chắc chắn muốn hủy đặt chỗ này?')) {
-                // Implement cancel booking API call
-                alert('Chức năng hủy đặt chỗ đang được phát triển');
-                $('#bookingDetailModal').modal('hide');
-            }
-        }
-
-        function renderHistoryPagination() {
-            const totalPages = Math.ceil(filteredBookings.length / historyItemsPerPage);
-            const pagination = document.getElementById('historyPagination');
-
-            if (totalPages <= 1) {
-                pagination.innerHTML = '';
-                return;
-            }
-
-            let html = '<nav><ul class="pagination justify-content-center">';
-
-            for (let i = 1; i <= totalPages; i++) {
-                html += `<li class="page-item ${i === currentHistoryPage ? 'active' : ''}">
-                    <a class="page-link" href="#" onclick="goToHistoryPage(${i}); return false;">${i}</a>
-                </li>`;
-            }
-
-            html += '</ul></nav>';
-            pagination.innerHTML = html;
-        }
-
-        function goToHistoryPage(page) {
-            currentHistoryPage = page;
-            displayBookingsHistory();
-        }
-    </script>
+    <!-- Client-side history fetch removed: rely on server-rendered rows and pagination -->
 
     <!-- info section -->
     <section class="info_section ">
