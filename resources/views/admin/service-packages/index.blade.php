@@ -30,58 +30,66 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @php
-                                $packages = [
-                                    ['id' => 1, 'name' => 'Gói Cơ Bản', 'price' => 50000, 'description' => 'Gói dịch vụ cơ bản với bảo vệ, camera giám sát và hỗ trợ 24/7', 'status' => 'active', 'usage_count' => 245],
-                                    ['id' => 2, 'name' => 'Gói Tiêu Chuẩn', 'price' => 100000, 'description' => 'Gói dịch vụ tiêu chuẩn với thêm dịch vụ rửa xe cơ bản và bảo dưỡng nhẹ', 'status' => 'active', 'usage_count' => 158],
-                                    ['id' => 3, 'name' => 'Gói Cao Cấp', 'price' => 150000, 'description' => 'Gói dịch vụ cao cấp với rửa xe miễn phí, bảo dưỡng và valet parking', 'status' => 'active', 'usage_count' => 89],
-                                    ['id' => 4, 'name' => 'Gói VIP', 'price' => 250000, 'description' => 'Gói dịch vụ VIP với đầy đủ tiện ích cao cấp và ưu tiên tối đa', 'status' => 'inactive', 'usage_count' => 12],
-                                ];
-                            @endphp
-                            @foreach($packages as $package)
+                            @forelse($packages as $package)
                             <tr>
                                 <td class="p-2 align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
                                     <div class="flex px-2 py-1">
                                         <div class="flex flex-col justify-center">
-                                            <h6 class="mb-0 leading-normal text-sm font-semibold">{{ $package['name'] }}</h6>
-                                            <p class="mb-0 leading-tight text-xs text-slate-400">{{ Str::limit($package['description'], 50) }}</p>
+                                            <h6 class="mb-0 leading-normal text-sm font-semibold">
+                                                {{ data_get($package, 'name') }}
+                                                @if(data_get($package, 'is_featured'))
+                                                    <span class="ml-2 px-2 py-0.5 text-xxs rounded bg-yellow-100 text-yellow-700 border border-yellow-300">Nổi bật</span>
+                                                @endif
+                                            </h6>
+                                            <p class="mb-0 leading-tight text-xs text-slate-400">{{ \Illuminate\Support\Str::limit(data_get($package, 'description'), 50) }}</p>
                                         </div>
                                     </div>
                                 </td>
                                 <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                                    <span class="text-sm font-bold leading-tight text-slate-400">{{ number_format($package['price']) }}đ</span>
+                                    <span class="text-sm font-bold leading-tight text-slate-400">{{ number_format((float) data_get($package, 'price', 0)) }}đ</span>
                                 </td>
                                 <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                                    <span class="px-2 py-1 text-xs font-semibold text-white rounded {{ $package['status'] == 'active' ? 'bg-black' : 'bg-black' }}">
-                                        {{ $package['status'] == 'active' ? 'Hoạt động' : 'Tạm dừng' }}
+                                    <span class="inline-flex items-center px-2 py-0.5 text-xs font-semibold rounded border {{ data_get($package, 'is_active') ? 'text-emerald-700 bg-emerald-50 border-emerald-200' : 'text-slate-700 bg-slate-100 border-slate-300' }}">
+                                        {{ data_get($package, 'is_active') ? 'Hoạt động' : 'Tạm dừng' }}
                                     </span>
                                 </td>
                                 <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
                                     <div class="flex items-center justify-center">
-                                        <span class="text-sm font-semibold text-slate-700">{{ $package['usage_count'] }}</span>
+                                        <span class="text-sm font-semibold text-slate-700">{{ data_get($package, 'usage_count', 0) }}</span>
                                         <span class="ml-1 text-xs text-slate-400">lượt</span>
                                     </div>
                                 </td>
-                                <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                                    <div class="flex items-center justify-center space-x-2">
-                                        <a href="{{ route('admin.service-packages.show', $package['id']) }}" class="text-blue-600 hover:text-blue-800" title="Xem chi tiết">
-                                            <i class="fas fa-eye"></i>
+                                <td class="p-2 text-center align-middle bg-transparent border-b shadow-transparent">
+                                    <div class="flex items-center justify-center flex-wrap gap-2">
+                                        <a href="{{ route('admin.service-packages.show', data_get($package, 'id')) }}" class="btn-chip btn-blue" title="Xem chi tiết">
+                                            <i class="fas fa-eye btn-icon"></i>
+                                            <span>Xem</span>
                                         </a>
-                                        <a href="{{ route('admin.service-packages.edit', $package['id']) }}" class="text-green-600 hover:text-green-800" title="Chỉnh sửa">
-                                            <i class="fas fa-edit"></i>
+                                        <a href="{{ route('admin.service-packages.edit', data_get($package, 'id')) }}" class="btn-chip btn-emerald" title="Chỉnh sửa">
+                                            <i class="fas fa-edit btn-icon"></i>
+                                            <span>Sửa</span>
                                         </a>
-                                        <button onclick="toggleStatus({{ $package['id'] }})" class="text-orange-600 hover:text-orange-800" title="Thay đổi trạng thái">
-                                            <i class="fas fa-{{ $package['status'] == 'active' ? 'pause' : 'play' }}"></i>
+                                        <button onclick="toggleStatus({{ (int) data_get($package, 'id') }})" class="btn-chip btn-orange" title="Thay đổi trạng thái" aria-label="Thay đổi trạng thái">
+                                            <i class="fas fa-power-off btn-icon"></i>
+                                            <span>Trạng thái</span>
                                         </button>
-                                        <button onclick="deletePackage({{ $package['id'] }})" class="text-red-600 hover:text-red-800" title="Xóa">
-                                            <i class="fas fa-trash"></i>
+                                        <button onclick="deletePackage({{ (int) data_get($package, 'id') }})" class="btn-chip btn-red" title="Xóa" aria-label="Xóa">
+                                            <i class="fas fa-trash btn-icon"></i>
+                                            <span>Xóa</span>
                                         </button>
                                     </div>
                                 </td>
                             </tr>
-                            @endforeach
+                            @empty
+                            <tr>
+                                <td colspan="5" class="p-4 text-center text-slate-500">Chưa có gói dịch vụ nào.</td>
+                            </tr>
+                            @endforelse
                         </tbody>
                     </table>
+                    @if (is_object($packages) && method_exists($packages, 'links'))
+                        <div class="mt-4">{{ $packages->links() }}</div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -98,9 +106,9 @@
                     <div class="flex-none w-2/3 max-w-full px-3">
                         <div>
                             <p class="mb-0 font-sans font-semibold leading-normal uppercase text-sm text-slate-400">Tổng gói dịch vụ</p>
-                            <h5 class="mb-2 font-bold text-slate-700 dark:text-white">4</h5>
+                            <h5 class="mb-2 font-bold text-slate-700 dark:text-white">{{ $stats['total'] }}</h5>
                             <p class="mb-0 text-slate-400">
-                                <span class="font-bold leading-normal text-emerald-500 text-sm">3</span> đang hoạt động
+                                <span class="font-bold leading-normal text-emerald-500 text-sm">{{ $stats['active'] }}</span> đang hoạt động
                             </p>
                         </div>
                     </div>
@@ -122,9 +130,9 @@
                     <div class="flex-none w-2/3 max-w-full px-3">
                         <div>
                             <p class="mb-0 font-sans font-semibold leading-normal uppercase text-sm text-slate-400">Gói phổ biến nhất</p>
-                            <h5 class="mb-2 font-bold text-slate-700 dark:text-white text-sm">Gói Cơ Bản</h5>
+                            <h5 class="mb-2 font-bold text-slate-700 dark:text-white text-sm">{{ is_object($packages) && method_exists($packages, 'first') ? optional($packages->first())->name : '—' }}</h5>
                             <p class="mb-0 text-slate-400">
-                                <span class="font-bold leading-normal text-emerald-500 text-sm">245</span> lượt sử dụng
+                                <span class="font-bold leading-normal text-emerald-500 text-sm">{{ is_object($packages) && method_exists($packages, 'first') ? (optional($packages->first())->usage_count ?? 0) : 0 }}</span> lượt sử dụng
                             </p>
                         </div>
                     </div>
@@ -146,9 +154,9 @@
                     <div class="flex-none w-2/3 max-w-full px-3">
                         <div>
                             <p class="mb-0 font-sans font-semibold leading-normal uppercase text-sm text-slate-400">Doanh thu từ gói</p>
-                            <h5 class="mb-2 font-bold text-slate-700 dark:text-white">{{ number_format(42500000) }}đ</h5>
+                            <h5 class="mb-2 font-bold text-slate-700 dark:text-white">—</h5>
                             <p class="mb-0 text-slate-400">
-                                <span class="font-bold leading-normal text-emerald-500 text-sm">+18%</span> tháng này
+                                <span class="text-sm">Đang cập nhật</span>
                             </p>
                         </div>
                     </div>
@@ -170,9 +178,9 @@
                     <div class="flex-none w-2/3 max-w-full px-3">
                         <div>
                             <p class="mb-0 font-sans font-semibold leading-normal uppercase text-sm text-slate-400">Giá trung bình</p>
-                            <h5 class="mb-2 font-bold text-slate-700 dark:text-white">{{ number_format(137500) }}đ</h5>
+                            <h5 class="mb-2 font-bold text-slate-700 dark:text-white">—</h5>
                             <p class="mb-0 text-slate-400">
-                                <span class="text-sm text-slate-400">Qua 4 gói dịch vụ</span>
+                                <span class="text-sm text-slate-400">Qua {{ $stats['total'] }} gói dịch vụ</span>
                             </p>
                         </div>
                     </div>
@@ -190,19 +198,47 @@
 
 @push('scripts')
 <script>
-function toggleStatus(packageId) {
-    if (confirm('Bạn có chắc chắn muốn thay đổi trạng thái gói dịch vụ này?')) {
-        // In real app, make AJAX call to toggle status
-        alert(`Đã thay đổi trạng thái gói dịch vụ #${packageId}`);
-        location.reload();
+const CSRF_TOKEN = '{{ csrf_token() }}';
+
+async function toggleStatus(packageId) {
+    if (!confirm('Bạn có chắc chắn muốn thay đổi trạng thái gói dịch vụ này?')) return;
+    try {
+        const res = await fetch(`/admin/service-packages/${packageId}/toggle-status`, {
+            method: 'PATCH',
+            headers: {
+                'X-CSRF-TOKEN': CSRF_TOKEN,
+                'Accept': 'application/json'
+            }
+        });
+        const data = await res.json();
+        if (data.success) {
+            location.reload();
+        } else {
+            alert(data.message || 'Không thể cập nhật trạng thái.');
+        }
+    } catch (e) {
+        alert('Có lỗi xảy ra khi cập nhật trạng thái.');
     }
 }
 
-function deletePackage(packageId) {
-    if (confirm('Bạn có chắc chắn muốn xóa gói dịch vụ này?\nLưu ý: Việc xóa có thể ảnh hưởng đến các booking đang sử dụng gói này.')) {
-        // In real app, make AJAX call to delete
-        alert(`Đã xóa gói dịch vụ #${packageId}`);
-        location.reload();
+async function deletePackage(packageId) {
+    if (!confirm('Bạn có chắc chắn muốn xóa gói dịch vụ này?\nLưu ý: Việc xóa có thể ảnh hưởng đến các booking đang sử dụng gói này.')) return;
+    try {
+        const res = await fetch(`/admin/service-packages/${packageId}`, {
+            method: 'POST',
+            headers: {
+                'X-CSRF-TOKEN': CSRF_TOKEN,
+                'Accept': 'text/html'
+            },
+            body: new URLSearchParams({ _method: 'DELETE' })
+        });
+        if (res.ok) {
+            location.reload();
+        } else {
+            alert('Không thể xóa gói dịch vụ.');
+        }
+    } catch (e) {
+        alert('Có lỗi xảy ra khi xóa gói dịch vụ.');
     }
 }
 </script>

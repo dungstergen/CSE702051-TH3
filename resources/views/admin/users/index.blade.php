@@ -70,7 +70,7 @@
                                 <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
                                     <p class="mb-0 text-xs font-semibold leading-tight dark:text-white dark:opacity-80">{{ $user->id }}</p>
                                 </td>
-                                <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
+                                <td class="p-2 align-middle bg-transparent border-b dark:border-white/40 shadow-transparent">
                                     <div class="flex px-2 py-1">
                                         <div class="flex flex-col justify-center">
                                             <h6 class="mb-0 text-sm leading-normal dark:text-white">{{ $user->name }}</h6>
@@ -92,26 +92,30 @@
                                     <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80">{{ $user->created_at->format('d/m/Y') }}</span>
                                 </td>
                                 <td class="p-2 text-center align-middle bg-transparent border-b dark:border-white/40 whitespace-nowrap shadow-transparent">
-                                    <div class="flex justify-center items-center space-x-2">
-                                        <a href="{{ route('admin.users.show', $user) }}" class="text-xs font-semibold leading-tight dark:text-white text-slate-400 hover:text-blue-500" title="Xem chi tiết">
-                                            <i class="fas fa-eye"></i>
+                                    <div class="flex justify-center items-center flex-wrap gap-2">
+                                        <a href="{{ route('admin.users.show', $user) }}" class="btn-chip btn-blue" title="Xem chi tiết">
+                                            <i class="fas fa-eye btn-icon"></i>
+                                            <span class="hidden sm:inline">Xem</span>
                                         </a>
-                                        <a href="{{ route('admin.users.edit', $user) }}" class="text-xs font-semibold leading-tight dark:text-white text-slate-400 hover:text-yellow-500" title="Chỉnh sửa">
-                                            <i class="fas fa-edit"></i>
+                                        <a href="{{ route('admin.users.edit', $user) }}" class="btn-chip btn-emerald" title="Chỉnh sửa">
+                                            <i class="fas fa-edit btn-icon"></i>
+                                            <span class="hidden sm:inline">Sửa</span>
                                         </a>
-                                        <form method="POST" action="{{ route('admin.users.toggle-status', $user) }}" class="inline-block">
+                                        <form method="POST" action="{{ route('admin.users.toggle-status', $user) }}" class="inline-flex">
                                             @csrf
                                             @method('PATCH')
-                                            <button type="submit" class="text-xs font-semibold leading-tight dark:text-white text-slate-400 hover:text-green-500" title="{{ $user->is_active ? 'Vô hiệu hóa' : 'Kích hoạt' }}">
-                                                <i class="fas fa-{{ $user->is_active ? 'ban' : 'check' }}"></i>
+                                            <button type="submit" class="btn-chip btn-orange" title="{{ $user->is_active ? 'Vô hiệu hóa' : 'Kích hoạt' }}">
+                                                <i class="fas fa-{{ $user->is_active ? 'ban' : 'check' }} btn-icon"></i>
+                                                <span class="hidden sm:inline">{{ $user->is_active ? 'Vô hiệu' : 'Kích hoạt' }}</span>
                                             </button>
                                         </form>
                                         @if($user->bookings_count == 0)
-                                        <form method="POST" action="{{ route('admin.users.destroy', $user) }}" class="inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa người dùng này?')">
+                                        <form method="POST" action="{{ route('admin.users.destroy', $user) }}" class="inline-flex" onsubmit="return confirm('Bạn có chắc chắn muốn xóa người dùng này?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="text-xs font-semibold leading-tight dark:text-white text-slate-400 hover:text-red-500" title="Xóa">
-                                                <i class="fas fa-trash"></i>
+                                            <button type="submit" class="btn-chip btn-red" title="Xóa">
+                                                <i class="fas fa-trash btn-icon"></i>
+                                                <span class="hidden sm:inline">Xóa</span>
                                             </button>
                                         </form>
                                         @endif

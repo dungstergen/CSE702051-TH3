@@ -7,7 +7,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use App\Models\ServicePackage;
 use App\Models\Booking;
-use Illuminate\Support\Facades\Schema;
 
 class AdminServicePackageController extends Controller
 {
@@ -126,7 +125,7 @@ class AdminServicePackageController extends Controller
 
     public function toggleFeatured(ServicePackage $servicePackage)
     {
-        if (!Schema::hasColumn('service_packages', 'is_featured')) {
+        if (!\Schema::hasColumn('service_packages', 'is_featured')) {
             return response()->json(['success' => false, 'message' => 'Cột is_featured chưa tồn tại'], 422);
         }
         $servicePackage->update(['is_featured' => !$servicePackage->is_featured]);
