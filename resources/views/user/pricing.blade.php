@@ -78,9 +78,7 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('user.why') }}">Tại sao chọn chúng tôi</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('user.testimonial') }}">Đánh giá khách hàng</a>
-                            </li>
+
                         </ul>
                         <form class="form-inline">
                             <button class="btn  my-2 my-sm-0 nav_search-btn" type="submit">

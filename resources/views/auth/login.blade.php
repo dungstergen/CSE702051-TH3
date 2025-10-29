@@ -82,9 +82,7 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ url('/why') }}">Tại sao chọn chúng tôi</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ url('/testimonial') }}">Đánh giá khách hàng</a>
-                            </li>
+
                              <li class="nav-item active">
                                 <a class="nav-link" href="{{ url('/login') }}">Đăng nhập <span
                                         class="sr-only">(current)</span> </a>

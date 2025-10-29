@@ -172,52 +172,7 @@
         </div>
     </div>
 
-    <!-- Testimonials Summary -->
-    <div class="w-full max-w-full px-3 mb-6 lg:w-6/12 lg:flex-none">
-        <div class="relative flex flex-col min-w-0 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border">
-            <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
-                <div class="flex items-center justify-between">
-                    <h6 class="mb-0 dark:text-white">Đánh giá khách hàng mới nhất</h6>
-                    <a href="{{ route('admin.testimonials.index') }}" class="text-blue-600 hover:text-blue-800 text-sm">
-                        <i class="fas fa-arrow-right mr-1"></i>Xem tất cả
-                    </a>
-                </div>
-            </div>
-            <div class="flex-auto p-6">
-                <div class="space-y-3">
-                    @php
-                        $recentTestimonials = [
-                            ['name' => 'Lê Thị Mai', 'content' => 'Lần đầu sử dụng dịch vụ, cảm thấy rất ấn tượng với sự chuyên nghiệp...', 'rating' => 4, 'status' => 'pending'],
-                            ['name' => 'Phạm Quang Huy', 'content' => 'Dịch vụ valet parking rất tiện lợi, tiết kiệm được rất nhiều thời gian...', 'rating' => 5, 'status' => 'published'],
-                        ];
-                    @endphp
-                    @foreach($recentTestimonials as $testimonial)
-                    <div class="flex items-start p-3 bg-gray-50 rounded-lg">
-                        <div class="flex-shrink-0 w-8 h-8 bg-gray-300 rounded-full flex items-center justify-center mr-3">
-                            <i class="fas fa-user text-gray-600 text-xs"></i>
-                        </div>
-                        <div class="flex-grow">
-                            <div class="flex items-center justify-between">
-                                <h6 class="text-sm font-semibold text-gray-800">{{ $testimonial['name'] }}</h6>
-                                <div class="flex items-center">
-                                    @for($i = 1; $i <= 5; $i++)
-                                        <i class="fas fa-star text-xs {{ $i <= $testimonial['rating'] ? 'text-yellow-500' : 'text-gray-300' }}"></i>
-                                    @endfor
-                                </div>
-                            </div>
-                            <p class="text-xs text-gray-600 mt-1">{{ Str::limit($testimonial['content'], 60) }}</p>
-                            <div class="flex items-center justify-between mt-2">
-                                <span class="px-2 py-1 text-xs font-semibold rounded {{ $testimonial['status'] == 'published' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800' }}">
-                                    {{ $testimonial['status'] == 'published' ? 'Đã xuất bản' : 'Chờ duyệt' }}
-                                </span>
-                            </div>
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-            </div>
-        </div>
-    </div>
+
 </div>
 
 <!-- Recent Bookings Table -->
