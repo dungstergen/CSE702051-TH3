@@ -40,6 +40,7 @@
     <!-- booking style -->
     <link href="{{ asset('user/css/booking.css') }}" rel="stylesheet" />
 </head>
+
 <body class="sub_page">
 
     <div class="hero_area">
@@ -68,20 +69,21 @@
                                 <a class="nav-link" href="{{ route('home') }}">Trang chủ</a>
                             </li>
                             @auth
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('user.dashboard') }}">Bảng điều khiển</a>
-                            </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('user.dashboard') }}">Bảng điều khiển</a>
+                                </li>
                             @endauth
                             <li class="nav-item active">
-                                <a class="nav-link" href="{{ route('user.booking') }}">Đặt chỗ <span class="sr-only">(current)</span></a>
+                                <a class="nav-link" href="{{ route('user.booking') }}">Đặt chỗ <span
+                                        class="sr-only">(current)</span></a>
                             </li>
                             @auth
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('user.history') }}">Lịch sử</a>
-                            </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('user.reviews') }}">Đánh giá</a>
-                            </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('user.history') }}">Lịch sử</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('user.reviews') }}">Đánh giá</a>
+                                </li>
                             @endauth
                             {{-- <li class="nav-item">
                                 <a class="nav-link" href="{{ route('user.pricing') }}">Gói dịch vụ</a>
@@ -89,29 +91,30 @@
                         </ul>
                         <div class="navbar-nav ml-auto">
                             @auth
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa fa-user"></i> {{ Auth::user()->name }}
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                    <a class="dropdown-item" href="{{ route('user.profile') }}">
-                                        <i class="fa fa-user-circle mr-2"></i>Thông tin cá nhân
+                                <li class="nav-item dropdown">
+                                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button"
+                                        data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        <i class="fa fa-user"></i> {{ Auth::user()->name }}
                                     </a>
-                                    <div class="dropdown-divider"></div>
-                                    <form method="POST" action="{{ route('logout') }}" class="d-inline">
-                                        @csrf
-                                        <button type="submit" class="dropdown-item">
-                                            <i class="fa fa-sign-out mr-2"></i>Đăng xuất
-                                        </button>
-                                    </form>
-                                </div>
-                            </li>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                                        <a class="dropdown-item" href="{{ route('user.profile') }}">
+                                            <i class="fa fa-user-circle mr-2"></i>Thông tin cá nhân
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                        <form method="POST" action="{{ route('logout') }}" class="d-inline">
+                                            @csrf
+                                            <button type="submit" class="dropdown-item">
+                                                <i class="fa fa-sign-out mr-2"></i>Đăng xuất
+                                            </button>
+                                        </form>
+                                    </div>
+                                </li>
                             @else
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('login') }}">
-                                    <i class="fa fa-sign-in"></i> Đăng nhập
-                                </a>
-                            </li>
+                                <li class="nav-item">
+                                    <a class="nav-link" href="{{ route('login') }}">
+                                        <i class="fa fa-sign-in"></i> Đăng nhập
+                                    </a>
+                                </li>
                             @endauth
                         </div>
                     </div>
@@ -136,7 +139,8 @@
 
                             <div class="filter_section">
                                 <h4>Địa điểm</h4>
-                                <input type="text" id="filter_location" class="filter_input" placeholder="Nhập địa điểm...">
+                                <input type="text" id="filter_location" class="filter_input"
+                                    placeholder="Nhập địa điểm...">
                             </div>
 
                             <div class="filter_section">
@@ -153,9 +157,11 @@
                             <div class="filter_section">
                                 <h4>Khoảng giá (VNĐ/giờ)</h4>
                                 <div class="price_range_filter">
-                                    <input type="number" id="filter_price_min" class="filter_input" placeholder="Từ" min="0">
+                                    <input type="number" id="filter_price_min" class="filter_input" placeholder="Từ"
+                                        min="0">
                                     <span class="range_separator">-</span>
-                                    <input type="number" id="filter_price_max" class="filter_input" placeholder="Đến" min="0">
+                                    <input type="number" id="filter_price_max" class="filter_input" placeholder="Đến"
+                                        min="0">
                                 </div>
                             </div>
 
@@ -177,7 +183,8 @@
                         <!-- Header Title -->
                         <div class="booking_header">
                             <h2>Danh Sách Bãi Đỗ Xe</h2>
-                            <p class="text-muted">Tìm thấy <span id="total_lots">{{ count($parkingLots) }}</span> bãi đỗ xe</p>
+                            <p class="text-muted">Tìm thấy <span id="total_lots">{{ count($parkingLots) }}</span> bãi đỗ
+                                xe</p>
                         </div>
 
                         @if(session('success'))
@@ -205,55 +212,55 @@
                         <!-- Parking Lots List -->
                         <div class="parking_lots_list" id="parking_lots_container">
                             @forelse($parkingLots as $lot)
-                            <div class="parking_lot_card"
-                                data-location="{{ strtolower($lot->address) }}"
-                                data-price="{{ $lot->hourly_rate }}"
-                                data-rating="{{ $lot->average_rating ?? 0 }}">
-                                <div class="parking_card_image">
-                                    <img src="{{ $lot->image ? asset('storage/' . $lot->image) : asset('user/images/c' . (($loop->index % 2) + 1) . '.jpg') }}" alt="{{ $lot->name }}">
-                                    <div class="parking_card_name">
-                                        <strong>{{ $lot->name }}</strong>
+                                <div class="parking_lot_card" data-location="{{ strtolower($lot->address) }}"
+                                    data-price="{{ $lot->hourly_rate }}" data-rating="{{ $lot->average_rating ?? 0 }}">
+                                    <div class="parking_card_image">
+                                        <img src="{{ $lot->image ? asset('storage/' . $lot->image) : asset('user/images/c' . (($loop->index % 2) + 1) . '.jpg') }}"
+                                            alt="{{ $lot->name }}">
+                                        <div class="parking_card_name">
+                                            <strong>{{ $lot->name }}</strong>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="parking_card_details">
-                                    <h4 class="parking_title">{{ $lot->name }}</h4>
-                                    <div class="parking_info_row">
-                                        <i class="fa fa-map-marker text-danger"></i>
-                                        <span>{{ $lot->address }}</span>
-                                    </div>
-                                    <div class="parking_info_row">
-                                        <i class="fa fa-car text-primary"></i>
-                                        <span>Chỗ trống: {{ $lot->available_spots }}/{{ $lot->total_spots }}</span>
-                                    </div>
-                                    <div class="parking_meta">
-                                        @if($lot->hourly_rate < 15000)
-                                            <span class="badge badge-danger">
-                                                <i class="fa fa-fire"></i> Giá rẻ
+                                    <div class="parking_card_details">
+                                        <h4 class="parking_title">{{ $lot->name }}</h4>
+                                        <div class="parking_info_row">
+                                            <i class="fa fa-map-marker text-danger"></i>
+                                            <span>{{ $lot->address }}</span>
+                                        </div>
+                                        <div class="parking_info_row">
+                                            <i class="fa fa-car text-primary"></i>
+                                            <span>Chỗ trống: {{ $lot->available_spots }}/{{ $lot->total_spots }}</span>
+                                        </div>
+                                        <div class="parking_meta">
+                                            @if($lot->hourly_rate < 15000)
+                                                <span class="badge badge-danger">
+                                                    <i class="fa fa-fire"></i> Giá rẻ
+                                                </span>
+                                            @endif
+                                            <span class="parking_rating">
+                                                <i class="fa fa-star text-warning"></i>
+                                                {{ number_format($lot->average_rating ?? 0, 1) }}
+                                                <small class="text-muted">({{ $lot->reviews_count ?? 0 }} đánh giá)</small>
                                             </span>
-                                        @endif
-                                        <span class="parking_rating">
-                                            <i class="fa fa-star text-warning"></i>
-                                            {{ number_format($lot->average_rating ?? 0, 1) }}
-                                            <small class="text-muted">({{ $lot->reviews_count ?? 0 }} đánh giá)</small>
-                                        </span>
+                                        </div>
+                                    </div>
+                                    <div class="parking_card_action">
+                                        <div class="parking_price_display">
+                                            <h3 class="price_number">{{ number_format($lot->hourly_rate) }}₫</h3>
+                                            <span class="price_unit">/giờ</span>
+                                        </div>
+                                        <button class="btn_book_now"
+                                            onclick="openSpotSelectionModal({{ $lot->id }}, '{{ $lot->name }}', '{{ $lot->address }}', {{ $lot->hourly_rate }})">
+                                            Đặt chỗ
+                                        </button>
                                     </div>
                                 </div>
-                                <div class="parking_card_action">
-                                    <div class="parking_price_display">
-                                        <h3 class="price_number">{{ number_format($lot->hourly_rate) }}₫</h3>
-                                        <span class="price_unit">/giờ</span>
-                                    </div>
-                                    <button class="btn_book_now" onclick="openSpotSelectionModal({{ $lot->id }}, '{{ $lot->name }}', '{{ $lot->address }}', {{ $lot->hourly_rate }})">
-                                        Đặt chỗ
-                                    </button>
-                                </div>
-                            </div>
                             @empty
-                            <div class="text-center py-5">
-                                <i class="fa fa-car fa-4x text-muted mb-3"></i>
-                                <h4>Không tìm thấy bãi đỗ xe nào</h4>
-                                <p class="text-muted">Vui lòng thử lại với điều kiện khác</p>
-                            </div>
+                                <div class="text-center py-5">
+                                    <i class="fa fa-car fa-4x text-muted mb-3"></i>
+                                    <h4>Không tìm thấy bãi đỗ xe nào</h4>
+                                    <p class="text-muted">Vui lòng thử lại với điều kiện khác</p>
+                                </div>
                             @endforelse
                         </div>
                     </div>
@@ -341,14 +348,15 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Ngày đặt <span class="text-danger">*</span></label>
-                                    <input type="date" name="booking_date" class="form-control" required min="{{ date('Y-m-d') }}">
+                                    <input type="date" name="booking_date" class="form-control" required
+                                        min="{{ date('Y-m-d') }}">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Số điện thoại <span class="text-danger">*</span></label>
-                                    <input type="text" name="phone_number" class="form-control" placeholder="0123456789" required
-                                           value="{{ Auth::check() ? Auth::user()->phone : '' }}">
+                                    <input type="text" name="phone_number" class="form-control" placeholder="0123456789"
+                                        required value="{{ Auth::check() ? Auth::user()->phone : '' }}">
                                 </div>
                             </div>
                         </div>
@@ -372,7 +380,8 @@
                             <div class="col-md-6">
                                 <div class="form-group">
                                     <label>Biển số xe <span class="text-danger">*</span></label>
-                                    <input type="text" name="license_plate" class="form-control" placeholder="VD: 51A-12345" required>
+                                    <input type="text" name="license_plate" class="form-control"
+                                        placeholder="VD: 51A-12345" required>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -390,22 +399,24 @@
                         </div>
 
                         @if(count($servicePackages) > 0)
-                        <div class="form-group">
-                            <label>Gói dịch vụ (tùy chọn)</label>
-                            <select name="service_package_id" class="form-control">
-                                <option value="">-- Không chọn gói --</option>
-                                @foreach($servicePackages as $package)
-                                <option value="{{ $package->id }}" data-price="{{ $package->price }}">
-                                    {{ $package->name }} - {{ number_format($package->price) }}₫ ({{ $package->duration_hours }} giờ)
-                                </option>
-                                @endforeach
-                            </select>
-                        </div>
+                            <div class="form-group">
+                                <label>Gói dịch vụ (tùy chọn)</label>
+                                <select name="service_package_id" class="form-control">
+                                    <option value="">-- Không chọn gói --</option>
+                                    @foreach($servicePackages as $package)
+                                        <option value="{{ $package->id }}" data-price="{{ $package->price }}">
+                                            {{ $package->name }} - {{ number_format($package->price) }}₫
+                                            ({{ $package->duration_hours }} giờ)
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
                         @endif
 
                         <div class="form-group">
                             <label>Yêu cầu đặc biệt</label>
-                            <textarea name="special_requests" class="form-control" rows="3" placeholder="Ghi chú thêm (nếu có)..."></textarea>
+                            <textarea name="special_requests" class="form-control" rows="3"
+                                placeholder="Ghi chú thêm (nếu có)..."></textarea>
                         </div>
 
                         <div class="alert alert-warning">
@@ -481,13 +492,13 @@
             display: flex;
             align-items: center;
             gap: 20px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
             transition: all 0.3s ease;
             border: 1px solid #f0f0f0;
         }
 
         .parking_lot_card:hover {
-            box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
             transform: translateY(-2px);
         }
 
@@ -693,7 +704,7 @@
             background: white;
             padding: 30px;
             border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
         }
 
         .search_filter_card label {
@@ -706,7 +717,7 @@
             background: white;
             padding: 25px;
             border-radius: 10px;
-            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
             position: sticky;
             top: 20px;
         }
@@ -728,7 +739,7 @@
             background: white;
             padding: 20px;
             border-radius: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .parking-level-title {
@@ -778,12 +789,12 @@
             transition: all 0.3s ease;
             background: #b3d4f5;
             position: relative;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
 
         .parking-spot:hover:not(.occupied) {
             transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
         }
 
         .parking-spot.available {
@@ -918,7 +929,7 @@
         const itemsPerPage = 5;
 
         // Load parking lots on page load
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             loadParkingLots();
         });
 
@@ -1023,10 +1034,10 @@
         }
 
         // Handle spot selection
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Add click event to all book buttons
             document.querySelectorAll('.btn_book_parking').forEach(button => {
-                button.addEventListener('click', function() {
+                button.addEventListener('click', function () {
                     const item = this.closest('.parking_lot_item');
                     const parkingName = item.querySelector('.parking_details h4').textContent;
                     const parkingAddress = item.querySelector('.parking_details p').textContent.trim();
@@ -1037,7 +1048,7 @@
 
             // Handle parking spot click
             document.querySelectorAll('.parking_spot').forEach(spot => {
-                spot.addEventListener('click', function() {
+                spot.addEventListener('click', function () {
                     if (this.classList.contains('occupied')) {
                         alert('Vị trí này đã được đặt!');
                         return;
@@ -1240,7 +1251,7 @@
     <!-- popper js -->
     <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
         integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous">
-    </script>
+        </script>
     <!-- nice select -->
     <script src="{{ asset('user/js/jquery.nice-select.min.js') }}"></script>
     <!-- bootstrap js -->
@@ -1384,7 +1395,7 @@
                         `;
 
                         if (spot.is_available) {
-                            spotDiv.onclick = function() {
+                            spotDiv.onclick = function () {
                                 selectSpot(spot.id, spot.spot_code, this);
                             };
                         } else {
@@ -1454,7 +1465,7 @@
             $('#bookingModal').modal('hide');
 
             // Wait for modal to close, then reopen spot selection modal
-            setTimeout(function() {
+            setTimeout(function () {
                 $('#spotSelectionModal').modal('show');
             }, 300);
         }
@@ -1518,7 +1529,7 @@
         }
 
         // Set minimum datetime for booking
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             const now = new Date();
             now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
             const minDateTime = now.toISOString().slice(0, 16);
@@ -1530,7 +1541,7 @@
                 startTimeInput.min = minDateTime;
 
                 // Auto set end time when start time changes
-                startTimeInput.addEventListener('change', function() {
+                startTimeInput.addEventListener('change', function () {
                     const startTime = new Date(this.value);
                     startTime.setHours(startTime.getHours() + 1);
                     endTimeInput.min = startTime.toISOString().slice(0, 16);

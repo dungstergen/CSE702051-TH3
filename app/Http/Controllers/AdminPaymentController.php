@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Payment;
 use App\Models\Booking;
+use App\Models\ParkingLot;
+use Illuminate\Support\Facades\DB;
 
 class AdminPaymentController extends Controller
 {
@@ -82,20 +84,41 @@ class AdminPaymentController extends Controller
         ]);
 
 
-        $payment->update($validated);
+        DB::transaction(function () use ($payment, $validated) {
+            $payment->update($validated);
 
-        // Đồng bộ trạng thái booking
-        $booking = $payment->booking;
-        if ($booking) {
-            if ($payment->payment_status === 'completed') {
-                $booking->status = 'completed';
-            } elseif ($payment->payment_status === 'cancelled') {
-                $booking->status = 'cancelled';
-            } elseif ($payment->payment_status === 'failed') {
-                $booking->status = 'pending';
+            // Đồng bộ trạng thái booking và điều chỉnh slot nếu cần
+            $booking = $payment->booking()->lockForUpdate()->first();
+            if ($booking) {
+                $oldStatus = $booking->status;
+
+                if ($payment->payment_status === 'completed') {
+                    $booking->status = 'completed';
+                } elseif ($payment->payment_status === 'cancelled') {
+                    $booking->status = 'cancelled';
+                } elseif ($payment->payment_status === 'failed') {
+                    $booking->status = 'pending';
+                }
+                $booking->save();
+
+                // Điều chỉnh available_spots theo chuyển trạng thái
+                $lot = ParkingLot::lockForUpdate()->find($booking->parking_lot_id);
+                if ($lot) {
+                    // Nếu chuyển từ confirmed -> cancelled/completed thì trả chỗ
+                    if ($oldStatus === 'confirmed' && in_array($booking->status, ['cancelled', 'completed'])) {
+                        $lot->update([
+                            'available_spots' => min($lot->available_spots + 1, $lot->total_spots)
+                        ]);
+                    }
+                    // Nếu chuyển sang confirmed (ít xảy ra trong form này) thì trừ chỗ
+                    if ($booking->status === 'confirmed' && $oldStatus !== 'confirmed') {
+                        if ($lot->available_spots > 0) {
+                            $lot->decrement('available_spots');
+                        }
+                    }
+                }
             }
-            $booking->save();
-        }
+        });
 
         return redirect()->route('admin.payments.index')
                         ->with('success', 'Cập nhật thanh toán thành công!');

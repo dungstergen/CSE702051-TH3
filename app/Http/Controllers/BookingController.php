@@ -9,6 +9,7 @@ use App\Models\ParkingSpot;
 use App\Models\ServicePackage;
 use App\Models\Payment;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 
 class BookingController extends Controller
@@ -153,8 +154,9 @@ class BookingController extends Controller
             'transaction_id' => 'TXN' . now()->format('YmdHis') . rand(1000, 9999),
         ]);
 
-        return redirect()->route('user.booking.show', $booking->id)
-            ->with('success', 'Đặt chỗ thành công! Vui lòng thanh toán để xác nhận.');
+        // Không chuyển sang trang thanh toán ngay; đưa người dùng về Lịch sử để họ có thể thanh toán khi muốn
+        return redirect()->route('user.history')
+            ->with('success', 'Đặt chỗ thành công! Bạn có thể thanh toán từ trang Lịch sử bất cứ lúc nào.');
     }
 
 
@@ -190,10 +192,22 @@ class BookingController extends Controller
             return back()->withErrors(['error' => 'Không thể hủy đặt chỗ đã hoàn thành']);
         }
 
-        $booking->update([
-            'status' => 'cancelled',
-            'payment_status' => $booking->payment_status === 'completed' ? $booking->payment_status : 'cancelled',
-        ]);
+        DB::transaction(function () use ($booking) {
+            // Nếu booking đang ở trạng thái confirmed, hoàn trả slot về bãi đỗ
+            if ($booking->status === 'confirmed') {
+                $lot = ParkingLot::lockForUpdate()->find($booking->parking_lot_id);
+                if ($lot) {
+                    // Tăng available_spots nhưng không vượt quá tổng số chỗ
+                    $newAvailable = min($lot->available_spots + 1, $lot->total_spots);
+                    $lot->update(['available_spots' => $newAvailable]);
+                }
+            }
+
+            $booking->update([
+                'status' => 'cancelled',
+                'payment_status' => $booking->payment_status === 'completed' ? $booking->payment_status : 'cancelled',
+            ]);
+        });
 
         return back()->with('success', 'Đã hủy đặt chỗ thành công');
     }

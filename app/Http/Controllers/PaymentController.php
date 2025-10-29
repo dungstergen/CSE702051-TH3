@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\Payment;
 use App\Models\Booking;
+use App\Models\ParkingLot;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class PaymentController extends Controller
 {
@@ -77,15 +79,43 @@ class PaymentController extends Controller
         // Xử lý theo phương thức
         if (in_array($request->payment_method, ['momo', 'zalopay'])) {
             // Giả lập thanh toán ví điện tử thành công
-            $payment->update(['payment_status' => 'completed', 'paid_at' => now()]);
-            $booking->update(['payment_status' => 'completed', 'status' => 'confirmed']);
+            DB::transaction(function () use ($payment, $booking) {
+                // Cập nhật trạng thái thanh toán
+                $payment->update(['payment_status' => 'completed', 'paid_at' => now()]);
+
+                // Chỉ điều chỉnh slot khi chuyển sang confirmed lần đầu
+                if ($booking->status !== 'confirmed') {
+                    // Khóa hàng bãi đỗ để cập nhật an toàn
+                    $lot = ParkingLot::lockForUpdate()->find($booking->parking_lot_id);
+                    if ($lot) {
+                        // Giảm available_spots nhưng không âm
+                        if ($lot->available_spots > 0) {
+                            $lot->decrement('available_spots');
+                        }
+                    }
+                }
+
+                // Cập nhật trạng thái booking
+                $booking->update(['payment_status' => 'completed', 'status' => 'confirmed']);
+            });
 
             return redirect()->route('user.payment.success', $payment->id)
                 ->with('success', 'Thanh toán thành công!');
         }
 
         if ($request->payment_method === 'cash') {
-            $booking->update(['status' => 'confirmed']);
+            DB::transaction(function () use ($booking) {
+                if ($booking->status !== 'confirmed') {
+                    $lot = ParkingLot::lockForUpdate()->find($booking->parking_lot_id);
+                    if ($lot) {
+                        if ($lot->available_spots > 0) {
+                            $lot->decrement('available_spots');
+                        }
+                    }
+                }
+                $booking->update(['status' => 'confirmed']);
+            });
+
             return redirect()->route('user.payment.cash', $payment->id)
                 ->with('success', 'Đặt chỗ đã xác nhận. Thanh toán tiền mặt khi đến.');
         }
