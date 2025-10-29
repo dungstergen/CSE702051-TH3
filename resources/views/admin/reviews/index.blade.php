@@ -9,9 +9,6 @@
             <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
                 <div class="flex items-center justify-between mb-4">
                     <h6 class="mb-0 dark:text-white">Danh sách đánh giá</h6>
-                    <a href="{{ route('admin.reviews.create') }}" class="inline-block px-6 py-3 font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer bg-gradient-to-tl from-green-600 to-lime-400 leading-pro text-xs ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs">
-                        <i class="fas fa-plus mr-2"></i>Thêm đánh giá
-                    </a>
                 </div>
 
                 <!-- Search and Filter -->
@@ -41,9 +38,10 @@
                     </div>
 
                     <div class="text-sm text-gray-600">
+                        @php $collection = $reviews->getCollection(); $avgOnPage = $collection->avg('rating'); @endphp
                         Tổng: <span class="font-semibold" id="totalCount">{{ $reviews->total() }}</span> đánh giá
                         <br>
-                        Điểm TB: <span class="font-semibold text-yellow-600">{{ number_format($reviews->avg('rating'), 1) }}</span>/5 ⭐
+                        Điểm TB (trang này): <span class="font-semibold text-yellow-600">{{ number_format($avgOnPage ?? 0, 1) }}</span>/5 ⭐
                     </div>
                 </div>
             </div>
@@ -163,10 +161,12 @@
 
             <div class="flex-auto p-6">
                 <div class="grid grid-cols-5 gap-4">
+                    @php $pageCollection = $reviews->getCollection(); @endphp
                     @for($i = 5; $i >= 1; $i--)
                         @php
-                            $count = $reviews->where('rating', $i)->count();
-                            $percentage = $reviews->count() > 0 ? ($count / $reviews->count()) * 100 : 0;
+                            $count = $pageCollection->where('rating', $i)->count();
+                            $total = $pageCollection->count();
+                            $percentage = $total > 0 ? ($count / $total) * 100 : 0;
                         @endphp
                         <div class="text-center">
                             <div class="flex items-center justify-center mb-2">

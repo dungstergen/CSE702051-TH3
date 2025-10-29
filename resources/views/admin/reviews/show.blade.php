@@ -96,7 +96,7 @@
                                         <h6 class="text-md font-semibold text-gray-800">{{ $review->parkingLot->name }}</h6>
                                         <p class="text-sm text-gray-600">{{ $review->parkingLot->address }}</p>
                                         <div class="flex items-center mt-1">
-                                            <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">{{ number_format($review->parkingLot->price_per_hour) }}đ/giờ</span>
+                                            <span class="text-xs bg-green-100 text-green-800 px-2 py-1 rounded">{{ number_format($review->parkingLot->hourly_rate, 2) }}đ/giờ</span>
                                             <span class="text-xs bg-blue-100 text-blue-800 px-2 py-1 rounded ml-2">{{ $review->parkingLot->total_spots }} chỗ</span>
                                         </div>
                                     </div>
@@ -124,11 +124,11 @@
                                                 {{ $review->booking->status }}
                                             </span>
                                             <span class="text-xs bg-yellow-100 text-yellow-800 px-2 py-1 rounded ml-2">
-                                                {{ number_format($review->booking->total_price) }}đ
+                                                {{ number_format($review->booking->total_cost, 2) }}đ
                                             </span>
-                                            @if($review->booking->vehicle_plate)
+                                            @if($review->booking->license_plate)
                                             <span class="text-xs bg-gray-100 text-gray-800 px-2 py-1 rounded ml-2">
-                                                {{ $review->booking->vehicle_plate }}
+                                                {{ $review->booking->license_plate }}
                                             </span>
                                             @endif
                                         </div>
