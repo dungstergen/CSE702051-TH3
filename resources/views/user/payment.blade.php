@@ -137,6 +137,14 @@
                             <i class="fa fa-credit-card"></i> Phương thức thanh toán
                         </h4>
 
+                        <!-- Real payment form -->
+                        <form id="paymentForm" method="POST" action="{{ route('user.payment.process') }}">
+                            @csrf
+                            <input type="hidden" name="booking_id" value="{{ $booking->id }}">
+                            <input type="hidden" name="payment_method" id="payment_method_field">
+                            <input type="hidden" name="phone_number" id="phone_number_field">
+                        </form>
+
                         <div class="payment_methods">
                             <!-- Credit/Debit Card -->
                             <div class="payment_method_item" onclick="selectPaymentMethod('card')">
@@ -301,17 +309,23 @@
 
                         <div class="summary_item">
                             <span>Bãi đỗ xe:</span>
-                            <strong id="summary_parking_lot">-</strong>
+                            <strong id="summary_parking_lot">{{ $booking->parkingLot->name ?? '-' }}</strong>
                         </div>
 
                         <div class="summary_item">
                             <span>Thời gian đỗ:</span>
-                            <strong id="summary_duration">-</strong>
+                            <strong id="summary_duration">
+                                @if($booking->start_time && $booking->end_time)
+                                    {{ $booking->start_time->format('d/m/Y H:i') }} - {{ $booking->end_time->format('d/m/Y H:i') }}
+                                @else
+                                    -
+                                @endif
+                            </strong>
                         </div>
 
                         <div class="summary_item">
                             <span>Phí đỗ xe:</span>
-                            <strong id="summary_parking_fee">0đ</strong>
+                            <strong id="summary_parking_fee">{{ number_format((float)($booking->total_cost ?? 0), 0, ',', '.') }}đ</strong>
                         </div>
 
                         <div class="summary_item">
@@ -323,7 +337,7 @@
 
                         <div class="summary_total">
                             <span>Tổng cộng:</span>
-                            <h3 id="summary_total">0đ</h3>
+                            <h3 id="summary_total">{{ number_format((float)($booking->total_cost ?? 0), 0, ',', '.') }}đ</h3>
                         </div>
 
                         <button type="button" class="btn btn_box w-100 mt-3 text-white" style="background: linear-gradient(90deg, #ffbe33 0%, #ff6f00 100%); border: none;" onclick="processPayment()">
@@ -566,20 +580,33 @@
                 return;
             }
 
-            // Validate payment information based on method
+            const methodField = document.getElementById('payment_method_field');
+
             if (selectedMethod === 'card') {
-                // Validate card info
-                alert('Đang xử lý thanh toán bằng thẻ...');
-            } else if (selectedMethod === 'ewallet') {
-                // Process e-wallet payment
-                alert('Đang chuyển đến trang thanh toán ví điện tử...');
-            } else if (selectedMethod === 'bank') {
-                // Process bank transfer
-                alert('Vui lòng chuyển khoản theo thông tin đã cung cấp');
-            } else {
-                // Cash payment
-                alert('Thanh toán thành công! Vui lòng thanh toán tiền mặt tại bãi đỗ xe');
+                alert('Hiện tại chưa hỗ trợ thanh toán thẻ trực tuyến. Vui lòng chọn ví điện tử, chuyển khoản hoặc tiền mặt.');
+                return;
             }
+
+            if (selectedMethod === 'ewallet') {
+                const chosen = document.querySelector('input[name="ewallet"]:checked');
+                if (!chosen) {
+                    alert('Vui lòng chọn ví MoMo hoặc ZaloPay');
+                    return;
+                }
+                const val = chosen.value;
+                if (val !== 'momo' && val !== 'zalopay') {
+                    alert('VNPay chưa được hỗ trợ ở thời điểm hiện tại. Vui lòng chọn MoMo hoặc ZaloPay.');
+                    return;
+                }
+                methodField.value = val; // 'momo' | 'zalopay'
+            } else if (selectedMethod === 'bank') {
+                methodField.value = 'bank_transfer';
+            } else if (selectedMethod === 'cash') {
+                methodField.value = 'cash';
+            }
+
+            // Submit form to backend
+            document.getElementById('paymentForm').submit();
         }
 
         function applyPromoCode() {
@@ -632,13 +659,6 @@
 
         document.addEventListener('DOMContentLoaded', function() {
             loadPaymentHistory();
-
-            // Load payment summary from URL params or session
-            document.getElementById('summary_parking_lot').textContent = 'Bãi đỗ xe Vincom';
-            document.getElementById('summary_duration').textContent = '3 giờ';
-            document.getElementById('summary_parking_fee').textContent = '45,000đ';
-            document.getElementById('summary_service_fee').textContent = '5,000đ';
-            document.getElementById('summary_total').textContent = '50,000đ';
         });
     </script>
 
