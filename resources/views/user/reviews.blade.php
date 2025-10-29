@@ -136,6 +136,20 @@
             </div>
             @endif
 
+            @if($errors->any())
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <i class="fa fa-exclamation-circle"></i>
+                <ul class="mb-0">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="close" data-dismiss="alert">
+                    <span>&times;</span>
+                </button>
+            </div>
+            @endif
+
             <div class="row">
                 <!-- Reviews List -->
                 <div class="col-lg-8">
@@ -146,7 +160,7 @@
                                 <div class="stat_box">
                                     <i class="fa fa-comments"></i>
                                     <div>
-                                        <h4 id="totalReviews">5</h4>
+                                        <h4 id="totalReviews">{{ $totalReviews ?? 0 }}</h4>
                                         <p>Tổng đánh giá</p>
                                     </div>
                                 </div>
@@ -155,7 +169,7 @@
                                 <div class="stat_box">
                                     <i class="fa fa-star"></i>
                                     <div>
-                                        <h4 id="avgRating">4.6</h4>
+                                        <h4 id="avgRating">{{ $avgRating ?? 0 }}</h4>
                                         <p>Đánh giá trung bình</p>
                                     </div>
                                 </div>
@@ -164,7 +178,7 @@
                                 <div class="stat_box">
                                     <i class="fa fa-clock-o"></i>
                                     <div>
-                                        <h4 id="pendingReviews">2</h4>
+                                        <h4 id="pendingReviewsCount">{{ $pendingReviews ?? 0 }}</h4>
                                         <p>Chờ đánh giá</p>
                                     </div>
                                 </div>
@@ -177,12 +191,12 @@
                         <ul class="nav nav-tabs">
                             <li class="nav-item">
                                 <a class="nav-link active" data-toggle="tab" href="#myReviews">
-                                    Đánh giá của tôi
+                                    Đánh giá của tôi ({{ $totalReviews ?? 0 }})
                                 </a>
                             </li>
                             <li class="nav-item">
                                 <a class="nav-link" data-toggle="tab" href="#pendingReviews">
-                                    Chưa đánh giá
+                                    Chưa đánh giá ({{ $pendingReviews ?? 0 }})
                                 </a>
                             </li>
                         </ul>
@@ -192,140 +206,97 @@
                         <!-- My Reviews Tab -->
                         <div class="tab-pane fade show active" id="myReviews">
                             <div class="reviews_container">
-                                <!-- Review Item -->
-                                <div class="my_review_item">
-                                    <div class="review_header">
-                                        <div>
-                                            <h5>Bãi đỗ xe Vincom Center</h5>
-                                            <p class="text-muted small">
-                                                <i class="fa fa-calendar"></i> 15/10/2025
-                                            </p>
+                                @forelse($reviews as $review)
+                                    <div class="my_review_item">
+                                        <div class="review_header">
+                                            <div>
+                                                <h5>{{ $review->parkingLot->name ?? 'Bãi đỗ xe' }}</h5>
+                                                <p class="text-muted small">
+                                                    <i class="fa fa-calendar"></i>
+                                                    {{ optional($review->created_at)->format('d/m/Y') }}
+                                                </p>
+                                            </div>
+                                            <div class="review_actions">
+                                                <button class="btn btn-sm btn-primary"
+                                                    onclick="openEditModal(this)"
+                                                    data-id="{{ $review->id }}"
+                                                    data-rating="{{ $review->rating }}"
+                                                    data-title="{{ $review->title }}"
+                                                    data-comment="{{ $review->comment }}"
+                                                    data-pros="{{ $review->pros }}"
+                                                    data-cons="{{ $review->cons }}"
+                                                    data-would-recommend="{{ (int)$review->would_recommend }}">
+                                                    <i class="fa fa-edit"></i> Sửa
+                                                </button>
+                                                <form method="POST" action="{{ route('user.reviews.destroy', $review->id) }}" class="d-inline" onsubmit="return confirm('Bạn có chắc chắn muốn xóa đánh giá này?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-sm btn-danger">
+                                                        <i class="fa fa-trash"></i> Xóa
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </div>
-                                        <div class="review_actions">
-                                            <button class="btn btn-sm btn-primary" onclick="editReview(1)">
-                                                <i class="fa fa-edit"></i> Sửa
-                                            </button>
-                                            <button class="btn btn-sm btn-danger" onclick="deleteReview(1)">
-                                                <i class="fa fa-trash"></i> Xóa
-                                            </button>
+                                        <div class="review_rating mb-2">
+                                            @for ($i = 1; $i <= 5; $i++)
+                                                @if ($i <= ($review->rating ?? 0))
+                                                    <i class="fa fa-star"></i>
+                                                @else
+                                                    <i class="fa fa-star-o"></i>
+                                                @endif
+                                            @endfor
                                         </div>
+                                        <p class="font-weight-bold mb-1">{{ $review->title }}</p>
+                                        <p class="review_content mb-2">{{ $review->comment }}</p>
+                                        @if($review->pros || $review->cons)
+                                            <div class="small text-muted">
+                                                @if($review->pros)
+                                                    <div><strong>Ưu điểm:</strong> {{ $review->pros }}</div>
+                                                @endif
+                                                @if($review->cons)
+                                                    <div><strong>Nhược điểm:</strong> {{ $review->cons }}</div>
+                                                @endif
+                                            </div>
+                                        @endif
                                     </div>
-                                    <div class="review_rating mb-2">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                    </div>
-                                    <p class="review_content">
-                                        Bãi đỗ xe rất rộng rãi và sạch sẽ. Nhân viên nhiệt tình, giá cả hợp lý.
-                                        Tôi rất hài lòng với dịch vụ ở đây và sẽ quay lại trong tương lai!
-                                    </p>
-                                </div>
+                                @empty
+                                    <div class="alert alert-info">Chưa có đánh giá nào.</div>
+                                @endforelse
 
-                                <!-- Review Item -->
-                                <div class="my_review_item">
-                                    <div class="review_header">
-                                        <div>
-                                            <h5>Bãi đỗ xe Big C</h5>
-                                            <p class="text-muted small">
-                                                <i class="fa fa-calendar"></i> 12/10/2025
-                                            </p>
-                                        </div>
-                                        <div class="review_actions">
-                                            <button class="btn btn-sm btn-primary" onclick="editReview(2)">
-                                                <i class="fa fa-edit"></i> Sửa
-                                            </button>
-                                            <button class="btn btn-sm btn-danger" onclick="deleteReview(2)">
-                                                <i class="fa fa-trash"></i> Xóa
-                                            </button>
-                                        </div>
+                                @if(method_exists($reviews, 'links'))
+                                    <div class="mt-3">
+                                        {{ $reviews->links() }}
                                     </div>
-                                    <div class="review_rating mb-2">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star-o"></i>
-                                    </div>
-                                    <p class="review_content">
-                                        Vị trí thuận tiện, gần trung tâm. Camera an ninh đầy đủ.
-                                        Chỉ có điều giờ cao điểm hơi đông một chút.
-                                    </p>
-                                </div>
-
-                                <!-- Review Item -->
-                                <div class="my_review_item">
-                                    <div class="review_header">
-                                        <div>
-                                            <h5>Bãi đỗ xe Lotte Mart</h5>
-                                            <p class="text-muted small">
-                                                <i class="fa fa-calendar"></i> 08/10/2025
-                                            </p>
-                                        </div>
-                                        <div class="review_actions">
-                                            <button class="btn btn-sm btn-primary" onclick="editReview(3)">
-                                                <i class="fa fa-edit"></i> Sửa
-                                            </button>
-                                            <button class="btn btn-sm btn-danger" onclick="deleteReview(3)">
-                                                <i class="fa fa-trash"></i> Xóa
-                                            </button>
-                                        </div>
-                                    </div>
-                                    <div class="review_rating mb-2">
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                        <i class="fa fa-star"></i>
-                                    </div>
-                                    <p class="review_content">
-                                        Tuyệt vời! Bãi đỗ xe hiện đại, an toàn. Sẽ quay lại lần sau.
-                                    </p>
-                                </div>
+                                @endif
                             </div>
                         </div>
 
                         <!-- Pending Reviews Tab -->
                         <div class="tab-pane fade" id="pendingReviews">
                             <div class="pending_reviews_container">
-                                <!-- Pending Review Item -->
-                                <div class="pending_review_item">
-                                    <div class="d-flex justify-content-between align-items-start mb-3">
-                                        <div>
-                                            <h5>Bãi đỗ xe Aeon Mall</h5>
-                                            <p class="text-muted small">
-                                                <i class="fa fa-calendar"></i> Đã đỗ xe: 16/10/2025
-                                            </p>
+                                @forelse($eligibleBookings as $booking)
+                                    <div class="pending_review_item">
+                                        <div class="d-flex justify-content-between align-items-start mb-3">
+                                            <div>
+                                                <h5>{{ $booking->parkingLot->name ?? 'Bãi đỗ xe' }}</h5>
+                                                <p class="text-muted small">
+                                                    <i class="fa fa-calendar"></i>
+                                                    Đã đỗ xe: {{ optional($booking->end_time)->format('d/m/Y') }}
+                                                </p>
+                                            </div>
+                                            <span class="badge badge-warning">Chờ đánh giá</span>
                                         </div>
-                                        <span class="badge badge-warning">Chờ đánh giá</span>
+                                        <p class="text-muted mb-3">
+                                            Bạn đã sử dụng dịch vụ tại bãi đỗ xe này. Hãy chia sẻ trải nghiệm của bạn!
+                                        </p>
+                                        <button class="btn btn_box"
+                                            onclick="showReviewForm({ id: {{ $booking->id }}, parkingLotId: {{ $booking->parking_lot_id }}, name: '{{ addslashes($booking->parkingLot->name ?? '') }}' })">
+                                            <i class="fa fa-star"></i> Viết đánh giá
+                                        </button>
                                     </div>
-                                    <p class="text-muted mb-3">
-                                        Bạn đã sử dụng dịch vụ tại bãi đỗ xe này. Hãy chia sẻ trải nghiệm của bạn!
-                                    </p>
-                                    <button class="btn btn_box" onclick="showReviewForm('Bãi đỗ xe Aeon Mall')">
-                                        <i class="fa fa-star"></i> Viết đánh giá
-                                    </button>
-                                </div>
-
-                                <!-- Pending Review Item -->
-                                <div class="pending_review_item">
-                                    <div class="d-flex justify-content-between align-items-start mb-3">
-                                        <div>
-                                            <h5>Bãi đỗ xe SC VivoCity</h5>
-                                            <p class="text-muted small">
-                                                <i class="fa fa-calendar"></i> Đã đỗ xe: 14/10/2025
-                                            </p>
-                                        </div>
-                                        <span class="badge badge-warning">Chờ đánh giá</span>
-                                    </div>
-                                    <p class="text-muted mb-3">
-                                        Bạn đã sử dụng dịch vụ tại bãi đỗ xe này. Hãy chia sẻ trải nghiệm của bạn!
-                                    </p>
-                                    <button class="btn btn_box" onclick="showReviewForm('Bãi đỗ xe SC VivoCity')">
-                                        <i class="fa fa-star"></i> Viết đánh giá
-                                    </button>
-                                </div>
+                                @empty
+                                    <div class="alert alert-light">Không có đặt chỗ nào đang chờ đánh giá.</div>
+                                @endforelse
                             </div>
                         </div>
                     </div>
@@ -341,6 +312,7 @@
                         <form id="reviewForm" method="POST" action="{{ route('user.reviews.store') }}">
                             @csrf
                             <input type="hidden" name="booking_id" id="reviewBookingId">
+                            <input type="hidden" name="parking_lot_id" id="reviewParkingLotId">
 
                             <div class="form-group">
                                 <label>Bãi đỗ xe</label>
@@ -350,7 +322,7 @@
                             <div class="form-group">
                                 <label>Đánh giá *</label>
                                 <div class="star_rating_input">
-                                    <input type="radio" name="rating" id="star5" value="5">
+                                    <input type="radio" name="rating" id="star5" value="5" required>
                                     <label for="star5"><i class="fa fa-star"></i></label>
 
                                     <input type="radio" name="rating" id="star4" value="4">
@@ -378,6 +350,30 @@
                                 <textarea class="form-control" name="comment" rows="5"
                                     placeholder="Chia sẻ chi tiết về trải nghiệm của bạn..." required></textarea>
                                 <small class="text-muted">Tối thiểu 20 ký tự</small>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Ưu điểm</label>
+                                <textarea class="form-control" name="pros" rows="2" placeholder="Điểm bạn thích (không bắt buộc)"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Nhược điểm</label>
+                                <textarea class="form-control" name="cons" rows="2" placeholder="Điểm cần cải thiện (không bắt buộc)"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label>Bạn có giới thiệu nơi này?</label>
+                                <div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="would_recommend" id="recommendYes" value="1" checked>
+                                        <label class="form-check-label" for="recommendYes">Có</label>
+                                    </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input" type="radio" name="would_recommend" id="recommendNo" value="0">
+                                        <label class="form-check-label" for="recommendNo">Không</label>
+                                    </div>
+                                </div>
                             </div>
 
                             <button type="submit" class="btn btn-warning btn_box w-100">
@@ -416,38 +412,69 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <form id="editReviewForm">
+                    <form id="editReviewForm" method="POST">
+                        @csrf
+                        @method('PUT')
                         <input type="hidden" id="editReviewId">
 
                         <div class="form-group">
                             <label>Đánh giá *</label>
                             <div class="star_rating_input">
-                                <input type="radio" name="edit_rating" id="edit_star5" value="5">
+                                <input type="radio" name="rating" id="edit_star5" value="5">
                                 <label for="edit_star5"><i class="fa fa-star"></i></label>
 
-                                <input type="radio" name="edit_rating" id="edit_star4" value="4">
+                                <input type="radio" name="rating" id="edit_star4" value="4">
                                 <label for="edit_star4"><i class="fa fa-star"></i></label>
 
-                                <input type="radio" name="edit_rating" id="edit_star3" value="3">
+                                <input type="radio" name="rating" id="edit_star3" value="3">
                                 <label for="edit_star3"><i class="fa fa-star"></i></label>
 
-                                <input type="radio" name="edit_rating" id="edit_star2" value="2">
+                                <input type="radio" name="rating" id="edit_star2" value="2">
                                 <label for="edit_star2"><i class="fa fa-star"></i></label>
 
-                                <input type="radio" name="edit_rating" id="edit_star1" value="1">
+                                <input type="radio" name="rating" id="edit_star1" value="1">
                                 <label for="edit_star1"><i class="fa fa-star"></i></label>
                             </div>
                         </div>
 
                         <div class="form-group">
+                            <label>Tiêu đề *</label>
+                            <input type="text" class="form-control" id="editReviewTitle" name="title" required>
+                        </div>
+
+                        <div class="form-group">
                             <label>Nội dung đánh giá *</label>
-                            <textarea class="form-control" id="editReviewContent" rows="5" required></textarea>
+                            <textarea class="form-control" id="editReviewContent" name="comment" rows="5" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Ưu điểm</label>
+                            <textarea class="form-control" id="editReviewPros" name="pros" rows="2"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Nhược điểm</label>
+                            <textarea class="form-control" id="editReviewCons" name="cons" rows="2"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Giới thiệu?</label>
+                            <div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="would_recommend" id="editRecommendYes" value="1">
+                                    <label class="form-check-label" for="editRecommendYes">Có</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" name="would_recommend" id="editRecommendNo" value="0">
+                                    <label class="form-check-label" for="editRecommendNo">Không</label>
+                                </div>
+                            </div>
                         </div>
                     </form>
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
-                    <button type="button" class="btn btn_box" onclick="saveEditReview()">
+                    <button type="submit" form="editReviewForm" class="btn btn_box">
                         <i class="fa fa-save"></i> Lưu thay đổi
                     </button>
                 </div>
@@ -600,35 +627,41 @@
 
     <!-- JavaScript -->
     <script>
-        function showReviewForm(parkingLotName) {
-            document.getElementById('reviewParkingLot').value = parkingLotName;
+        function showReviewForm(data) {
+            // data: {id, parkingLotId, name}
+            document.getElementById('reviewBookingId').value = data.id;
+            document.getElementById('reviewParkingLotId').value = data.parkingLotId;
+            document.getElementById('reviewParkingLot').value = data.name;
             document.getElementById('reviewForm').scrollIntoView({ behavior: 'smooth' });
         }
 
-        function editReview(reviewId) {
-            // Load review data and show modal
-            $('#editReviewModal').modal('show');
-            document.getElementById('editReviewId').value = reviewId;
+        function openEditModal(button) {
+            const id = button.getAttribute('data-id');
+            const rating = parseInt(button.getAttribute('data-rating')) || 0;
+            const title = button.getAttribute('data-title') || '';
+            const comment = button.getAttribute('data-comment') || '';
+            const pros = button.getAttribute('data-pros') || '';
+            const cons = button.getAttribute('data-cons') || '';
+            const wouldRecommend = parseInt(button.getAttribute('data-would-recommend')) || 0;
 
-            // Load existing review data here
-            // This is a placeholder - implement actual data loading
-        }
+            document.getElementById('editReviewId').value = id;
+            document.getElementById('editReviewTitle').value = title;
+            document.getElementById('editReviewContent').value = comment;
+            document.getElementById('editReviewPros').value = pros;
+            document.getElementById('editReviewCons').value = cons;
+            document.getElementById(wouldRecommend ? 'editRecommendYes' : 'editRecommendNo').checked = true;
 
-        function saveEditReview() {
-            const reviewId = document.getElementById('editReviewId').value;
-            const content = document.getElementById('editReviewContent').value;
-
-            // Implement save logic here
-            alert('Đánh giá đã được cập nhật!');
-            $('#editReviewModal').modal('hide');
-        }
-
-        function deleteReview(reviewId) {
-            if (confirm('Bạn có chắc chắn muốn xóa đánh giá này?')) {
-                // Implement delete logic here
-                alert('Đánh giá đã được xóa!');
-                location.reload();
+            // Set rating radios
+            for (let i = 1; i <= 5; i++) {
+                const radio = document.getElementById('edit_star' + i);
+                if (radio) radio.checked = (i === rating);
             }
+
+            // Set form action
+            const form = document.getElementById('editReviewForm');
+            form.action = `{{ url('/user/reviews') }}/${id}`;
+
+            $('#editReviewModal').modal('show');
         }
     </script>
 
