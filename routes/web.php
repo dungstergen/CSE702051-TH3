@@ -30,7 +30,7 @@ Route::prefix('user')->name('user.')->group(function () {
 
     // Pricing & Services (Public)
     Route::get('/pricing', [App\Http\Controllers\UserController::class, 'pricing'])->name('pricing');
-    Route::get('/testimonial', [App\Http\Controllers\UserController::class, 'testimonials'])->name('testimonial');
+    // Testimonials removed
 
     // Service Packages (Public - View Only)
     Route::get('/service-packages', [App\Http\Controllers\ServicePackageController::class, 'index'])->name('service-packages');
@@ -144,11 +144,7 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::patch('/service-packages/{servicePackage}/toggle-status', [App\Http\Controllers\Admin\AdminServicePackageController::class, 'toggleStatus'])->name('service-packages.toggle-status');
     Route::patch('/service-packages/{servicePackage}/toggle-featured', [App\Http\Controllers\Admin\AdminServicePackageController::class, 'toggleFeatured'])->name('service-packages.toggle-featured');
 
-    // Testimonial Management
-    Route::resource('testimonials', App\Http\Controllers\Admin\AdminTestimonialController::class);
-    Route::patch('/testimonials/{testimonial}/update-status', [App\Http\Controllers\Admin\AdminTestimonialController::class, 'updateStatus'])->name('testimonials.update-status');
-    Route::patch('/testimonials/{testimonial}/toggle-featured', [App\Http\Controllers\Admin\AdminTestimonialController::class, 'toggleFeatured'])->name('testimonials.toggle-featured');
-    Route::post('/testimonials/bulk-action', [App\Http\Controllers\Admin\AdminTestimonialController::class, 'bulkAction'])->name('testimonials.bulk-action');
+    // Testimonials removed
 
     // Reports
     Route::get('/reports', [App\Http\Controllers\AdminReportController::class, 'index'])->name('reports.index');

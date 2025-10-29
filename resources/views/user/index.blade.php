@@ -78,9 +78,7 @@
                             <li class="nav-item">
                                 <a class="nav-link" href="{{ route('user.why') }}">Tại sao chọn chúng tôi</a>
                             </li>
-                            <li class="nav-item">
-                                <a class="nav-link" href="{{ route('user.testimonial') }}">Đánh giá khách hàng</a>
-                            </li>
+
                         </ul>
                         <div class="user_options">
                             <a href="{{ route('login') }}" class="login_btn">
