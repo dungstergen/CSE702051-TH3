@@ -22,6 +22,8 @@
     <link href="{{ asset('admin/css/argon-dashboard-tailwind.css?v=1.0.1') }}" rel="stylesheet" />
 
     <style>
+        /* Prevent background bar from blocking interactions */
+        .admin-bg-top { pointer-events: none; z-index: 0; }
         /* Profile Dropdown Styles */
         .profile-dropdown {
             position: relative;
@@ -65,12 +67,33 @@
         .fa-chevron-down:before {
             content: "\f078" !important;
         }
+
+        /* Minimal, framework-agnostic chip buttons to avoid Tailwind/Bootstrap conflicts */
+        .btn-chip { display:inline-flex; align-items:center; padding: 0.25rem 0.5rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 600; border: 1px solid transparent; line-height: 1; }
+        .btn-blue { background:#E6F0FF; color:#1D4ED8; border-color:#BFDBFE; }
+        .btn-blue:hover { background:#DBEAFE; color:#1E40AF; }
+        .btn-emerald { background:#ECFDF5; color:#047857; border-color:#A7F3D0; }
+        .btn-emerald:hover { background:#D1FAE5; color:#065F46; }
+        .btn-orange { background:#FFF7ED; color:#C2410C; border-color:#FED7AA; }
+        .btn-orange:hover { background:#FFEDD5; color:#9A3412; }
+        .btn-red { background:#FEF2F2; color:#B91C1C; border-color:#FECACA; }
+        .btn-red:hover { background:#FEE2E2; color:#991B1B; }
+        .btn-icon { margin-right: .25rem; }
+
+        /* Solid filled buttons (uppercase) */
+        .btn-solid { display:inline-flex; align-items:center; padding: 0.5rem 1rem; border-radius: 0.5rem; font-size: 0.75rem; font-weight: 700; text-transform: uppercase; color:#ffffff; border: none; line-height: 1; }
+        .btn-solid-orange { background:#EA580C; }
+        .btn-solid-orange:hover { background:#C2410C; }
+        .btn-solid-yellow { background:#CA8A04; }
+        .btn-solid-yellow:hover { background:#A16207; }
+        .btn-solid-red { background:#DC2626; }
+        .btn-solid-red:hover { background:#B91C1C; }
     </style>
     @yield('additional_css')
 </head>
 
 <body class="m-0 font-sans text-base antialiased font-normal dark:bg-slate-900 leading-default bg-gray-50 text-slate-500">
-    <div class="absolute w-full bg-blue-500 dark:hidden min-h-75"></div>
+    <div class="absolute w-full bg-blue-500 dark:hidden min-h-75 admin-bg-top"></div>
 
     <!-- Sidebar -->
     <aside class="fixed inset-y-0 flex-wrap items-center justify-between block w-full p-0 my-4 antialiased transition-transform duration-200 -translate-x-full bg-white border-0 shadow-xl dark:shadow-none dark:bg-slate-850 max-w-64 ease-nav-brand z-990 xl:ml-6 rounded-2xl xl:left-0 xl:translate-x-0" aria-expanded="false">

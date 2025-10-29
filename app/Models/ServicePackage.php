@@ -13,8 +13,7 @@ class ServicePackage extends Model
         'name',
         'description',
         'price',
-        'duration_type',
-        'duration_value',
+        'duration_hours',
         'features',
         'max_vehicles',
         'max_bookings_per_month',
@@ -31,6 +30,7 @@ class ServicePackage extends Model
     protected $casts = [
         'features' => 'array',
         'price' => 'decimal:2',
+        'duration_hours' => 'integer',
         'promotional_price' => 'decimal:2',
         'discount_percentage' => 'decimal:2',
         'promotion_start_date' => 'date',

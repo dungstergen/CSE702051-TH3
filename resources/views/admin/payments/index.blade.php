@@ -65,7 +65,7 @@
                         <tbody id="paymentsTable">
                             @forelse($payments as $payment)
                             <tr class="payment-row" data-user="{{ strtolower($payment->booking->user->name) }}" data-email="{{ strtolower($payment->booking->user->email) }}" data-status="{{ $payment->payment_status }}" data-method="{{ $payment->payment_method }}" data-date="{{ $payment->paid_at ? $payment->paid_at->format('Y-m-d') : '' }}">
-                                <td class="p-2 align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
+                                <td class="p-2 align-middle bg-transparent border-b shadow-transparent">
                                     <div class="flex px-2 py-1">
                                         <div class="flex flex-col justify-center">
                                             <h6 class="mb-0 text-sm leading-normal dark:text-white">{{ $payment->booking->user->name }}</h6>
@@ -73,7 +73,7 @@
                                         </div>
                                     </div>
                                 </td>
-                                <td class="p-2 align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
+                                <td class="p-2 align-middle bg-transparent border-b shadow-transparent">
                                     <div class="flex flex-col justify-center">
                                         <p class="mb-0 text-xs font-semibold leading-tight dark:text-white dark:opacity-80">
                                             <a href="{{ route('admin.bookings.show', $payment->booking) }}" class="text-blue-600 hover:text-blue-800">
@@ -149,21 +149,24 @@
                                     </div>
                                 </td>
                                 <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                                    <div class="flex items-center justify-center space-x-2">
-                                        <a href="{{ route('admin.payments.show', $payment) }}" class="text-blue-600 hover:text-blue-800 transition-colors" title="Xem chi tiết">
-                                            <i class="fas fa-eye text-sm"></i>
+                                    <div class="flex items-center justify-center flex-wrap gap-2">
+                                        <a href="{{ route('admin.payments.show', $payment) }}" class="btn-chip btn-blue" title="Xem chi tiết">
+                                            <i class="fas fa-eye btn-icon"></i>
+                                            <span class="hidden sm:inline">Xem</span>
                                         </a>
                                         @if($payment->payment_status !== 'completed')
-                                        <a href="{{ route('admin.payments.edit', $payment) }}" class="text-orange-600 hover:text-orange-800 transition-colors" title="Chỉnh sửa">
-                                            <i class="fas fa-edit text-sm"></i>
+                                        <a href="{{ route('admin.payments.edit', $payment) }}" class="btn-chip btn-emerald" title="Chỉnh sửa">
+                                            <i class="fas fa-edit btn-icon"></i>
+                                            <span class="hidden sm:inline">Sửa</span>
                                         </a>
                                         @endif
                                         @if($payment->payment_status === 'failed')
-                                        <form method="POST" action="{{ route('admin.payments.destroy', $payment) }}" class="inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa thanh toán này?')">
+                                        <form method="POST" action="{{ route('admin.payments.destroy', $payment) }}" class="inline-flex" onsubmit="return confirm('Bạn có chắc chắn muốn xóa thanh toán này?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-800 transition-colors" title="Xóa">
-                                                <i class="fas fa-trash text-sm"></i>
+                                            <button type="submit" class="btn-chip btn-red" title="Xóa">
+                                                <i class="fas fa-trash btn-icon"></i>
+                                                <span class="hidden sm:inline">Xóa</span>
                                             </button>
                                         </form>
                                         @endif

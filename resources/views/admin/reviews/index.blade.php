@@ -105,18 +105,21 @@
                                     </div>
                                 </td>
                                 <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
-                                    <div class="flex items-center justify-center space-x-2">
-                                        <a href="{{ route('admin.reviews.show', $review) }}" class="text-blue-600 hover:text-blue-800 transition-colors" title="Xem chi tiết">
-                                            <i class="fas fa-eye text-sm"></i>
+                                    <div class="flex items-center justify-center flex-wrap gap-2">
+                                        <a href="{{ route('admin.reviews.show', $review) }}" class="btn-chip btn-blue" title="Xem chi tiết">
+                                            <i class="fas fa-eye btn-icon"></i>
+                                            <span class="hidden sm:inline">Xem</span>
                                         </a>
-                                        <a href="{{ route('admin.reviews.edit', $review) }}" class="text-orange-600 hover:text-orange-800 transition-colors" title="Chỉnh sửa">
-                                            <i class="fas fa-edit text-sm"></i>
+                                        <a href="{{ route('admin.reviews.edit', $review) }}" class="btn-chip btn-emerald" title="Chỉnh sửa">
+                                            <i class="fas fa-edit btn-icon"></i>
+                                            <span class="hidden sm:inline">Sửa</span>
                                         </a>
-                                        <form method="POST" action="{{ route('admin.reviews.destroy', $review) }}" class="inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa đánh giá này?')">
+                                        <form method="POST" action="{{ route('admin.reviews.destroy', $review) }}" class="inline-flex" onsubmit="return confirm('Bạn có chắc chắn muốn xóa đánh giá này?')">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="text-red-600 hover:text-red-800 transition-colors" title="Xóa">
-                                                <i class="fas fa-trash text-sm"></i>
+                                            <button type="submit" class="btn-chip btn-red" title="Xóa">
+                                                <i class="fas fa-trash btn-icon"></i>
+                                                <span class="hidden sm:inline">Xóa</span>
                                             </button>
                                         </form>
                                     </div>

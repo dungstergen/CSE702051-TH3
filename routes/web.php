@@ -142,7 +142,8 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::post('/reviews/bulk-action', [App\Http\Controllers\AdminReviewController::class, 'bulkAction'])->name('reviews.bulk-action');
 
     // Service Package Management
-    Route::resource('service-packages', App\Http\Controllers\Admin\AdminServicePackageController::class);
+    Route::resource('service-packages', App\Http\Controllers\Admin\AdminServicePackageController::class)
+        ->parameters(['service-packages' => 'servicePackage']);
     Route::patch('/service-packages/{servicePackage}/toggle-status', [App\Http\Controllers\Admin\AdminServicePackageController::class, 'toggleStatus'])->name('service-packages.toggle-status');
     Route::patch('/service-packages/{servicePackage}/toggle-featured', [App\Http\Controllers\Admin\AdminServicePackageController::class, 'toggleFeatured'])->name('service-packages.toggle-featured');
 
