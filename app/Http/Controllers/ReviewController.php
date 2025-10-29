@@ -23,10 +23,16 @@ class ReviewController extends Controller
             ->whereDoesntHave('review')
             ->with('parkingLot')
             ->orderBy('end_time', 'desc')
-            ->limit(5)
             ->get();
 
-        return view('user.reviews', compact('reviews', 'eligibleBookings'));
+        $totalReviews = Review::where('user_id', Auth::id())->count();
+        $avgRating = round((float) Review::where('user_id', Auth::id())->avg('rating'), 1);
+        $pendingReviews = Booking::where('user_id', Auth::id())
+            ->where('status', 'completed')
+            ->whereDoesntHave('review')
+            ->count();
+
+        return view('user.reviews', compact('reviews', 'eligibleBookings', 'totalReviews', 'avgRating', 'pendingReviews'));
     }
 
     // Form tạo đánh giá
@@ -151,5 +157,29 @@ class ReviewController extends Controller
         $review->delete();
 
         return redirect()->route('user.reviews')->with('success', 'Đánh giá đã được xóa');
+    }
+
+    // API: danh sách đánh giá của user (JSON)
+    public function getUserReviews(Request $request)
+    {
+        $reviews = Review::where('user_id', Auth::id())
+            ->with(['parkingLot:id,name', 'booking:id,parking_lot_id,end_time'])
+            ->orderByDesc('created_at')
+            ->paginate(10);
+
+        return response()->json($reviews);
+    }
+
+    // API: danh sách booking đủ điều kiện để đánh giá (JSON)
+    public function getPendingReviews(Request $request)
+    {
+        $pending = Booking::where('user_id', Auth::id())
+            ->where('status', 'completed')
+            ->whereDoesntHave('review')
+            ->with('parkingLot:id,name')
+            ->orderByDesc('end_time')
+            ->get();
+
+        return response()->json($pending);
     }
 }
