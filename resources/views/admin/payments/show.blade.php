@@ -165,9 +165,7 @@
                                     <span class="inline-block px-2 py-1 text-xs font-semibold rounded-full
                                         {{ $payment->booking->status === 'completed' ? 'bg-gray-100 text-gray-800' :
                                            ($payment->booking->status === 'confirmed' ? 'bg-blue-100 text-blue-800' :
-                                           ($payment->booking->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'))) }}">
-                                           ($payment->booking->status === 'confirmed' ? 'bg-blue-100 text-blue-800' :
-                                           ($payment->booking->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800'))) }}">
+                                           ($payment->booking->status === 'pending' ? 'bg-yellow-100 text-yellow-800' : 'bg-red-100 text-red-800')) }}">
                                         {{ ucfirst($payment->booking->status) }}
                                     </span>
                                 </div>
@@ -188,7 +186,7 @@
 
     <!-- Quick Actions -->
     <div class="w-full max-w-full px-3 lg:w-4/12 lg:flex-none">
-    @if($payment->payment_status !== 'completed' && $payment->payment_status !== 'refunded')
+    @if($payment->payment_status !== 'refunded')
         <div class="relative flex flex-col min-w-0 break-words bg-white border-0 border-transparent border-solid shadow-xl dark:bg-slate-850 dark:shadow-dark-xl rounded-2xl bg-clip-border mb-6">
             <div class="p-6 pb-0 mb-0 border-b-0 border-b-solid rounded-t-2xl border-b-transparent">
                 <h6 class="mb-0 dark:text-white">Thao tác nhanh</h6>

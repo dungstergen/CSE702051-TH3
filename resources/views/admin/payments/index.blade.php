@@ -64,7 +64,7 @@
                         </thead>
                         <tbody id="paymentsTable">
                             @forelse($payments as $payment)
-                            <tr class="payment-row" data-user="{{ strtolower($payment->booking->user->name) }}" data-email="{{ strtolower($payment->booking->user->email) }}" data-status="{{ $payment->payment_status }}" data-method="{{ $payment->payment_method }}" data-date="{{ $payment->created_at->format('Y-m-d') }}">
+                            <tr class="payment-row" data-user="{{ strtolower($payment->booking->user->name) }}" data-email="{{ strtolower($payment->booking->user->email) }}" data-status="{{ $payment->payment_status }}" data-method="{{ $payment->payment_method }}" data-date="{{ $payment->paid_at ? $payment->paid_at->format('Y-m-d') : '' }}">
                                 <td class="p-2 align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
                                     <div class="flex px-2 py-1">
                                         <div class="flex flex-col justify-center">
@@ -124,7 +124,7 @@
                                         <span class="px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white" style="background: linear-gradient(135deg, #dc2626 0%, #f87171 100%);">
                                             Thất bại
                                         </span>
-                                    @elseif($payment->payment_status === 'cancelled')
+                                    @elseif($payment->payment_status === 'refunded')
                                         <span class="px-2.5 text-xs rounded-1.8 py-1.4 inline-block whitespace-nowrap text-center align-baseline font-bold uppercase leading-none text-white" style="background: linear-gradient(135deg, #6b7280 0%, #9ca3af 100%);">
                                             Hoàn tiền
                                         </span>
