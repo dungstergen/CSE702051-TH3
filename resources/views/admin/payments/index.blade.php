@@ -31,11 +31,10 @@
 
                         <select id="methodFilter" class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none focus:transition-shadow">
                             <option value="">Tất cả phương thức</option>
-                            <option value="momo">Ví MoMo</option>
-                            <option value="zalopay">Vietcombank</option>
-                            <option value="vnpay">VietinBank</option>
-                            <option value="banking">Thẻ ATM/Internet Banking</option>
-                            <option value="cash">Thanh toán tại chỗ</option>
+                            <option value="credit_card">Thẻ tín dụng</option>
+                            <option value="bank_transfer">Chuyển khoản</option>
+                            <option value="e_wallet">Ví điện tử</option>
+                            <option value="cash">Tiền mặt</option>
                         </select>
 
                         <input type="date" id="dateFilter" class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none focus:transition-shadow">
@@ -59,13 +58,13 @@
                                 <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Phương thức</th>
                                 <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Số tiền</th>
                                 <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Trạng thái</th>
-                                {{-- <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Ngày TT</th> --}}
+                                <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Ngày TT</th>
                                 <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Thao tác</th>
                             </tr>
                         </thead>
                         <tbody id="paymentsTable">
                             @forelse($payments as $payment)
-                            <tr class="payment-row" data-user="{{ strtolower($payment->booking->user->name) }}" data-email="{{ strtolower($payment->booking->user->email) }}" data-status="{{ $payment->status }}" data-method="{{ $payment->payment_method }}" data-date="{{ $payment->created_at->format('Y-m-d') }}">
+                            <tr class="payment-row" data-user="{{ strtolower($payment->booking->user->name) }}" data-email="{{ strtolower($payment->booking->user->email) }}" data-status="{{ $payment->payment_status }}" data-method="{{ $payment->payment_method }}" data-date="{{ $payment->created_at->format('Y-m-d') }}">
                                 <td class="p-2 align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
                                     <div class="flex px-2 py-1">
                                         <div class="flex flex-col justify-center">
@@ -86,25 +85,18 @@
                                 </td>
                                 <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
                                     <div class="flex flex-col items-center">
-                                        @if($payment->payment_method === 'momo')
-                                            <span class="text-xs font-semibold text-pink-600">
-                                                <i class="fas fa-wallet mr-1"></i>Ví MoMo
-                                            </span>
-                                        @elseif($payment->payment_method === 'zalopay')
-                                            <span class="text-xs font-semibold text-green-600">
-                                                <i class="fas fa-university mr-1"></i>Vietcombank
-                                            </span>
-                                        @elseif($payment->payment_method === 'vnpay')
-                                            <span class="text-xs font-semibold text-blue-600">
-                                                <i class="fas fa-university mr-1"></i>VietinBank
-                                            </span>
-                                        @elseif($payment->payment_method === 'banking')
-                                            <span class="text-xs font-semibold text-purple-600">
-                                                <i class="fas fa-credit-card mr-1"></i>Thẻ ATM/Internet Banking
-                                            </span>
-                                        @elseif($payment->payment_method === 'cash')
-                                            <span class="text-xs font-semibold text-orange-600">
-                                                <i class="fas fa-money-bill mr-1"></i>Thanh toán tại chỗ
+                                        @php
+                                            $methodIcons = [
+                                                'credit_card' => ['icon' => 'fas fa-credit-card', 'class' => 'text-purple-600', 'text' => 'Thẻ tín dụng'],
+                                                'bank_transfer' => ['icon' => 'fas fa-university', 'class' => 'text-blue-600', 'text' => 'Chuyển khoản'],
+                                                'e_wallet' => ['icon' => 'fas fa-wallet', 'class' => 'text-pink-600', 'text' => 'Ví điện tử'],
+                                                'cash' => ['icon' => 'fas fa-money-bill', 'class' => 'text-orange-600', 'text' => 'Tiền mặt']
+                                            ];
+                                            $m = $methodIcons[$payment->payment_method] ?? null;
+                                        @endphp
+                                        @if($m)
+                                            <span class="text-xs font-semibold {{ $m['class'] }}">
+                                                <i class="{{ $m['icon'] }} mr-1"></i>{{ $m['text'] }}
                                             </span>
                                         @else
                                             <span class="text-xs font-semibold text-gray-600">{{ ucfirst($payment->payment_method) }}</span>
@@ -161,12 +153,12 @@
                                         <a href="{{ route('admin.payments.show', $payment) }}" class="text-blue-600 hover:text-blue-800 transition-colors" title="Xem chi tiết">
                                             <i class="fas fa-eye text-sm"></i>
                                         </a>
-                                        @if($payment->status !== 'completed')
+                                        @if($payment->payment_status !== 'completed')
                                         <a href="{{ route('admin.payments.edit', $payment) }}" class="text-orange-600 hover:text-orange-800 transition-colors" title="Chỉnh sửa">
                                             <i class="fas fa-edit text-sm"></i>
                                         </a>
                                         @endif
-                                        @if($payment->status === 'pending')
+                                        @if($payment->payment_status === 'failed')
                                         <form method="POST" action="{{ route('admin.payments.destroy', $payment) }}" class="inline-block" onsubmit="return confirm('Bạn có chắc chắn muốn xóa thanh toán này?')">
                                             @csrf
                                             @method('DELETE')

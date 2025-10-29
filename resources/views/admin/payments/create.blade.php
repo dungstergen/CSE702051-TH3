@@ -31,8 +31,8 @@
                             <select name="booking_id" id="booking_id" class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none focus:transition-shadow" required>
                                 <option value="">Chọn booking cần thanh toán</option>
                                 @foreach($unpaidBookings as $booking)
-                                    <option value="{{ $booking->id }}" data-amount="{{ $booking->total_amount }}" {{ old('booking_id') == $booking->id ? 'selected' : '' }}>
-                                        #{{ $booking->id }} - {{ $booking->user->name }} - {{ $booking->parkingLot->name }} - {{ number_format($booking->total_amount, 0, ',', '.') }}đ
+                                    <option value="{{ $booking->id }}" data-amount="{{ $booking->total_cost }}" {{ old('booking_id') == $booking->id ? 'selected' : '' }}>
+                                        #{{ $booking->id }} - {{ $booking->user->name }} - {{ $booking->parkingLot->name }} - {{ number_format($booking->total_cost, 0, ',', '.') }}đ
                                     </option>
                                 @endforeach
                             </select>
@@ -62,10 +62,9 @@
                             </label>
                             <select name="payment_method" id="payment_method" class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none focus:transition-shadow" required>
                                 <option value="">Chọn phương thức</option>
-                                <option value="momo" {{ old('payment_method') == 'momo' ? 'selected' : '' }}>Ví MoMo</option>
-                                <option value="zalopay" {{ old('payment_method') == 'zalopay' ? 'selected' : '' }}>Vietcombank</option>
-                                <option value="vnpay" {{ old('payment_method') == 'vnpay' ? 'selected' : '' }}>VietinBank</option>
-                                <option value="banking" {{ old('payment_method') == 'banking' ? 'selected' : '' }}>Thẻ ATM/Internet Banking</option>
+                                <option value="credit_card" {{ old('payment_method') == 'credit_card' ? 'selected' : '' }}>Thẻ tín dụng</option>
+                                <option value="bank_transfer" {{ old('payment_method') == 'bank_transfer' ? 'selected' : '' }}>Chuyển khoản ngân hàng</option>
+                                <option value="e_wallet" {{ old('payment_method') == 'e_wallet' ? 'selected' : '' }}>Ví điện tử</option>
                                 <option value="cash" {{ old('payment_method') == 'cash' ? 'selected' : '' }}>Thanh toán tại chỗ</option>
                             </select>
                             @error('payment_method')
@@ -84,16 +83,16 @@
                         </div>
 
                         <div class="w-full max-w-full px-3 mb-6 md:w-6/12 md:flex-none">
-                            <label class="mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80" for="status">
+                            <label class="mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80" for="payment_status">
                                 Trạng thái <span class="text-red-500">*</span>
                             </label>
-                            <select name="status" id="status" class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none focus:transition-shadow" required>
+                            <select name="payment_status" id="payment_status" class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none focus:transition-shadow" required>
                                 <option value="">Chọn trạng thái</option>
-                                <option value="pending" {{ old('status', 'pending') == 'pending' ? 'selected' : '' }}>Chờ thanh toán</option>
-                                <option value="completed" {{ old('status') == 'completed' ? 'selected' : '' }}>Đã thanh toán</option>
-                                <option value="failed" {{ old('status') == 'failed' ? 'selected' : '' }}>Thất bại</option>
+                                <option value="pending" {{ old('payment_status', 'pending') == 'pending' ? 'selected' : '' }}>Chờ thanh toán</option>
+                                <option value="completed" {{ old('payment_status') == 'completed' ? 'selected' : '' }}>Đã thanh toán</option>
+                                <option value="failed" {{ old('payment_status') == 'failed' ? 'selected' : '' }}>Thất bại</option>
                             </select>
-                            @error('status')
+                            @error('payment_status')
                                 <p class="text-red-500 text-xs italic mt-1">{{ $message }}</p>
                             @enderror
                         </div>
@@ -148,7 +147,7 @@
 document.addEventListener('DOMContentLoaded', function() {
     const bookingSelect = document.getElementById('booking_id');
     const amountInput = document.getElementById('amount');
-    const statusSelect = document.getElementById('status');
+    const statusSelect = document.getElementById('payment_status');
     const paidAtInput = document.getElementById('paid_at');
     const bookingPreview = document.getElementById('bookingPreview');
 

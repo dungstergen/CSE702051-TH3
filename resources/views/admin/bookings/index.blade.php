@@ -25,7 +25,6 @@
                             <option value="">Tất cả trạng thái</option>
                             <option value="pending">Chờ xác nhận</option>
                             <option value="confirmed">Đã xác nhận</option>
-                            <option value="active">Đang hoạt động</option>
                             <option value="completed">Hoàn thành</option>
                             <option value="cancelled">Đã hủy</option>
                         </select>
@@ -55,7 +54,7 @@
                                 <th class="px-6 py-3 pl-2 font-bold text-left uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Bãi đỗ xe</th>
                                 <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Thời gian</th>
                                 <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Trạng thái</th>
-                                {{-- <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Tổng tiền</th> --}}
+                                <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Tổng tiền</th>
                                 <th class="px-6 py-3 font-bold text-center uppercase align-middle bg-transparent border-b border-gray-200 shadow-none text-xxs border-b-solid tracking-none whitespace-nowrap text-slate-400 opacity-70">Thao tác</th>
                             </tr>
                         </thead>
@@ -73,7 +72,7 @@
                                 <td class="p-2 align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
                                     <div class="flex flex-col justify-center">
                                         <p class="mb-0 text-xs font-semibold leading-tight dark:text-white dark:opacity-80 max-w-xs truncate">{{ $booking->parkingLot->name }}</p>
-                                        <p class="mb-0 text-xs leading-tight text-slate-400">{{ $booking->parkingLot->city }}</p>
+                                        <p class="mb-0 text-xs leading-tight text-slate-400">{{ $booking->parkingLot->address }}</p>
                                     </div>
                                 </td>
                                 <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
@@ -114,11 +113,11 @@
                                 </td>
                                 <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
                                     <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80">
-                                        {{ number_format($booking->total_amount, 0, ',', '.') }}đ
+                                        {{ number_format($booking->total_cost, 0, ',', '.') }}đ
                                     </span>
-                                    @if($booking->payment && $booking->payment->status === 'completed')
+                                    @if($booking->payment && $booking->payment->payment_status === 'completed')
                                         <br><span class="text-xs text-green-600 font-semibold">Đã thanh toán</span>
-                                    @elseif($booking->payment && $booking->payment->status === 'pending')
+                                    @elseif($booking->payment && $booking->payment->payment_status === 'pending')
                                         <br><span class="text-xs text-yellow-600 font-semibold">Chờ thanh toán</span>
                                     @else
                                         <br><span class="text-xs text-red-600 font-semibold">Chưa thanh toán</span>

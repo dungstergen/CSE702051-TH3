@@ -104,8 +104,8 @@
 
                 <div class="mb-4">
                     <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm font-semibold text-slate-700 dark:text-white/80">Booking hoạt động:</span>
-                        <span class="text-lg font-bold text-green-600">{{ $user->bookings->where('status', 'active')->count() }}</span>
+                        <span class="text-sm font-semibold text-slate-700 dark:text-white/80">Booking đang xử lý:</span>
+                        <span class="text-lg font-bold text-green-600">{{ $user->bookings->whereIn('status', ['pending','confirmed'])->count() }}</span>
                     </div>
                 </div>
 
@@ -175,7 +175,7 @@
                                 </td>
                                 <td class="p-2 text-center align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
                                     <span class="text-xs font-semibold leading-tight dark:text-white dark:opacity-80">
-                                        {{ number_format($booking->total_amount, 0, ',', '.') }}đ
+                                        {{ number_format($booking->total_cost, 0, ',', '.') }}đ
                                     </span>
                                 </td>
                             </tr>

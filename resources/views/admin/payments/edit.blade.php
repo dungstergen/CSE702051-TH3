@@ -40,7 +40,7 @@
                                     </div>
                                     <div class="w-full md:w-1/2 px-2 mb-2">
                                         <p class="text-sm"><strong>Bãi đỗ xe:</strong> {{ $payment->booking->parkingLot->name }}</p>
-                                        <p class="text-sm"><strong>Tổng tiền booking:</strong> {{ number_format($payment->booking->total_amount, 0, ',', '.') }}đ</p>
+                                        <p class="text-sm"><strong>Tổng tiền booking:</strong> {{ number_format($payment->booking->total_cost, 0, ',', '.') }}đ</p>
                                     </div>
                                 </div>
                             </div>
@@ -125,19 +125,19 @@
                         </div>
 
                         <!-- Current vs New Comparison -->
-                        @if($payment->status !== old('status') || $payment->amount != old('amount'))
+                        @if($payment->payment_status !== old('payment_status') || $payment->amount != old('amount'))
                         <div class="w-full max-w-full px-3 mb-6">
                             <div class="bg-blue-50 rounded-lg p-4">
                                 <h6 class="text-md font-semibold text-blue-700 mb-2">So sánh thay đổi</h6>
                                 <div class="grid grid-cols-2 gap-4">
                                     <div>
                                         <h6 class="text-sm font-semibold text-gray-700">Hiện tại</h6>
-                                        <p class="text-sm">Trạng thái: <span class="font-semibold">{{ ucfirst($payment->status) }}</span></p>
+                                        <p class="text-sm">Trạng thái: <span class="font-semibold">{{ ucfirst($payment->payment_status) }}</span></p>
                                         <p class="text-sm">Số tiền: <span class="font-semibold">{{ number_format($payment->amount, 0, ',', '.') }}đ</span></p>
                                     </div>
                                     <div>
                                         <h6 class="text-sm font-semibold text-blue-700">Sẽ cập nhật</h6>
-                                        <p class="text-sm">Trạng thái: <span class="font-semibold" id="newStatus">{{ old('status', $payment->status) }}</span></p>
+                                        <p class="text-sm">Trạng thái: <span class="font-semibold" id="newStatus">{{ old('payment_status', $payment->payment_status) }}</span></p>
                                         <p class="text-sm">Số tiền: <span class="font-semibold" id="newAmount">{{ number_format(old('amount', $payment->amount), 0, ',', '.') }}đ</span></p>
                                     </div>
                                 </div>
@@ -162,14 +162,14 @@
 
 <script>
 document.addEventListener('DOMContentLoaded', function() {
-    const statusSelect = document.getElementById('status');
+    const statusSelect = document.getElementById('payment_status');
     const paidAtInput = document.getElementById('paid_at');
     const amountInput = document.getElementById('amount');
     const newStatusSpan = document.getElementById('newStatus');
     const newAmountSpan = document.getElementById('newAmount');
 
     function updatePreview() {
-        if (newStatusSpan) {
+        if (newStatusSpan && statusSelect) {
             newStatusSpan.textContent = statusSelect.options[statusSelect.selectedIndex].text;
         }
         if (newAmountSpan && amountInput.value) {

@@ -28,13 +28,7 @@
                             <option value="maintenance">Bảo trì</option>
                         </select>
 
-                        <select id="cityFilter" class="focus:shadow-soft-primary-outline text-sm leading-5.6 ease-soft block appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 transition-all focus:border-fuchsia-300 focus:outline-none focus:transition-shadow">
-                            <option value="">Tất cả thành phố</option>
-                            <option value="Hà Nội">Hà Nội</option>
-                            <option value="Hồ Chí Minh">Hồ Chí Minh</option>
-                            <option value="Đà Nẵng">Đà Nẵng</option>
-                            <option value="Hải Phòng">Hải Phòng</option>
-                        </select>
+                        <!-- City filter removed: no 'city' column in schema -->
                     </div>
 
                     <div class="text-sm text-gray-600">
@@ -58,12 +52,12 @@
                         </thead>
                         <tbody id="parkingLotsTable">
                             @forelse($parkingLots as $parkingLot)
-                            <tr class="parking-lot-row" data-name="{{ strtolower($parkingLot->name) }}" data-address="{{ strtolower($parkingLot->address) }}" data-status="{{ $parkingLot->status }}" data-city="{{ $parkingLot->city }}">
+                            <tr class="parking-lot-row" data-name="{{ strtolower($parkingLot->name) }}" data-address="{{ strtolower($parkingLot->address) }}" data-status="{{ $parkingLot->status }}">
                                 <td class="p-2 align-middle bg-transparent border-b whitespace-nowrap shadow-transparent">
                                     <div class="flex px-2 py-1">
                                         <div class="flex flex-col justify-center">
                                             <h6 class="mb-0 text-sm leading-normal dark:text-white">{{ $parkingLot->name }}</h6>
-                                            <p class="mb-0 text-xs leading-tight text-slate-400">{{ $parkingLot->city }}</p>
+
                                         </div>
                                     </div>
                                 </td>
@@ -155,25 +149,25 @@
 document.addEventListener('DOMContentLoaded', function() {
     const searchInput = document.getElementById('searchInput');
     const statusFilter = document.getElementById('statusFilter');
-    const cityFilter = document.getElementById('cityFilter');
+    // City filter removed
     const rows = document.querySelectorAll('.parking-lot-row');
     const totalCount = document.getElementById('totalCount');
 
     function filterRows() {
         const searchTerm = searchInput.value.toLowerCase();
         const statusValue = statusFilter.value;
-        const cityValue = cityFilter.value;
+    const cityValue = '';
         let visibleCount = 0;
 
         rows.forEach(row => {
             const name = row.dataset.name;
             const address = row.dataset.address;
             const status = row.dataset.status;
-            const city = row.dataset.city;
+            const city = '';
 
             const matchesSearch = name.includes(searchTerm) || address.includes(searchTerm);
             const matchesStatus = !statusValue || status === statusValue;
-            const matchesCity = !cityValue || city === cityValue;
+            const matchesCity = true; // city filter removed
 
             if (matchesSearch && matchesStatus && matchesCity) {
                 row.style.display = '';
@@ -188,7 +182,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     searchInput.addEventListener('input', filterRows);
     statusFilter.addEventListener('change', filterRows);
-    cityFilter.addEventListener('change', filterRows);
+    // cityFilter removed
 });
 </script>
 @endsection

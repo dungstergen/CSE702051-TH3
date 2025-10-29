@@ -99,12 +99,7 @@
                         </div>
                     </div>
 
-                    <div class="w-full max-w-full px-3 mb-6 md:w-6/12 md:flex-none">
-                        <div class="mb-4">
-                            <label class="mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Thành phố:</label>
-                            <p class="text-sm text-gray-600 dark:text-white/60">{{ $booking->parkingLot->city }}</p>
-                        </div>
-                    </div>
+
 
                     <div class="w-full max-w-full px-3 mb-6">
                         <div class="mb-4">
@@ -149,7 +144,7 @@
                     <div class="w-full max-w-full px-3 mb-6 md:w-4/12 md:flex-none">
                         <div class="mb-4">
                             <label class="mb-2 ml-1 font-bold text-xs text-slate-700 dark:text-white/80">Tổng tiền:</label>
-                            <p class="text-lg font-bold text-purple-600">{{ number_format($booking->total_amount, 0, ',', '.') }}đ</p>
+                            <p class="text-lg font-bold text-purple-600">{{ number_format($booking->total_cost, 0, ',', '.') }}đ</p>
                         </div>
                     </div>
 
@@ -220,11 +215,11 @@
                     <div class="mb-4">
                         <div class="flex items-center justify-between mb-2">
                             <span class="text-sm font-semibold text-slate-700 dark:text-white/80">Trạng thái thanh toán:</span>
-                            @if($booking->payment->status === 'completed')
+                            @if($booking->payment->payment_status === 'completed')
                                 <span class="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-green-100 text-green-800">
                                     Đã thanh toán
                                 </span>
-                            @elseif($booking->payment->status === 'pending')
+                            @elseif($booking->payment->payment_status === 'pending')
                                 <span class="inline-block px-2 py-1 text-xs font-semibold rounded-full bg-yellow-100 text-yellow-800">
                                     Chờ thanh toán
                                 </span>
@@ -296,9 +291,9 @@
             <div class="flex-auto p-6">
                 <div class="space-y-3">
                     @if($booking->status === 'pending')
-                    <form method="POST" action="{{ route('admin.bookings.update', $booking) }}" class="w-full mb-2">
+                    <form method="POST" action="{{ route('admin.bookings.update-status', $booking) }}" class="w-full mb-2">
                         @csrf
-                        @method('PUT')
+                        @method('PATCH')
                         <input type="hidden" name="status" value="confirmed">
                         <button type="submit" class="w-full px-4 py-2 text-sm font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer bg-gradient-to-tl from-red-600 to-rose-400 leading-pro ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs">
                             <i class="fas fa-check mr-2"></i>Xác nhận booking
@@ -307,20 +302,9 @@
                     @endif
 
                     @if($booking->status === 'confirmed')
-                    <form method="POST" action="{{ route('admin.bookings.update', $booking) }}" class="w-full mb-2">
+                    <form method="POST" action="{{ route('admin.bookings.update-status', $booking) }}" class="w-full mb-2">
                         @csrf
-                        @method('PUT')
-                        <input type="hidden" name="status" value="active">
-                        <button type="submit" class="w-full px-4 py-2 text-sm font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer bg-gradient-to-tl from-red-600 to-rose-400 leading-pro ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs">
-                            <i class="fas fa-play mr-2"></i>Bắt đầu đỗ xe
-                        </button>
-                    </form>
-                    @endif
-
-                    @if($booking->status === 'active')
-                    <form method="POST" action="{{ route('admin.bookings.update', $booking) }}" class="w-full mb-2">
-                        @csrf
-                        @method('PUT')
+                        @method('PATCH')
                         <input type="hidden" name="status" value="completed">
                         <button type="submit" class="w-full px-4 py-2 text-sm font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer bg-gradient-to-tl from-red-600 to-rose-400 leading-pro ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs">
                             <i class="fas fa-stop mr-2"></i>Hoàn thành
@@ -329,9 +313,9 @@
                     @endif
 
                     @if(in_array($booking->status, ['pending', 'confirmed']))
-                    <form method="POST" action="{{ route('admin.bookings.update', $booking) }}" class="w-full mb-2" onsubmit="return confirm('Bạn có chắc chắn muốn hủy booking này?')">
+                    <form method="POST" action="{{ route('admin.bookings.update-status', $booking) }}" class="w-full mb-2" onsubmit="return confirm('Bạn có chắc chắn muốn hủy booking này?')">
                         @csrf
-                        @method('PUT')
+                        @method('PATCH')
                         <input type="hidden" name="status" value="cancelled">
                         <button type="submit" class="w-full px-4 py-2 text-sm font-bold text-center text-white uppercase align-middle transition-all bg-transparent rounded-lg cursor-pointer bg-gradient-to-tl from-red-600 to-rose-400 leading-pro ease-soft-in tracking-tight-soft shadow-soft-md bg-150 bg-x-25 hover:scale-102 active:opacity-85 hover:shadow-soft-xs">
                             <i class="fas fa-times mr-2"></i>Hủy booking
