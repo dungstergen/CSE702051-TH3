@@ -2,97 +2,65 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
 use App\Models\Booking;
-use App\Models\User;
 use App\Models\ParkingLot;
+use App\Models\ServicePackage;
+use App\Models\User;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class BookingSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $users = User::where('role', 'user')->get();
-        $parkingLots = ParkingLot::all();
+        $users = User::whereHas('roles', fn($q) => $q->where('name', 'user'))->get();
+        if ($users->isEmpty()) { $users = User::factory(10)->create(); }
+        $lots = ParkingLot::all();
+        $packages = ServicePackage::all();
 
-        if ($users->isEmpty() || $parkingLots->isEmpty()) {
-            $this->command->error('Please seed Users and ParkingLots first!');
-            return;
-        }
-
-        $statuses = ['pending', 'confirmed', 'completed', 'cancelled'];
-        $vehicleTypes = ['car', 'motorcycle', 'bicycle'];
+        $faker = fake();
+        $statuses = ['pending','confirmed','cancelled','completed'];
+        $vehicleTypes = ['car','motorbike'];
 
         $bookings = [];
-
-        // Tạo 20 bookings mẫu
-        for ($i = 0; $i < 20; $i++) {
+        // Generate ~200 bookings over last 60 days
+        for ($i = 0; $i < 200; $i++) {
             $user = $users->random();
-            $parkingLot = $parkingLots->random();
+            $lot = $lots->random();
+            $package = $packages->random();
 
-            // Random thời gian trong 30 ngày qua và 7 ngày tới
-            $daysOffset = rand(-30, 7);
-            $startTime = Carbon::now()->addDays($daysOffset)->setHour(rand(8, 18))->setMinute(0);
-            $durationHours = rand(2, 8);
-            $endTime = $startTime->copy()->addHours($durationHours);
+            $start = Carbon::now()->subDays(rand(0, 60))->setTime(rand(6, 22), [0, 15, 30, 45][rand(0, 3)], 0);
+            $duration = [1,2,3,4,6,8][array_rand([1,2,3,4,6,8])];
+            $end = (clone $start)->addHours($duration);
+            $status = $statuses[array_rand($statuses)];
+            if ($start->isFuture()) { $status = 'pending'; }
 
-            // Xác định status dựa trên thời gian
-            if ($daysOffset < -7) {
-                $status = 'completed';
-            } elseif ($daysOffset < 0) {
-                $status = rand(0, 1) ? 'completed' : 'cancelled';
-            } elseif ($daysOffset == 0) {
-                $status = 'confirmed';
-            } else {
-                $status = rand(0, 1) ? 'confirmed' : 'pending';
-            }
-
-            $totalCost = $durationHours * $parkingLot->hourly_rate;
+            $total = round(((float)$lot->hourly_rate) * $duration, 2);
 
             $bookings[] = [
                 'user_id' => $user->id,
-                'parking_lot_id' => $parkingLot->id,
-                'booking_code' => 'BK' . date('Ymd') . str_pad($i + 1, 4, '0', STR_PAD_LEFT),
-                'booking_date' => $startTime->toDateString(),
-                'start_time' => $startTime,
-                'end_time' => $endTime,
-                'duration_hours' => $durationHours,
+                'parking_lot_id' => $lot->id,
+                'service_package_id' => $package->id,
+                'booking_code' => 'BK-' . strtoupper(Str::random(8)),
+                'booking_date' => $start->toDateString(),
+                'start_time' => $start->toDateTimeString(),
+                'end_time' => $end->toDateTimeString(),
+                'duration_hours' => $duration,
                 'vehicle_type' => $vehicleTypes[array_rand($vehicleTypes)],
-                'license_plate' => $this->generateLicensePlate(),
-                'phone_number' => $user->phone,
-                'special_requests' => rand(0, 1) ? 'Cần chỗ đỗ gần lối ra' : null,
-                'total_cost' => $totalCost,
+                'license_plate' => strtoupper(Str::random(2)) . '-' . rand(10000, 99999),
+                'phone_number' => '09' . rand(10000000, 99999999),
+                'special_requests' => $faker->boolean(20) ? $faker->sentence() : null,
+                'total_cost' => $total,
                 'status' => $status,
-                'payment_status' => $status === 'completed' ? 'completed' : ($status === 'cancelled' ? 'cancelled' : 'pending'),
-                'created_at' => $startTime->copy()->subDays(rand(1, 3)),
-                'updated_at' => now(),
+                'payment_status' => in_array($status, ['confirmed','completed']) ? 'completed' : 'pending',
+                'created_at' => $start->copy()->subMinutes(rand(10, 240)),
+                'updated_at' => $end,
             ];
         }
 
-        foreach ($bookings as $booking) {
-            Booking::create($booking);
+        foreach (array_chunk($bookings, 50) as $chunk) {
+            Booking::insert($chunk);
         }
-
-        $this->command->info('Bookings seeded successfully!');
-        $this->command->info('Created ' . count($bookings) . ' bookings with various statuses.');
-    }
-
-    /**
-     * Generate random Vietnamese license plate
-     */
-    private function generateLicensePlate(): string
-    {
-        $provinces = ['29', '30', '31', '50', '51', '59', '60', '61'];
-        $letters = ['A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'K', 'L', 'M'];
-
-        $province = $provinces[array_rand($provinces)];
-        $letter = $letters[array_rand($letters)];
-        $number = str_pad(rand(1, 99999), 5, '0', STR_PAD_LEFT);
-
-        return $province . $letter . '-' . $number;
     }
 }
