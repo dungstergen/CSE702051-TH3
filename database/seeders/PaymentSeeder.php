@@ -2,51 +2,45 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use Illuminate\Database\Seeder;
-use App\Models\Payment;
 use App\Models\Booking;
+use App\Models\Payment;
+use Carbon\Carbon;
+use Illuminate\Database\Seeder;
+use Illuminate\Support\Str;
 
 class PaymentSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $bookings = Booking::all();
+        $completedBookings = Booking::whereIn('status', ['confirmed','completed'])
+            ->where('payment_status', 'completed')
+            ->get();
 
-        if ($bookings->isEmpty()) {
-            $this->command->error('Please seed Bookings first!');
-            return;
-        }
+        $methods = ['cash', 'e_wallet', 'bank_transfer', 'credit_card'];
+        $payments = [];
 
-        $paymentMethods = ['e_wallet', 'bank_transfer', 'cash', 'credit_card'];
+        foreach ($completedBookings as $b) {
+            // Avoid duplicate payments
+            if (Payment::where('booking_id', $b->id)->exists()) continue;
 
-        foreach ($bookings as $booking) {
-            $paymentStatus = $booking->payment_status;
-            $paymentMethod = $paymentMethods[array_rand($paymentMethods)];
+            $amount = (float) $b->total_cost * (rand(95, 105) / 100); // small variance
+            $paidAt = Carbon::parse($b->start_time)->subMinutes(rand(5, 60));
 
-            // Nếu payment_status là completed, set paid_at
-            $paidAt = null;
-            if ($paymentStatus === 'completed') {
-                $paidAt = $booking->created_at->addMinutes(rand(10, 60));
-            }
-
-            Payment::create([
-                'booking_id' => $booking->id,
-                'user_id' => $booking->user_id,
-                'amount' => $booking->total_cost,
-                'payment_method' => $paymentMethod,
-                'payment_status' => $paymentStatus,
-                'transaction_id' => $paymentStatus === 'completed' ? 'TXN' . date('YmdHis') . rand(1000, 9999) : null,
+            $payments[] = [
+                'user_id' => $b->user_id,
+                'booking_id' => $b->id,
+                'amount' => round($amount, 2),
+                'payment_method' => $methods[array_rand($methods)],
+                'payment_status' => 'completed',
+                'transaction_id' => 'TX-' . strtoupper(Str::random(10)),
                 'paid_at' => $paidAt,
-                'created_at' => $booking->created_at,
-                'updated_at' => $paidAt ?? $booking->updated_at,
-            ]);
+                'created_at' => $paidAt,
+                'updated_at' => $paidAt,
+            ];
         }
 
-        $this->command->info('Payments seeded successfully!');
-        $this->command->info('Created ' . $bookings->count() . ' payments corresponding to bookings.');
+        foreach (array_chunk($payments, 100) as $chunk) {
+            Payment::insert($chunk);
+        }
     }
 }

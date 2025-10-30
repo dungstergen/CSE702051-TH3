@@ -153,6 +153,13 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     Route::get('/reports/usage', [App\Http\Controllers\AdminReportController::class, 'usage'])->name('reports.usage');
     Route::get('/reports/export/{type}', [App\Http\Controllers\AdminReportController::class, 'export'])->name('reports.export');
 
+    // Reports API (JSON for charts)
+    Route::prefix('api/reports')->name('reports.api.')->group(function () {
+        Route::get('/summary', [App\Http\Controllers\AdminReportController::class, 'apiSummary'])->name('summary');
+        Route::get('/revenue', [App\Http\Controllers\AdminReportController::class, 'apiRevenue'])->name('revenue');
+        Route::get('/usage', [App\Http\Controllers\AdminReportController::class, 'apiUsage'])->name('usage');
+    });
+
     // Profile Management
     Route::get('/profile', [App\Http\Controllers\AdminController::class, 'profile'])->name('profile');
     Route::put('/profile', [App\Http\Controllers\AdminController::class, 'updateProfile'])->name('profile.update');
