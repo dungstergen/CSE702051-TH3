@@ -284,6 +284,7 @@
         });
     </script>
 
+    @stack('scripts')
     @yield('additional_js')
 </body>
 </html>
