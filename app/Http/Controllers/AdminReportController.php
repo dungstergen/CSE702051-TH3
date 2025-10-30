@@ -1,320 +1,311 @@
 <?php
 
-namespace App\Http\Controllers;
+        namespace App\Http\Controllers;
 
-use App\Models\Booking;
-use App\Models\Payment;
-use App\Models\ParkingLot;
-use Carbon\Carbon;
-use Carbon\CarbonPeriod;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
+        use App\Models\Booking;
+        use App\Models\Payment;
+        use Carbon\Carbon;
+        use Illuminate\Http\Request;
+        use Illuminate\Support\Facades\DB;
+        use Symfony\Component\HttpFoundation\StreamedResponse;
 
-class AdminReportController extends Controller
-{
-	// Views
-	public function index()
-	{
-		return view('admin.reports.index');
-	}
+        class AdminReportController extends Controller
+        {
+            // Page views
+            public function index()
+            {
+                return view('admin.reports.index');
+            }
 
-	public function revenue()
-	{
-		return view('admin.reports.revenue');
-	}
+            public function revenue()
+            {
+                return view('admin.reports.revenue');
+            }
 
-	public function usage()
-	{
-		return view('admin.reports.usage');
-	}
+            public function usage()
+            {
+                return view('admin.reports.usage');
+            }
 
-	// Export CSV
-	public function export(string $type, Request $request)
-	{
-		$start = $this->parseDate($request->input('start_date', now()->subDays(30)->toDateString()))->startOfDay();
-		$end = $this->parseDate($request->input('end_date', now()->toDateString()))->endOfDay();
+            // -------- APIs --------
+            public function apiSummary(Request $request)
+            {
+                // Overall totals
+            $totalRevenue = (float) Payment::where('payments.payment_status', 'completed')->sum('amount');
+                $totalBookings = (int) Booking::count();
 
-		if ($type === 'revenue') {
-			$daily = $this->queryDailyRevenue($start, $end, (int) $request->input('parking_lot_id'));
-			$rows = [["Date", "Revenue"]];
-			foreach ($daily['labels'] as $i => $label) {
-				$rows[] = [$label, $daily['totals'][$i] ?? 0];
-			}
-			return $this->streamCsv('revenue.csv', $rows);
-		}
+                // Revenue by month (last 12 months)
+                $start = Carbon::now()->startOfMonth()->subMonths(11);
+                $end = Carbon::now()->endOfMonth();
 
-		if ($type === 'usage') {
-			$weekly = $this->queryWeeklyBookings($start, $end);
-			$rows = [["Label", "Bookings"]];
-			foreach ($weekly['labels'] as $i => $label) {
-				$rows[] = [$label, $weekly['bookings'][$i] ?? 0];
-			}
-			return $this->streamCsv('usage.csv', $rows);
-		}
+                $raw = Payment::query()
+                    ->where('payments.payment_status', 'completed')
+                    ->whereBetween(DB::raw('COALESCE(paid_at, created_at)'), [$start, $end])
+                    ->selectRaw("DATE_FORMAT(COALESCE(paid_at, created_at), '%Y-%m') as ym, SUM(amount) as total")
+                    ->groupBy('ym')
+                    ->orderBy('ym')
+                    ->pluck('total', 'ym')
+                    ->toArray();
 
-		abort(404);
-	}
+                $labels = [];
+                $totals = [];
+                $cursor = $start->copy();
+                for ($i = 0; $i < 12; $i++) {
+                    $key = $cursor->format('Y-m');
+                    $labels[] = $cursor->format('m/Y');
+                    $totals[] = isset($raw[$key]) ? (float) $raw[$key] : 0.0;
+                    $cursor->addMonth();
+                }
 
-	// APIs
-	public function apiSummary(Request $request)
-	{
-		$start = $this->parseDate($request->input('start_date', now()->subDays(30)->toDateString()))->startOfDay();
-		$end = $this->parseDate($request->input('end_date', now()->toDateString()))->endOfDay();
+                // Bookings by status
+                $bookingsByStatus = Booking::query()
+                    ->select('status', DB::raw('COUNT(*) as c'))
+                    ->groupBy('status')
+                    ->pluck('c', 'status')
+                    ->toArray();
 
-		// Totals
-		$totalRevenue = (float) Payment::completed()->whereBetween('created_at', [$start, $end])->sum('amount');
-		$totalBookings = (int) Booking::whereBetween('created_at', [$start, $end])->count();
+                // Top parking lots by revenue
+                $topLots = Payment::query()
+                    ->where('payments.payment_status', 'completed')
+                    ->join('bookings', 'bookings.id', '=', 'payments.booking_id')
+                    ->join('parking_lots', 'parking_lots.id', '=', 'bookings.parking_lot_id')
+                    ->select('parking_lots.id', 'parking_lots.name', DB::raw('SUM(payments.amount) as revenue'))
+                    ->groupBy('parking_lots.id', 'parking_lots.name')
+                    ->orderByDesc('revenue')
+                    ->limit(5)
+                    ->get();
 
-		// Revenue by month (last 6 months)
-		$months = collect(range(5, 0))->map(fn($i) => now()->copy()->subMonths($i)->startOfMonth());
-		$revByMonth = $months->map(function ($m) use ($start, $end) {
-			$ms = $m->copy()->startOfMonth();
-			$me = $m->copy()->endOfMonth();
-			$sum = (float) Payment::completed()
-				->whereBetween('created_at', [max($ms, $start), min($me, $end)])
-				->sum('amount');
-			return [
-				'label' => $m->format('m/Y'),
-				'value' => $sum,
-			];
-		})->values();
+                return response()->json([
+                    'summary' => [
+                        'totalRevenue' => (float) $totalRevenue,
+                        'totalBookings' => $totalBookings,
+                    ],
+                    'revenueByMonth' => [
+                        'labels' => $labels,
+                        'totals' => $totals,
+                    ],
+                    'bookingsByStatus' => $bookingsByStatus,
+                    'topParkingLots' => $topLots,
+                ]);
+            }
 
-		// Bookings by status
-		$statusCounts = Booking::whereBetween('created_at', [$start, $end])
-			->select('status', DB::raw('COUNT(*) as c'))
-			->groupBy('status')
-			->pluck('c', 'status');
+            public function apiRevenue(Request $request)
+            {
+                [$start, $end] = $this->parseDateRange($request, 30);
+                $parkingLotId = $request->integer('parking_lot_id');
 
-		// Top parking lots by revenue
-		$topLots = Payment::completed()
-			->whereBetween('payments.created_at', [$start, $end])
-			->join('bookings', 'bookings.id', '=', 'payments.booking_id')
-			->join('parking_lots', 'parking_lots.id', '=', 'bookings.parking_lot_id')
-			->groupBy('parking_lots.id', 'parking_lots.name')
-			->select('parking_lots.name', DB::raw('SUM(payments.amount) as revenue'), DB::raw('COUNT(*) as bookings'))
-			->orderByDesc('revenue')
-			->limit(5)
-			->get()
-			->map(function ($row) use ($totalRevenue) {
-				$avg = $row->bookings ? ((float)$row->revenue / (int)$row->bookings) : 0;
-				$pct = $totalRevenue > 0 ? round(((float)$row->revenue * 100) / $totalRevenue, 1) : 0;
-				return [
-					'name' => $row->name,
-					'revenue' => (float)$row->revenue,
-					'bookings' => (int)$row->bookings,
-					'avg' => $avg,
-					'percentage' => $pct,
-				];
-			});
+            $payments = Payment::query()->where('payments.payment_status', 'completed')
+                    ->join('bookings', 'bookings.id', '=', 'payments.booking_id');
 
-		return response()->json([
-			'summary' => [
-				'totalRevenue' => $totalRevenue,
-				'totalBookings' => $totalBookings,
-			],
-			'revenueByMonth' => [
-				'labels' => $revByMonth->pluck('label'),
-				'totals' => $revByMonth->pluck('value'),
-			],
-			'bookingsByStatus' => $statusCounts,
-			'topParkingLots' => $topLots,
-		]);
-	}
+                if ($parkingLotId) {
+                    $payments->where('bookings.parking_lot_id', $parkingLotId);
+                }
 
-	public function apiRevenue(Request $request)
-	{
-		$start = $this->parseDate($request->input('start_date', now()->subDays(30)->toDateString()))->startOfDay();
-		$end = $this->parseDate($request->input('end_date', now()->toDateString()))->endOfDay();
-		$lotId = (int) $request->input('parking_lot_id');
+                $payments->whereBetween(DB::raw('DATE(COALESCE(payments.paid_at, payments.created_at))'), [$start->toDateString(), $end->toDateString()]);
 
-		$daily = $this->queryDailyRevenue($start, $end, $lotId);
+                // Daily totals
+                $dailyRaw = (clone $payments)
+                    ->selectRaw("DATE(COALESCE(payments.paid_at, payments.created_at)) as d, SUM(payments.amount) as total")
+                    ->groupBy('d')
+                    ->pluck('total', 'd')
+                    ->toArray();
 
-		$totalRevenue = array_sum($daily['totals']);
-		$days = max(1, count($daily['labels']));
-		$avgPerDay = $totalRevenue / $days;
-		$peakIdx = $this->arrayArgMax($daily['totals']);
-		$peakDay = $peakIdx >= 0 ? ['label' => $daily['labels'][$peakIdx], 'total' => $daily['totals'][$peakIdx]] : null;
+                $labels = [];
+                $totals = [];
+                $cursor = $start->copy();
+                while ($cursor->lte($end)) {
+                    $key = $cursor->toDateString();
+                    $labels[] = $cursor->format('d/m');
+                    $totals[] = isset($dailyRaw[$key]) ? (float) $dailyRaw[$key] : 0.0;
+                    $cursor->addDay();
+                }
 
-		// Distribution by parking lot
-		$byLot = Payment::completed()
-			->whereBetween('payments.created_at', [$start, $end])
-			->when($lotId, fn($q) => $q->join('bookings', 'bookings.id', '=', 'payments.booking_id')->where('bookings.parking_lot_id', $lotId),
-				fn($q) => $q->join('bookings', 'bookings.id', '=', 'payments.booking_id'))
-			->join('parking_lots', 'parking_lots.id', '=', 'bookings.parking_lot_id')
-			->groupBy('parking_lots.id', 'parking_lots.name')
-			->select('parking_lots.name', DB::raw('SUM(payments.amount) as revenue'), DB::raw('COUNT(*) as bookings'))
-			->orderByDesc('revenue')
-			->get();
+                $totalRevenue = array_sum($totals);
+                $days = max(1, $start->diffInDays($end) + 1);
+                $avgPerDay = $totalRevenue / $days;
 
-		$byParkingLot = $byLot->map(function ($row) use ($totalRevenue) {
-			$avg = $row->bookings ? ((float)$row->revenue / (int)$row->bookings) : 0;
-			$pct = $totalRevenue > 0 ? round(((float)$row->revenue * 100) / $totalRevenue, 1) : 0;
-			return [
-				'name' => $row->name,
-				'revenue' => (float)$row->revenue,
-				'bookings' => (int)$row->bookings,
-				'avg' => $avg,
-				'percentage' => $pct,
-			];
-		});
+                // Peak day
+                $peakDay = null;
+                if (!empty($dailyRaw)) {
+                    $maxDate = array_keys($dailyRaw, max($dailyRaw))[0];
+                    $peakDay = [
+                        'date' => Carbon::parse($maxDate)->format('d/m/Y'),
+                        'total' => (float) $dailyRaw[$maxDate]
+                    ];
+                }
 
-		return response()->json([
-			'summary' => [
-				'totalRevenue' => $totalRevenue,
-				'avgPerDay' => $avgPerDay,
-				'peakDay' => $peakDay,
-			],
-			'daily' => $daily,
-			'byParkingLot' => $byParkingLot,
-		]);
-	}
+                // By parking lot
+            $byLot = Payment::query()->where('payments.payment_status', 'completed')
+                    ->join('bookings', 'bookings.id', '=', 'payments.booking_id')
+                    ->join('parking_lots', 'parking_lots.id', '=', 'bookings.parking_lot_id')
+                    ->whereBetween(DB::raw('DATE(COALESCE(payments.paid_at, payments.created_at))'), [$start->toDateString(), $end->toDateString()])
+                    ->when($parkingLotId, fn($q) => $q->where('bookings.parking_lot_id', $parkingLotId))
+                    ->select('parking_lots.id', 'parking_lots.name', DB::raw('SUM(payments.amount) as revenue'), DB::raw('COUNT(bookings.id) as bookings'))
+                    ->groupBy('parking_lots.id', 'parking_lots.name')
+                    ->orderByDesc('revenue')
+                    ->get()
+                    ->map(function ($row) use ($totalRevenue) {
+                        $avg = $row->bookings > 0 ? ((float) $row->revenue / (int) $row->bookings) : 0.0;
+                        $pct = $totalRevenue > 0 ? round(((float) $row->revenue * 100) / $totalRevenue, 1) : 0.0;
+                        return [
+                            'id' => $row->id,
+                            'name' => $row->name,
+                            'revenue' => (float) $row->revenue,
+                            'bookings' => (int) $row->bookings,
+                            'avg' => $avg,
+                            'percentage' => $pct,
+                        ];
+                    });
 
-	public function apiUsage(Request $request)
-	{
-		$start = $this->parseDate($request->input('start_date', now()->toDateString()))->startOfDay();
-		$end = $this->parseDate($request->input('end_date', now()->toDateString()))->endOfDay();
-		$period = $request->input('period', 'today'); // today|week|month
-		$lotId = (int) $request->input('parking_lot_id');
+                return response()->json([
+                    'summary' => [
+                        'totalRevenue' => $totalRevenue,
+                        'avgPerDay' => $avgPerDay,
+                        'peakDay' => $peakDay,
+                    ],
+                    'daily' => [
+                        'labels' => $labels,
+                        'totals' => $totals,
+                    ],
+                    'byParkingLot' => $byLot,
+                ]);
+            }
 
-		$hourly = $this->queryHourlyBookings($start, $end, $lotId, $period);
-		$weekly = $this->queryWeeklyBookings($start, $end, $lotId);
+            public function apiUsage(Request $request)
+            {
+                [$start, $end] = $this->parseDateRange($request, 7);
+                $parkingLotId = $request->integer('parking_lot_id');
 
-		$totalBookings = Booking::when($lotId, fn($q) => $q->where('parking_lot_id', $lotId))
-			->whereBetween('created_at', [$start, $end])
-			->count();
+                $bookings = Booking::query()
+                    ->when($parkingLotId, fn($q) => $q->where('parking_lot_id', $parkingLotId))
+                    ->whereBetween(DB::raw('DATE(COALESCE(start_time, booking_date))'), [$start->toDateString(), $end->toDateString()]);
 
-		$avgDuration = (float) Booking::when($lotId, fn($q) => $q->where('parking_lot_id', $lotId))
-			->whereBetween('created_at', [$start, $end])
-			->avg('duration_hours');
+                // Summary
+                $totalBookings = (clone $bookings)->count();
+                $avgDuration = (clone $bookings)->avg('duration_hours') ?? 0;
 
-		// Status counts
-		$status = Booking::when($lotId, fn($q) => $q->where('parking_lot_id', $lotId))
-			->whereBetween('created_at', [$start, $end])
-			->select('status', DB::raw('COUNT(*) as c'))
-			->groupBy('status')
-			->pluck('c', 'status');
+                // Hourly usage
+                $hourlyRaw = (clone $bookings)
+                    ->selectRaw('HOUR(COALESCE(start_time, created_at)) as h, COUNT(*) as c')
+                    ->groupBy('h')
+                    ->pluck('c', 'h')
+                    ->toArray();
+                $hourLabels = [];
+                $hourCounts = [];
+                for ($h = 0; $h < 24; $h++) {
+                    $hourLabels[] = sprintf('%02d:00', $h);
+                    $hourCounts[] = isset($hourlyRaw[$h]) ? (int) $hourlyRaw[$h] : 0;
+                }
 
-		// By parking lot
-		$byLot = Booking::when($lotId, fn($q) => $q->where('parking_lot_id', $lotId))
-			->whereBetween('created_at', [$start, $end])
-			->join('parking_lots', 'parking_lots.id', '=', 'bookings.parking_lot_id')
-			->groupBy('parking_lots.id', 'parking_lots.name')
-			->select('parking_lots.name', DB::raw('COUNT(*) as bookings'), DB::raw('AVG(duration_hours) as avg_hours'))
-			->orderByDesc('bookings')
-			->get()
-			->map(fn($r) => [
-				'name' => $r->name,
-				'bookings' => (int)$r->bookings,
-				'avg_hours' => round((float)$r->avg_hours, 1),
-			]);
+                $peakHourIndex = null;
+                if (!empty($hourCounts)) {
+                    $maxVal = max($hourCounts);
+                    $peakHourIndex = $maxVal > 0 ? array_search($maxVal, $hourCounts) : null;
+                }
 
-		// Peak hour
-		$peakIdx = $this->arrayArgMax($hourly['counts']);
-		$peakHour = $peakIdx >= 0 ? [
-			'index' => $peakIdx,
-			'label' => $hourly['labels'][$peakIdx],
-		] : null;
+                // Weekly pattern (by day)
+                $weeklyRaw = (clone $bookings)
+                    ->selectRaw('DATE(COALESCE(start_time, booking_date)) as d, COUNT(*) as c')
+                    ->groupBy('d')
+                    ->pluck('c', 'd')
+                    ->toArray();
 
-		return response()->json([
-			'summary' => [
-				'totalBookings' => (int)$totalBookings,
-				'avgDuration' => round($avgDuration ?: 0, 1),
-				'peakHour' => $peakHour,
-			],
-			'hourly' => $hourly,
-			'weekly' => $weekly,
-			'status' => $status,
-			'byParkingLot' => $byLot,
-		]);
-	}
+                $weekLabels = [];
+                $weekCounts = [];
+                $cursor = $start->copy();
+                while ($cursor->lte($end)) {
+                    $key = $cursor->toDateString();
+                    $weekLabels[] = $cursor->format('d/m');
+                    $weekCounts[] = isset($weeklyRaw[$key]) ? (int) $weeklyRaw[$key] : 0;
+                    $cursor->addDay();
+                }
 
-	// Helpers
-	private function parseDate($date)
-	{
-		try { return Carbon::parse($date); } catch (\Exception $e) { return now(); }
-	}
+                // Status distribution
+                $statusMap = (clone $bookings)
+                    ->select('status', DB::raw('COUNT(*) as c'))
+                    ->groupBy('status')
+                    ->pluck('c', 'status')
+                    ->toArray();
 
-	private function arrayArgMax(array $arr): int
-	{
-		if (empty($arr)) return -1;
-		$max = max($arr);
-		foreach ($arr as $i => $v) if ($v === $max) return $i;
-		return -1;
-	}
+                // Usage by parking lot
+                $byLot = Booking::query()
+                    ->when($parkingLotId, fn($q) => $q->where('parking_lot_id', $parkingLotId))
+                    ->whereBetween(DB::raw('DATE(COALESCE(start_time, booking_date))'), [$start->toDateString(), $end->toDateString()])
+                    ->join('parking_lots', 'parking_lots.id', '=', 'bookings.parking_lot_id')
+                    ->select('parking_lots.id', 'parking_lots.name', DB::raw('COUNT(bookings.id) as bookings'), DB::raw('AVG(duration_hours) as avg_hours'))
+                    ->groupBy('parking_lots.id', 'parking_lots.name')
+                    ->orderByDesc('bookings')
+                    ->get();
 
-	private function queryDailyRevenue(Carbon $start, Carbon $end, int $parkingLotId = 0): array
-	{
-		$period = CarbonPeriod::create($start, $end);
-		$labels = [];
-		$totals = [];
-		foreach ($period as $date) {
-			$labels[] = $date->format('d/m');
-			$sum = (float) Payment::completed()
-				->whereDate('payments.created_at', $date->toDateString())
-				->when($parkingLotId, function ($q) use ($parkingLotId) {
-					$q->join('bookings', 'bookings.id', '=', 'payments.booking_id')
-					  ->where('bookings.parking_lot_id', $parkingLotId);
-				})
-				->sum('amount');
-			$totals[] = round($sum, 2);
-		}
-		return ['labels' => $labels, 'totals' => $totals];
-	}
+                return response()->json([
+                    'summary' => [
+                        'totalBookings' => (int) $totalBookings,
+                        'avgDuration' => round((float) $avgDuration, 1),
+                        'peakHour' => $peakHourIndex !== null ? [
+                            'index' => $peakHourIndex,
+                            'label' => $hourLabels[$peakHourIndex] ?? null,
+                            'count' => $hourCounts[$peakHourIndex] ?? 0,
+                        ] : null,
+                    ],
+                    'hourly' => [
+                        'labels' => $hourLabels,
+                        'counts' => $hourCounts,
+                    ],
+                    'weekly' => [
+                        'labels' => $weekLabels,
+                        'bookings' => $weekCounts,
+                    ],
+                    'status' => $statusMap,
+                    'byParkingLot' => $byLot,
+                ]);
+            }
 
-	private function queryHourlyBookings(Carbon $start, Carbon $end, int $parkingLotId = 0, string $period = 'today'): array
-	{
-		// Build hour buckets 0-23
-		$labels = [];
-		$counts = array_fill(0, 24, 0);
-		for ($h = 0; $h < 24; $h++) { $labels[] = sprintf('%02d:00 - %02d:00', $h, ($h+1)%24); }
+            public function export(Request $request, string $type)
+            {
+                [$start, $end] = $this->parseDateRange($request, 30);
+                $filename = sprintf('reports_%s_%s_to_%s.csv', $type, $start->toDateString(), $end->toDateString());
 
-		$query = Booking::when($parkingLotId, fn($q) => $q->where('parking_lot_id', $parkingLotId))
-			->whereBetween('start_time', [$start, $end]);
+                $callback = function () use ($type, $start, $end) {
+                    $out = fopen('php://output', 'w');
+                    if ($type === 'revenue') {
+                        fputcsv($out, ['Date', 'Revenue']);
+                        $rows = Payment::where('payments.payment_status', 'completed')
+                            ->whereBetween(DB::raw('DATE(COALESCE(paid_at, created_at))'), [$start->toDateString(), $end->toDateString()])
+                            ->selectRaw('DATE(COALESCE(paid_at, created_at)) as d, SUM(amount) as total')
+                            ->groupBy('d')
+                            ->orderBy('d')
+                            ->get();
+                        foreach ($rows as $row) {
+                            fputcsv($out, [$row->d, (float) $row->total]);
+                        }
+                    } else { // usage
+                        fputcsv($out, ['Hour', 'Bookings']);
+                        $rows = Booking::whereBetween(DB::raw('DATE(COALESCE(start_time, booking_date))'), [$start->toDateString(), $end->toDateString()])
+                            ->selectRaw('HOUR(COALESCE(start_time, created_at)) as h, COUNT(*) as c')
+                            ->groupBy('h')
+                            ->orderBy('h')
+                            ->get();
+                        foreach ($rows as $row) {
+                            fputcsv($out, [sprintf('%02d:00', (int) $row->h), (int) $row->c]);
+                        }
+                    }
+                    fclose($out);
+                };
 
-		$rows = $query
-			->select(DB::raw('DATEPART(HOUR, start_time) as h'), DB::raw('COUNT(*) as c'))
-			->groupBy(DB::raw('DATEPART(HOUR, start_time)'))
-			->get();
+                return new StreamedResponse($callback, 200, [
+                    'Content-Type' => 'text/csv',
+                    'Content-Disposition' => 'attachment; filename="' . $filename . '"',
+                ]);
+            }
 
-		foreach ($rows as $r) {
-			$idx = (int) $r->h;
-			if ($idx >= 0 && $idx < 24) $counts[$idx] = (int)$r->c;
-		}
-
-		return ['labels' => $labels, 'counts' => $counts];
-	}
-
-	private function queryWeeklyBookings(Carbon $start, Carbon $end, int $parkingLotId = 0): array
-	{
-		// Labels Mon..Sun (Vi: Thứ 2..Chủ nhật)
-		$labels = ['Thứ 2','Thứ 3','Thứ 4','Thứ 5','Thứ 6','Thứ 7','Chủ nhật'];
-		$bookings = array_fill(0, 7, 0);
-
-		$rows = Booking::when($parkingLotId, fn($q) => $q->where('parking_lot_id', $parkingLotId))
-			->whereBetween('created_at', [$start, $end])
-			->select(DB::raw("(DATEPART(WEEKDAY, created_at) + 5) % 7 as d"), DB::raw('COUNT(*) as c'))
-			->groupBy(DB::raw("(DATEPART(WEEKDAY, created_at) + 5) % 7"))
-			->get();
-
-		foreach ($rows as $r) {
-			$idx = (int) $r->d; // 0..6
-			if ($idx >= 0 && $idx < 7) $bookings[$idx] = (int)$r->c;
-		}
-		return ['labels' => $labels, 'bookings' => $bookings];
-	}
-
-	private function streamCsv(string $filename, array $rows)
-	{
-		$headers = [
-			'Content-Type' => 'text/csv',
-			'Content-Disposition' => "attachment; filename=\"{$filename}\"",
-		];
-		$callback = function () use ($rows) {
-			$out = fopen('php://output', 'w');
-			foreach ($rows as $row) { fputcsv($out, $row); }
-			fclose($out);
-		};
-		return response()->stream($callback, 200, $headers);
-	}
-}
+            // -------- Helpers --------
+            private function parseDateRange(Request $request, int $defaultDays = 30): array
+            {
+                $startStr = $request->get('start_date');
+                $endStr = $request->get('end_date');
+                $end = $endStr ? Carbon::parse($endStr)->endOfDay() : Carbon::now()->endOfDay();
+                $start = $startStr ? Carbon::parse($startStr)->startOfDay() : $end->copy()->subDays($defaultDays - 1)->startOfDay();
+                return [$start, $end];
+            }
+        }
 
