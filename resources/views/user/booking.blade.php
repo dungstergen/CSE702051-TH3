@@ -377,14 +377,14 @@
                         </div>
 
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label>Biển số xe <span class="text-danger">*</span></label>
                                     <input type="text" name="license_plate" class="form-control"
                                         placeholder="VD: 51A-12345" required>
                                 </div>
                             </div>
-                            <div class="col-md-6">
+                            <div class="col-md-4">
                                 <div class="form-group">
                                     <label style="display: block"> Loại xe</label>
                                     <select name="vehicle_type" class="form-control">
@@ -396,22 +396,23 @@
                                     </select>
                                 </div>
                             </div>
-                        </div>
-
-                        @if(count($servicePackages) > 0)
-                            <div class="form-group">
-                                <label>Gói dịch vụ (tùy chọn)</label>
-                                <select name="service_package_id" class="form-control">
-                                    <option value="">-- Không chọn gói --</option>
-                                    @foreach($servicePackages as $package)
-                                        <option value="{{ $package->id }}" data-price="{{ $package->price }}">
-                                            {{ $package->name }} - {{ number_format($package->price) }}₫
-                                            ({{ $package->duration_hours }} giờ)
-                                        </option>
-                                    @endforeach
-                                </select>
+                            @if(count($servicePackages) > 0)
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="d-block">Gói dịch vụ (tùy chọn)</label>
+                                    <select name="service_package_id" class="form-control">
+                                        <option value="">Không chọn gói</option>
+                                        @foreach($servicePackages as $package)
+                                            <option value="{{ $package->id }}" data-price="{{ $package->price }}">
+                                                {{ $package->name }} - {{ number_format($package->price) }}₫
+                                                ({{ $package->duration_hours }} giờ)
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                </div>
                             </div>
-                        @endif
+                            @endif
+                        </div>
 
                         <div class="form-group">
                             <label>Yêu cầu đặc biệt</label>

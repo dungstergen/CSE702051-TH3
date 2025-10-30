@@ -66,8 +66,8 @@
                                 <div id="features-container">
                                     <div class="flex items-center mb-2 feature-item">
                                         <input type="text" name="features[]" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none mr-2" placeholder="Nhập tính năng...">
-                                        <button type="button" class="remove-feature inline-block px-3 py-2 text-xs font-bold text-center text-white uppercase align-middle transition-all bg-red-600 border-0 rounded-lg cursor-pointer hover:scale-102 active:opacity-85 hover:shadow-xs leading-normal ease-in tracking-tight-rem shadow-md bg-150 bg-x-25" style="display: none;">
-                                            <i class="fas fa-minus"></i>
+                                        <button type="button" class="remove-feature btn-chip btn-red">
+                                            <i class="fas fa-minus btn-icon"></i><span>Xóa</span>
                                         </button>
                                     </div>
                                 </div>
@@ -124,12 +124,15 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function updateRemoveButtons() {
         const featureItems = featuresContainer.querySelectorAll('.feature-item');
-        featureItems.forEach((item, index) => {
+        featureItems.forEach((item) => {
             const removeBtn = item.querySelector('.remove-feature');
+            if (!removeBtn) return;
             if (featureItems.length > 1) {
-                removeBtn.style.display = 'inline-block';
+                removeBtn.disabled = false;
+                removeBtn.classList.remove('opacity-50', 'cursor-not-allowed');
             } else {
-                removeBtn.style.display = 'none';
+                removeBtn.disabled = true;
+                removeBtn.classList.add('opacity-50', 'cursor-not-allowed');
             }
         });
     }
@@ -139,8 +142,8 @@ document.addEventListener('DOMContentLoaded', function() {
         newFeatureItem.className = 'flex items-center mb-2 feature-item';
         newFeatureItem.innerHTML = `
             <input type="text" name="features[]" class="focus:shadow-primary-outline dark:bg-slate-850 dark:text-white text-sm leading-5.6 ease block w-full appearance-none rounded-lg border border-solid border-gray-300 bg-white bg-clip-padding px-3 py-2 font-normal text-gray-700 outline-none transition-all placeholder:text-gray-500 focus:border-blue-500 focus:outline-none mr-2" placeholder="Nhập tính năng..." required>
-            <button type="button" class="remove-feature inline-block px-3 py-2 text-xs font-bold text-center text-white uppercase align-middle transition-all bg-red-600 border-0 rounded-lg cursor-pointer hover:scale-102 active:opacity-85 hover:shadow-xs leading-normal ease-in tracking-tight-rem shadow-md bg-150 bg-x-25">
-                <i class="fas fa-minus"></i>
+            <button type="button" class="remove-feature btn-chip btn-red">
+                <i class=\"fas fa-minus btn-icon\"></i><span>Xóa</span>
             </button>
         `;
 
@@ -156,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // Add event listeners to existing remove buttons
     featuresContainer.addEventListener('click', function(e) {
-        if (e.target.classList.contains('remove-feature') || e.target.parentElement.classList.contains('remove-feature')) {
+        if ((e.target.classList.contains('remove-feature') || e.target.closest('.remove-feature')) && !e.target.closest('.remove-feature').disabled) {
             const featureItem = e.target.closest('.feature-item');
             featureItem.remove();
             updateRemoveButtons();
