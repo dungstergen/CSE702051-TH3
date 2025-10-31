@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 
 class AdminController extends Controller
 {
@@ -20,25 +21,72 @@ class AdminController extends Controller
         $totalBookings = \App\Models\Booking::count();
         $totalRevenue = \App\Models\Payment::where('payment_status', 'completed')->sum('amount');
 
+        // Month-over-month growth metrics
+        $now = now();
+        $curStart = $now->copy()->startOfMonth();
+        $curEnd = $now->copy()->endOfMonth();
+        $prevStart = $curStart->copy()->subMonth()->startOfMonth();
+        $prevEnd = $curStart->copy()->subMonth()->endOfMonth();
+
+        // Revenue MoM (completed payments)
+        $curRevenue = \App\Models\Payment::where('payment_status', 'completed')
+            ->whereBetween(DB::raw('DATE(COALESCE(paid_at, created_at))'), [$curStart->toDateString(), $curEnd->toDateString()])
+            ->sum('amount');
+        $prevRevenue = \App\Models\Payment::where('payment_status', 'completed')
+            ->whereBetween(DB::raw('DATE(COALESCE(paid_at, created_at))'), [$prevStart->toDateString(), $prevEnd->toDateString()])
+            ->sum('amount');
+        $revenueMoMPct = $prevRevenue > 0 ? round((($curRevenue - $prevRevenue) * 100) / $prevRevenue, 1) : ($curRevenue > 0 ? 100.0 : 0.0);
+
+        // Users MoM (new users created)
+        $curUsers = \App\Models\User::whereBetween('created_at', [$curStart, $curEnd])->count();
+        $prevUsers = \App\Models\User::whereBetween('created_at', [$prevStart, $prevEnd])->count();
+        $usersMoMPct = $prevUsers > 0 ? round((($curUsers - $prevUsers) * 100) / $prevUsers, 1) : ($curUsers > 0 ? 100.0 : 0.0);
+
+        // Bookings MoM (bookings created)
+        $curBookings = \App\Models\Booking::whereBetween('created_at', [$curStart, $curEnd])->count();
+        $prevBookings = \App\Models\Booking::whereBetween('created_at', [$prevStart, $prevEnd])->count();
+        $bookingsMoMPct = $prevBookings > 0 ? round((($curBookings - $prevBookings) * 100) / $prevBookings, 1) : ($curBookings > 0 ? 100.0 : 0.0);
+
+        // New parking lots this month
+        $newParkingLotsCount = \App\Models\ParkingLot::whereBetween('created_at', [$curStart, $curEnd])->count();
+
         // Recent bookings with proper data handling
         $recentBookings = \App\Models\Booking::with(['user', 'parkingLot'])
                                 ->orderBy('created_at', 'desc')
                                 ->limit(10)
                                 ->get() ?? collect();
 
-        // Service packages and testimonials stats for new admin features
-        $servicePackageStats = [
-            'total' => 3,  // In real app, get from ServicePackage model
-            'active' => 3,
-            'featured' => 1,
-        ];
+        // Top service packages (last 30 days by revenue)
+        $spStart = now()->copy()->subDays(29)->startOfDay();
+        $spEnd = now()->copy()->endOfDay();
+        $topPackagesRaw = \App\Models\Payment::query()
+            ->where('payments.payment_status', 'completed')
+            ->whereBetween(DB::raw('DATE(COALESCE(payments.paid_at, payments.created_at))'), [$spStart->toDateString(), $spEnd->toDateString()])
+            ->join('bookings', 'bookings.id', '=', 'payments.booking_id')
+            ->join('service_packages', 'service_packages.id', '=', 'bookings.service_package_id')
+            ->select('service_packages.id', 'service_packages.name', 'service_packages.price', DB::raw('SUM(payments.amount) as revenue'), DB::raw('COUNT(bookings.id) as usage_count'))
+            ->groupBy('service_packages.id', 'service_packages.name', 'service_packages.price')
+            ->orderByDesc('revenue')
+            ->get();
 
+        $totalRevenuePackages = (float) ($topPackagesRaw->sum('revenue') ?? 0);
+        $topPackages = $topPackagesRaw->take(3)->map(function ($row) use ($totalRevenuePackages) {
+            $pct = $totalRevenuePackages > 0 ? round(((float) $row->revenue * 100) / $totalRevenuePackages, 1) : 0.0;
+            return [
+                'name' => $row->name,
+                'price' => number_format((float) $row->price, 0, ',', '.') . 'đ',
+                'usage' => (int) $row->usage_count,
+                'percentage' => $pct,
+            ];
+        });
+
+        // Placeholder testimonial stats (no testimonial module wired yet)
         $testimonialStats = [
-            'total' => 5,  // In real app, get from Testimonial model
-            'published' => 3,
-            'pending' => 1,
-            'featured' => 2,
-            'average_rating' => 4.6,
+            'total' => 0,
+            'published' => 0,
+            'pending' => 0,
+            'featured' => 0,
+            'average_rating' => null,
         ];
 
         return view('admin.dashboard', compact(
@@ -47,8 +95,12 @@ class AdminController extends Controller
             'totalBookings',
             'totalRevenue',
             'recentBookings',
-            'servicePackageStats',
-            'testimonialStats'
+            'testimonialStats',
+            'revenueMoMPct',
+            'usersMoMPct',
+            'bookingsMoMPct',
+            'newParkingLotsCount',
+            'topPackages'
         ));
     }
 
