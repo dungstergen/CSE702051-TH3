@@ -48,7 +48,7 @@ Thực hiện theo các bước sau để dự án hoạt động trên máy c�
 
 1.  **Sao chép kho mã nguồn:**
     ```bash
-    git clone https://github.com/dungstergen/CSE702051-TH3.git
+    git clone https://github.com/dungstergen/Parking.git
     ```
 
 2.  **Cài đặt các gói phụ thuộc PHP:**
