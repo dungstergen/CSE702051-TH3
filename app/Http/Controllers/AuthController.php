@@ -42,6 +42,18 @@ class AuthController extends Controller
 
         if (Auth::attempt($request->only('email', 'password'), $request->boolean('remember'))) {
             $request->session()->regenerate();
+
+            // Cập nhật thông tin đăng nhập gần nhất
+            try {
+                /** @var \App\Models\User $user */
+                $user = Auth::user();
+                $user->last_login_at = now();
+                $user->last_login_ip = $request->ip();
+                $user->save();
+            } catch (\Throwable $e) {
+                // Bỏ qua nếu cột chưa tồn tại (trước khi migrate) hoặc lỗi không nghiêm trọng
+            }
+
             return $this->redirectToDashboard()->with('success', 'Đăng nhập thành công!');
         }
 
@@ -95,7 +107,8 @@ class AuthController extends Controller
     // Chuyển hướng theo role (dùng Spatie)
     protected function redirectToDashboard()
     {
-        $user = Auth::user();
+    /** @var \App\Models\User $user */
+    $user = Auth::user();
 
         // Kiểm tra bằng Spatie Permission
         if ($user->hasRole('admin')) {
