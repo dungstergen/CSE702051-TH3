@@ -6,8 +6,9 @@
 <div class="flex flex-wrap -mx-3 mb-6">
 	<div class="w-full max-w-full px-3">
 		<div class="relative flex flex-col bg-white dark:bg-slate-850 shadow-xl rounded-2xl">
-			<div class="p-6 pb-0">
+			<div class="p-6 pb-0 flex items-center justify-between">
 				<h6 class="mb-0 dark:text-white">Bộ lọc</h6>
+				<a href="{{ route('admin.reports.index') }}" class="btn-chip btn-blue"><i class="btn-icon fas fa-arrow-left"></i>Quay lại</a>
 			</div>
 			<div class="p-6 grid grid-cols-1 md:grid-cols-4 gap-4">
 				<div>

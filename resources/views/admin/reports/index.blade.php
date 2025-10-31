@@ -3,6 +3,18 @@
 @section('page-heading', 'Báo cáo & Thống kê')
 
 @section('content')
+<div class="flex flex-wrap -mx-3 mb-4">
+  <div class="w-full px-3">
+    <div class="p-4 bg-white dark:bg-slate-850 rounded-2xl shadow flex flex-wrap items-center gap-2">
+      <span class="text-xs text-slate-500 mr-2">Đi nhanh:</span>
+      <a href="{{ route('admin.reports.revenue') }}" class="btn-chip btn-blue"><i class="btn-icon fas fa-chart-line"></i>Doanh thu</a>
+      <a href="{{ route('admin.reports.usage') }}" class="btn-chip btn-emerald"><i class="btn-icon fas fa-chart-bar"></i>Sử dụng</a>
+      <a href="{{ route('admin.reports.export', 'revenue') }}" class="btn-chip btn-orange"><i class="btn-icon fas fa-file-archive"></i>Tải dữ liệu (Doanh thu)</a>
+      <a href="{{ route('admin.reports.export', 'usage') }}" class="btn-chip btn-orange"><i class="btn-icon fas fa-file-archive"></i>Tải dữ liệu (Sử dụng)</a>
+    </div>
+  </div>
+  </div>
+
 <div class="flex flex-wrap -mx-3 mb-6">
   <div class="w-full max-w-full px-3">
     <div class="relative flex flex-col bg-white dark:bg-slate-850 shadow-xl rounded-2xl">
